@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
-import { SEED_ARTICLES } from '@/lib/seedData'
+import { SEED_ARTICLES, SEED_VIDEOS, SEED_GALLERIES } from '@/lib/seedData'
 import { articles as localArticles, getAuthorById } from '@/data/articles'
 import HeroSection from '@/components/HeroSection'
 import VideoStory from '@/components/VideoStory'
@@ -38,6 +38,44 @@ function normalizeLocalArticles() {
   }))
 }
 
+async function fetchVideos(limit = 4) {
+  const { data } = await supabase
+    .from('videos')
+    .select('id,title,platform,video_id,thumbnail_url,description,sort_order,video_url')
+    .eq('is_published', true)
+    .order('sort_order')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (data && data.length > 0) return data
+  return SEED_VIDEOS.slice(0, limit)
+}
+
+async function fetchGalleries(limit = 4) {
+  const { data } = await supabase
+    .from('galleries')
+    .select('id,title,slug,cover_url,event_date,category')
+    .eq('is_published', true)
+    .order('sort_order')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (data && data.length > 0) {
+    const ids = data.map((a) => a.id)
+    const { data: photos } = await supabase
+      .from('gallery_photos').select('gallery_id').in('gallery_id', ids)
+    const counts = photos?.reduce((acc, row) => {
+      acc[row.gallery_id] = (acc[row.gallery_id] ?? 0) + 1
+      return acc
+    }, {}) ?? {}
+    return { albums: data, counts }
+  }
+  const seedSlice = SEED_GALLERIES.slice(0, limit)
+  const counts = seedSlice.reduce((acc, g) => {
+    acc[g.id] = g.photos?.length ?? 0
+    return acc
+  }, {})
+  return { albums: seedSlice, counts }
+}
+
 async function fetchLatestArticles(limit = 24) {
   const { data } = await supabase
     .from('articles')
@@ -54,29 +92,28 @@ async function fetchLatestArticles(limit = 24) {
 }
 
 export default async function HomePage() {
-  const articles = await fetchLatestArticles(20)
+  // Semua fetch paralel di server — tidak ada waterfall client-side
+  const [articles, videos, { albums, counts }] = await Promise.all([
+    fetchLatestArticles(20),
+    fetchVideos(4),
+    fetchGalleries(4),
+  ])
 
-  // Pisah untuk HeroSection — server fetch, tidak perlu client fetch ulang
   const heroSlides = articles.slice(0, 3)
   const heroGrid   = articles.slice(3, 7)
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 space-y-12">
 
-      {/* Hero carousel + grid + berita terbaru (data dari server) */}
       <HeroSection slides={heroSlides} grid={heroGrid} />
-
-      {/* Artikel per kanal: Berita Kesehatan, Aksi Kemanusiaan, Dokter Menulis */}
       <HomeFeed articles={articles} />
 
-      {/* Video Story */}
       <section>
-        <VideoStory limit={4} />
+        <VideoStory limit={4} initialVideos={videos} />
       </section>
 
-      {/* Galeri Foto */}
       <section>
-        <GallerySection limit={4} />
+        <GallerySection limit={4} initialAlbums={albums} initialCounts={counts} />
       </section>
 
       {/* WhatsApp CTA */}

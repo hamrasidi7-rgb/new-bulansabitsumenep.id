@@ -10,12 +10,14 @@ import { SEED_GALLERIES } from '@/lib/seedData'
  * Section galeri untuk homepage — tampilkan album terbaru.
  * Props: limit {number}
  */
-export default function GallerySection({ limit = 4 }) {
-  const [albums, setAlbums] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [counts, setCounts] = useState({})
+// initialAlbums/initialCounts: opsional — jika diisi dari server, skip fetch client-side
+export default function GallerySection({ limit = 4, initialAlbums, initialCounts }) {
+  const [albums, setAlbums] = useState(initialAlbums ?? [])
+  const [loading, setLoading] = useState(!initialAlbums)
+  const [counts, setCounts] = useState(initialCounts ?? {})
 
   useEffect(() => {
+    if (initialAlbums) return  // data sudah dari server, tidak perlu fetch
     async function load() {
       const { data } = await supabase
         .from('galleries')
@@ -27,7 +29,6 @@ export default function GallerySection({ limit = 4 }) {
 
       if (data && data.length > 0) {
         setAlbums(data)
-        // Hitung jumlah foto per album dari DB
         const ids = data.map((a) => a.id)
         supabase
           .from('gallery_photos')
@@ -43,10 +44,8 @@ export default function GallerySection({ limit = 4 }) {
             )
           })
       } else {
-        // Fallback ke seed data
         const seedSlice = SEED_GALLERIES.slice(0, limit)
         setAlbums(seedSlice)
-        // Hitung foto dari seed
         const seedCounts = seedSlice.reduce((acc, g) => {
           acc[g.id] = g.photos?.length ?? 0
           return acc
@@ -56,7 +55,7 @@ export default function GallerySection({ limit = 4 }) {
       setLoading(false)
     }
     load()
-  }, [limit])
+  }, [limit, initialAlbums])
 
   return (
     <section aria-labelledby="gallery-section-heading">

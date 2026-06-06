@@ -14,13 +14,14 @@ import VideoEmbed from './VideoEmbed'
  *   limit    {number}  jumlah video ditampilkan (default 4, homepage)
  *   showAll  {boolean} tampilkan semua (halaman /video-story)
  */
-export default function VideoStory({ limit = 4, showAll = false }) {
-  const [videos, setVideos] = useState([])
-  const [loading, setLoading] = useState(true)
-  // id video yang sedang diputar (satu pada satu waktu)
+// initialVideos: opsional — jika diisi dari server, skip fetch client-side
+export default function VideoStory({ limit = 4, showAll = false, initialVideos }) {
+  const [videos, setVideos] = useState(initialVideos ?? [])
+  const [loading, setLoading] = useState(!initialVideos)
   const [playingId, setPlayingId] = useState(null)
 
   useEffect(() => {
+    if (initialVideos) return  // data sudah dari server, tidak perlu fetch
     async function load() {
       const query = supabase
         .from('videos')
@@ -36,14 +37,13 @@ export default function VideoStory({ limit = 4, showAll = false }) {
       if (data && data.length > 0) {
         setVideos(data)
       } else {
-        // Fallback ke seed data jika Supabase belum dikonfigurasi atau tabel kosong
         const seedSlice = showAll ? SEED_VIDEOS : SEED_VIDEOS.slice(0, limit)
         setVideos(seedSlice)
       }
       setLoading(false)
     }
     load()
-  }, [limit, showAll])
+  }, [limit, showAll, initialVideos])
 
   return (
     <section aria-labelledby="video-story-heading">
