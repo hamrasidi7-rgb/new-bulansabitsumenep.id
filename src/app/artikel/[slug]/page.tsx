@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import VerifiedBadge from "@/components/article/VerifiedBadge";
+import AuthorByline from "@/components/article/AuthorByline";
+import AuthorBox from "@/components/article/AuthorBox";
 import ArticleImage from "@/components/article/ArticleImage";
 import ShareButtons from "@/components/article/ShareButtons";
 import AiToolbar from "@/components/ai/AiToolbar";
@@ -12,7 +14,7 @@ import AiSummary from "@/components/ai/AiSummary";
 import AskArticle from "@/components/ai/AskArticle";
 import WhatsAppCard from "@/components/ui/WhatsAppCard";
 import ArticleCard from "@/components/article/ArticleCard";
-import { getArticleBySlug, getRecentArticles, articles } from "@/data/articles";
+import { getArticleBySlug, getRecentArticles, getAuthorById, articles } from "@/data/articles";
 import { siteConfig } from "@/lib/site";
 
 interface Props {
@@ -37,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: article.excerpt,
       type: "article",
       publishedTime: article.publishedAt,
-      authors: [article.author.name],
+      authors: [getAuthorById(article.authorId)?.name ?? ""],
       siteName: siteConfig.displayName,
       locale: "id_ID",
       // heroImage sudah URL absolut (Unsplash) — langsung dipakai sebagai OG image artikel
@@ -59,19 +61,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
 export default async function ArtikelPage({ params }: Props) {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) notFound();
+
+  const author = getAuthorById(article.authorId);
 
   const related = getRecentArticles(3, slug);
   const fullText = article.body.join(" ");
@@ -118,20 +113,16 @@ export default async function ArtikelPage({ params }: Props) {
             {article.title}
           </h1>
 
-          {/* ── Penulis + tanggal + waktu baca ──────────────────────────── */}
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--muted)]">
-            <span className="font-medium text-[var(--foreground)]">
-              {article.author.name}
-            </span>
-            <span>·</span>
-            <span>{article.author.title}</span>
-            <span>·</span>
-            <time dateTime={article.publishedAt}>
-              {formatDate(article.publishedAt)}
-            </time>
-            <span>·</span>
-            <span>{article.readingMinutes} mnt baca</span>
-          </div>
+          {/* ── Byline penulis ──────────────────────────────────────────── */}
+          {author && (
+            <div className="mt-3">
+              <AuthorByline
+                author={author}
+                date={article.publishedAt}
+                readTime={article.readingMinutes}
+              />
+            </div>
+          )}
 
           {/* ── Share buttons (a) — di bawah penulis/tanggal ────────────── */}
           <div className="mt-3">
@@ -214,6 +205,9 @@ export default async function ArtikelPage({ params }: Props) {
               ))}
             </div>
           )}
+
+          {/* ── Profil penulis ───────────────────────────────────────────── */}
+          {author && <AuthorBox author={author} />}
 
           {/* ── Share buttons (b) — di akhir artikel ────────────────────── */}
           <div className="mt-5 border-t border-[var(--border)] pt-5">

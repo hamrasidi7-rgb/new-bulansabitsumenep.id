@@ -1,10 +1,58 @@
 export type Category = "Berita Kesehatan" | "Aksi Kemanusiaan" | "Edukasi" | "Gizi" | "Kemanusiaan";
 
-export interface Author {
+// ── Profil Penulis ─────────────────────────────────────────────────────────
+
+export interface AuthorProfile {
   name: string;
-  title: string;
-  avatar?: string;
+  role: string;
+  // TODO: taruh foto nyata di public/authors/<id>.jpg (ukuran ideal: 200×200 px, format .jpg)
+  avatar: string;
+  bio?: string;
 }
+
+export const authors: Record<string, AuthorProfile> = {
+  "anwar-fauzi": {
+    name: "dr. Anwar Fauzi",
+    role: "Dokter Umum, Kontributor BSS",
+    avatar: "/authors/anwar-fauzi.jpg",
+    bio: "Dokter umum di Puskesmas Kalianget dengan pengalaman lebih dari 8 tahun melayani masyarakat Sumenep dan kepulauan. Aktif sebagai kontributor medis di Bulan Sabit Sumenep.",
+  },
+  "siti-rahmah": {
+    name: "dr. Siti Rahmah",
+    role: "Ahli Gizi, Kontributor BSS",
+    avatar: "/authors/siti-rahmah.jpg",
+    bio: "Ahli gizi yang berfokus pada penanganan masalah gizi masyarakat di daerah terpencil dan kepulauan Sumenep.",
+  },
+  "siti-maryam": {
+    name: "dr. Siti Maryam",
+    role: "Ahli Gizi Klinis, Kontributor BSS",
+    avatar: "/authors/siti-maryam.jpg",
+    bio: "Ahli gizi klinis di Dinas Kesehatan Sumenep dan pemimpin program intervensi gizi \"Anak Pulau Sehat\" yang berhasil menekan angka stunting di kepulauan.",
+  },
+  "hamid-wibowo": {
+    name: "dr. Hamid Wibowo",
+    role: "Spesialis Jantung, RSUD Sumenep",
+    avatar: "/authors/hamid-wibowo.jpg",
+    bio: "Spesialis jantung dan pembuluh darah di RSUD dr. H. Moh. Anwar Sumenep, aktif dalam edukasi pencegahan penyakit kardiovaskular untuk masyarakat Madura.",
+  },
+  "nisa-pratiwi": {
+    name: "Nisa Pratiwi",
+    role: "Jurnalis Kesehatan, Bulan Sabit Sumenep",
+    avatar: "/authors/nisa-pratiwi.jpg",
+    bio: "Jurnalis kesehatan yang meliput isu-isu kesehatan masyarakat, kemanusiaan, dan kesehatan mental di Kabupaten Sumenep.",
+  },
+  "redaksi-bss": {
+    name: "Redaksi BSS",
+    role: "Tim Jurnalis Bulan Sabit Sumenep",
+    avatar: "/authors/redaksi.jpg",
+  },
+};
+
+export function getAuthorById(id: string): AuthorProfile | undefined {
+  return authors[id];
+}
+
+// ── Struktur Artikel ───────────────────────────────────────────────────────
 
 export interface BodyImage {
   afterParagraph: number; // sisipkan setelah paragraf ke-N (0-indexed)
@@ -22,7 +70,7 @@ export interface Article {
   pullQuote?: string;
   category: Category;
   tags: string[];
-  author: Author;
+  authorId: string;      // merujuk ke kunci di `authors`
   publishedAt: string;   // ISO string
   readingMinutes: number;
   hasAudio: boolean;
@@ -52,7 +100,7 @@ export const articles: Article[] = [
       "\"Jangan tunggu sampai tiga hari. Segera ke puskesmas terdekat jika anak demam tinggi.\" — dr. Halimah, Dinkes Sumenep",
     category: "Berita Kesehatan",
     tags: ["DBD", "Sumenep", "Musim Hujan", "Nyamuk", "Kewaspadaan"],
-    author: { name: "dr. Anwar Fauzi", title: "Dokter Umum, Kontributor BSS" },
+    authorId: "anwar-fauzi",
     publishedAt: "2026-06-05T08:00:00+07:00",
     readingMinutes: 4,
     hasAudio: true,
@@ -88,7 +136,7 @@ export const articles: Article[] = [
       "\"Yang membedakan program ini adalah penggunaan bahan pangan lokal yang mudah didapat warga pulau.\" — dr. Siti Maryam",
     category: "Berita Kesehatan",
     tags: ["Stunting", "Gizi Balita", "Kepulauan", "Posyandu", "PMI"],
-    author: { name: "dr. Siti Rahmah", title: "Ahli Gizi, Kontributor BSS" },
+    authorId: "siti-rahmah",
     publishedAt: "2026-06-04T10:30:00+07:00",
     readingMinutes: 5,
     hasAudio: true,
@@ -121,7 +169,7 @@ export const articles: Article[] = [
     ],
     category: "Aksi Kemanusiaan",
     tags: ["Bakti Kesehatan", "Kangean", "PMI", "Layanan Gratis", "Kepulauan"],
-    author: { name: "Redaksi BSS", title: "Tim Jurnalis Bulan Sabit Sumenep" },
+    authorId: "redaksi-bss",
     publishedAt: "2026-06-03T14:00:00+07:00",
     readingMinutes: 3,
     hasAudio: true,
@@ -147,7 +195,7 @@ export const articles: Article[] = [
       "\"Cubitan kulit yang tidak segera kembali adalah tanda dehidrasi berat pada anak. Ini kedaruratan medis.\" — dr. Anwar Fauzi",
     category: "Edukasi",
     tags: ["Diare", "Oralit", "Dehidrasi", "Anak", "Pertolongan Pertama"],
-    author: { name: "dr. Anwar Fauzi", title: "Dokter Umum, Kontributor BSS" },
+    authorId: "anwar-fauzi",
     publishedAt: "2026-06-02T09:00:00+07:00",
     readingMinutes: 4,
     hasAudio: true,
@@ -169,7 +217,7 @@ export const articles: Article[] = [
     ],
     category: "Gizi",
     tags: ["Kelor", "Gizi", "Ibu Hamil", "ASI", "Pangan Lokal"],
-    author: { name: "dr. Siti Maryam", title: "Ahli Gizi Klinis, Kontributor BSS" },
+    authorId: "siti-maryam",
     publishedAt: "2026-06-01T08:30:00+07:00",
     readingMinutes: 4,
     hasAudio: true,
@@ -191,7 +239,7 @@ export const articles: Article[] = [
     ],
     category: "Aksi Kemanusiaan",
     tags: ["Donor Darah", "PMI", "Stok Darah", "Kemanusiaan"],
-    author: { name: "Redaksi BSS", title: "Tim Jurnalis Bulan Sabit Sumenep" },
+    authorId: "redaksi-bss",
     publishedAt: "2026-05-31T11:00:00+07:00",
     readingMinutes: 3,
     hasAudio: false,
@@ -215,7 +263,7 @@ export const articles: Article[] = [
       "\"Satu porsi bebek goreng khas Madura sudah mengandung 3–4 gram sodium. Jika ditambah petis, bisa melebihi batas harian dalam sekali makan.\" — dr. Hamid",
     category: "Edukasi",
     tags: ["Hipertensi", "Garam", "Masakan Madura", "Jantung", "Gaya Hidup Sehat"],
-    author: { name: "dr. Hamid Wibowo", title: "Spesialis Jantung, RSUD Sumenep" },
+    authorId: "hamid-wibowo",
     publishedAt: "2026-05-30T09:00:00+07:00",
     readingMinutes: 5,
     hasAudio: true,
@@ -237,7 +285,7 @@ export const articles: Article[] = [
     ],
     category: "Berita Kesehatan",
     tags: ["Remaja", "Kesehatan Mental", "Posyandu", "PMI", "Generasi Muda"],
-    author: { name: "Nisa Pratiwi", title: "Jurnalis Kesehatan, Bulan Sabit Sumenep" },
+    authorId: "nisa-pratiwi",
     publishedAt: "2026-05-28T10:00:00+07:00",
     readingMinutes: 4,
     hasAudio: false,

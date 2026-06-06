@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Article } from "@/data/articles";
+import { type Article, getAuthorById } from "@/data/articles";
 import VerifiedBadge from "./VerifiedBadge";
 import ListenButton from "@/components/ai/ListenButton";
 
@@ -50,7 +50,7 @@ export default function ArticleCard({ article, variant = "list" }: ArticleCardPr
           </p>
           <div className="mt-3 flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
-              <span className="font-medium text-[var(--foreground)]">{article.author.name}</span>
+              <span className="font-medium text-[var(--foreground)]">{getAuthorById(article.authorId)?.name}</span>
               <span>·</span>
               <span>{formatDate(article.publishedAt)}</span>
             </div>
@@ -90,7 +90,7 @@ export default function ArticleCard({ article, variant = "list" }: ArticleCardPr
             {article.title}
           </h3>
           <div className="mt-auto pt-2 flex items-center gap-1 text-[11px] text-[var(--muted)]">
-            <span>{article.author.name}</span>
+            <span>{getAuthorById(article.authorId)?.name}</span>
             {article.hasAudio && (
               <>
                 <span>·</span>
@@ -118,7 +118,7 @@ export default function ArticleCard({ article, variant = "list" }: ArticleCardPr
           {article.title}
         </h3>
         <div className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--muted)]">
-          <span className="font-medium">{article.author.name}</span>
+          <span className="font-medium">{getAuthorById(article.authorId)?.name}</span>
           <span>·</span>
           {article.isVerified && (
             <>
