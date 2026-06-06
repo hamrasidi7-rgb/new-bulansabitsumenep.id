@@ -37,9 +37,9 @@ export default function CategoryPillNav({
   return (
     <nav
       aria-label="Navigasi kategori"
-      className={`bg-[var(--accent-red)] ${className}`}
+      className={`bg-[var(--card)] border-b border-[var(--border)] ${className}`}
     >
-      <div className="flex gap-2 overflow-x-auto px-4 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex gap-1.5 overflow-x-auto px-4 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {categories.map((cat) => {
           const active = isActive(cat)
           return (
@@ -49,11 +49,11 @@ export default function CategoryPillNav({
               aria-current={active ? 'page' : undefined}
               className={[
                 'inline-flex shrink-0 cursor-pointer items-center',
-                'min-h-[36px] whitespace-nowrap rounded-full',
-                'px-4 py-1.5 text-[14px] font-medium transition-colors',
+                'min-h-[34px] whitespace-nowrap rounded-full',
+                'px-4 py-1 text-[13px] font-semibold transition-colors',
                 active
-                  ? 'bg-white text-[var(--accent-red)]'
-                  : 'text-white/90 hover:bg-white/15 hover:text-white',
+                  ? 'bg-[var(--accent-red)] text-white'
+                  : 'bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--border)]',
               ].join(' ')}
             >
               {cat.label}
