@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/layout/Footer";
 import { siteConfig } from "@/lib/site";
+// Footer hanya dirender di (public)/layout.jsx — bukan di sini,
+// agar tidak double saat rute (public) diakses.
 
 const inter = Inter({
   variable: "--font-inter",
@@ -70,7 +71,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)] font-sans">
         {children}
-        <Footer />
       </body>
     </html>
   );
