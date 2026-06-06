@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { SEED_GALLERIES } from '@/lib/seedData'
 
 /**
  * Section galeri untuk homepage — tampilkan album terbaru.
@@ -12,6 +13,7 @@ import { supabase } from '@/lib/supabaseClient'
 export default function GallerySection({ limit = 4 }) {
   const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
+  const [counts, setCounts] = useState({})
 
   useEffect(() => {
     async function load() {
@@ -22,29 +24,39 @@ export default function GallerySection({ limit = 4 }) {
         .order('sort_order')
         .order('created_at', { ascending: false })
         .limit(limit)
-      setAlbums(data ?? [])
+
+      if (data && data.length > 0) {
+        setAlbums(data)
+        // Hitung jumlah foto per album dari DB
+        const ids = data.map((a) => a.id)
+        supabase
+          .from('gallery_photos')
+          .select('gallery_id')
+          .in('gallery_id', ids)
+          .then(({ data: photos }) => {
+            if (!photos) return
+            setCounts(
+              photos.reduce((acc, row) => {
+                acc[row.gallery_id] = (acc[row.gallery_id] ?? 0) + 1
+                return acc
+              }, {}),
+            )
+          })
+      } else {
+        // Fallback ke seed data
+        const seedSlice = SEED_GALLERIES.slice(0, limit)
+        setAlbums(seedSlice)
+        // Hitung foto dari seed
+        const seedCounts = seedSlice.reduce((acc, g) => {
+          acc[g.id] = g.photos?.length ?? 0
+          return acc
+        }, {})
+        setCounts(seedCounts)
+      }
       setLoading(false)
     }
     load()
   }, [limit])
-
-  // Hitung jumlah foto per album
-  const [counts, setCounts] = useState({})
-  useEffect(() => {
-    if (albums.length === 0) return
-    const ids = albums.map((a) => a.id)
-    supabase
-      .from('gallery_photos')
-      .select('gallery_id')
-      .in('gallery_id', ids)
-      .then(({ data }) => {
-        if (!data) return
-        setCounts(data.reduce((acc, row) => {
-          acc[row.gallery_id] = (acc[row.gallery_id] ?? 0) + 1
-          return acc
-        }, {}))
-      })
-  }, [albums])
 
   return (
     <section aria-labelledby="gallery-section-heading">

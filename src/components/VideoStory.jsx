@@ -4,16 +4,17 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { SEED_VIDEOS } from '@/lib/seedData'
 import { platformLabel, platformBadgeClass } from '@/lib/videoUtils'
 import VideoEmbed from './VideoEmbed'
 
 /**
  * Section "Cerita Pendonor" — Video Story multi-platform.
  * Props:
- *   limit    {number}  jumlah video ditampilkan (default 6, homepage)
+ *   limit    {number}  jumlah video ditampilkan (default 4, homepage)
  *   showAll  {boolean} tampilkan semua (halaman /video-story)
  */
-export default function VideoStory({ limit = 6, showAll = false }) {
+export default function VideoStory({ limit = 4, showAll = false }) {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   // id video yang sedang diputar (satu pada satu waktu)
@@ -31,7 +32,14 @@ export default function VideoStory({ limit = 6, showAll = false }) {
       if (!showAll) query.limit(limit)
 
       const { data } = await query
-      setVideos(data ?? [])
+
+      if (data && data.length > 0) {
+        setVideos(data)
+      } else {
+        // Fallback ke seed data jika Supabase belum dikonfigurasi atau tabel kosong
+        const seedSlice = showAll ? SEED_VIDEOS : SEED_VIDEOS.slice(0, limit)
+        setVideos(seedSlice)
+      }
       setLoading(false)
     }
     load()
@@ -61,7 +69,8 @@ export default function VideoStory({ limit = 6, showAll = false }) {
 
       {/* Skeleton loading */}
       {loading && (
-        <div className={`flex gap-4 overflow-x-auto pb-2 no-scrollbar ${showAll ? 'sm:grid sm:grid-cols-3 sm:overflow-visible' : ''}`}>
+        <div className={`flex gap-4 overflow-x-auto pb-2 no-scrollbar
+          ${showAll ? 'sm:grid sm:grid-cols-3 sm:overflow-visible' : ''}`}>
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="w-64 shrink-0 sm:w-auto animate-pulse">
               <div className="aspect-video rounded-xl bg-gray-200 dark:bg-gray-700" />
@@ -72,7 +81,7 @@ export default function VideoStory({ limit = 6, showAll = false }) {
         </div>
       )}
 
-      {/* Empty state */}
+      {/* Empty state (seharusnya tidak muncul karena ada seed fallback) */}
       {!loading && videos.length === 0 && (
         <div className="rounded-xl border border-[var(--border)] p-8 text-center text-sm text-[var(--muted)]">
           Belum ada video diterbitkan.
@@ -84,7 +93,7 @@ export default function VideoStory({ limit = 6, showAll = false }) {
         <div className={`
           ${showAll
             ? 'grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'
-            : 'flex gap-4 overflow-x-auto pb-2 no-scrollbar sm:grid sm:grid-cols-3 sm:overflow-visible'
+            : 'flex gap-4 overflow-x-auto pb-2 no-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible'
           }`}
         >
           {videos.map((video) => (
@@ -171,6 +180,9 @@ function VideoCard({ video, isPlaying, onPlay }) {
             group-hover:text-[var(--accent-red)] transition-colors line-clamp-2">
             {video.title}
           </p>
+          {video.description && (
+            <p className="mt-0.5 text-xs text-[var(--muted)] line-clamp-2">{video.description}</p>
+          )}
         </button>
       )}
     </div>
@@ -195,10 +207,30 @@ function buildEmbedUrl(video) {
 
 function PlatformIcon({ platform }) {
   const icons = {
-    youtube:   <svg className="h-8 w-8 text-red-600" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2s-.3-1.9-1.1-2.7c-1-1.1-2.2-1.1-2.7-1.2C16.8 2 12 2 12 2s-4.8 0-7.7.3c-.5.1-1.7.1-2.7 1.2C.8 4.3.5 6.2.5 6.2S.2 8.4.2 10.6v2c0 2.2.3 4.4.3 4.4s.3 1.9 1.1 2.7c1 1.1 2.4 1.1 3 1.2C6.9 21 12 21 12 21s4.8 0 7.7-.2c.5-.1 1.7-.1 2.7-1.2.8-.8 1.1-2.7 1.1-2.7s.3-2.2.3-4.4v-2c0-2.2-.3-4.4-.3-4.4zM9.7 14.8V8.6l7 3.1-7 3.1z"/></svg>,
-    instagram: <svg className="h-8 w-8 text-pink-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.7 1.7 4.8 4.8.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.6 4.7-4.8 4.8-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.2-.1-4.7-1.6-4.8-4.8C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zm0-2.2C8.7 0 8.3 0 7.1.1 2.9.3.3 2.9.1 7.1.1 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.2 2.8 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.2-.2 6.8-2.8 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.2-2.8-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg>,
-    tiktok:    <svg className="h-8 w-8 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 0h-3.2v15.4a2.6 2.6 0 1 1-2.6-2.6h.4v-3.2h-.4A5.8 5.8 0 1 0 19.6 15V8.5a9.1 9.1 0 0 0 5.4 1.7V7a5.4 5.4 0 0 1-5.4-5.4V0z"/></svg>,
-    facebook:  <svg className="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23 10.1 24v-8.4H7.1v-3.5h3v-2.7c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9v2.3h3.4l-.5 3.5h-2.9V24C19.6 23 24 18.1 24 12.1z"/></svg>,
+    youtube: (
+      <svg className="h-8 w-8 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M23.5 6.2s-.3-1.9-1.1-2.7c-1-1.1-2.2-1.1-2.7-1.2C16.8 2 12 2 12 2s-4.8 0-7.7.3c-.5.1-1.7.1-2.7 1.2C.8 4.3.5 6.2.5 6.2S.2 8.4.2 10.6v2c0 2.2.3 4.4.3 4.4s.3 1.9 1.1 2.7c1 1.1 2.4 1.1 3 1.2C6.9 21 12 21 12 21s4.8 0 7.7-.2c.5-.1 1.7-.1 2.7-1.2.8-.8 1.1-2.7 1.1-2.7s.3-2.2.3-4.4v-2c0-2.2-.3-4.4-.3-4.4zM9.7 14.8V8.6l7 3.1-7 3.1z"/>
+      </svg>
+    ),
+    instagram: (
+      <svg className="h-8 w-8 text-pink-500" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.7 1.7 4.8 4.8.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.6 4.7-4.8 4.8-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.2-.1-4.7-1.6-4.8-4.8C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zm0-2.2C8.7 0 8.3 0 7.1.1 2.9.3.3 2.9.1 7.1.1 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.2 2.8 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.2-.2 6.8-2.8 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.2-2.8-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/>
+      </svg>
+    ),
+    tiktok: (
+      <svg className="h-8 w-8 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.6 0h-3.2v15.4a2.6 2.6 0 1 1-2.6-2.6h.4v-3.2h-.4A5.8 5.8 0 1 0 19.6 15V8.5a9.1 9.1 0 0 0 5.4 1.7V7a5.4 5.4 0 0 1-5.4-5.4V0z"/>
+      </svg>
+    ),
+    facebook: (
+      <svg className="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23 10.1 24v-8.4H7.1v-3.5h3v-2.7c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9v2.3h3.4l-.5 3.5h-2.9V24C19.6 23 24 18.1 24 12.1z"/>
+      </svg>
+    ),
   }
-  return icons[platform] ?? <svg className="h-8 w-8 text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+  return icons[platform] ?? (
+    <svg className="h-8 w-8 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5v14l11-7L8 5z"/>
+    </svg>
+  )
 }
