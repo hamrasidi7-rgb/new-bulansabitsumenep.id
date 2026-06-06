@@ -5,9 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
 import { SEED_ARTICLES } from '@/lib/seedData'
+import { articles as localArticles } from '@/data/articles'
 import VerifiedBadge from '@/components/article/VerifiedBadge'
-
-// ── Konstanta ─────────────────────────────────────────────────────────────────
 
 const CHANNEL_LABEL = {
   'berita-kesehatan': 'Berita Kesehatan',
@@ -17,9 +16,16 @@ const CHANNEL_LABEL = {
   'galeri':           'Galeri',
 }
 
-const RED      = '#E11932'
-const RED_DARK = '#A50E22'
-const INTERVAL = 5000   // auto-slide setiap 5 detik
+const CATEGORY_TO_CHANNEL = {
+  'Berita Kesehatan': 'berita-kesehatan',
+  'Aksi Kemanusiaan': 'aksi-kemanusiaan',
+  'Kemanusiaan':      'aksi-kemanusiaan',
+  'Edukasi':          'berita-kesehatan',
+  'Gizi':             'berita-kesehatan',
+}
+
+const RED      = '#c0392b'
+const INTERVAL = 5500
 
 function fmt(iso) {
   return new Date(iso).toLocaleDateString('id-ID', {
@@ -33,7 +39,22 @@ function articleHref(a) {
     : `/artikel/${a.slug}`
 }
 
-// ── HeroSection ───────────────────────────────────────────────────────────────
+// Normalisasi articles.ts ke format unified
+function buildLocalArticles() {
+  return [...localArticles]
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .map((a) => ({
+      id:           a.slug,
+      title:        a.title,
+      slug:         a.slug,
+      channel:      CATEGORY_TO_CHANNEL[a.category] ?? 'berita-kesehatan',
+      excerpt:      a.excerpt,
+      cover_url:    a.heroImage,       // foto landscape lebar untuk slide utama
+      thumb_url:    a.thumbnailImage,  // foto kotak untuk sidebar/card
+      published_at: a.publishedAt,
+      is_verified:  a.isVerified,
+    }))
+}
 
 export default function HeroSection() {
   const [slides,  setSlides]  = useState([])
@@ -42,7 +63,6 @@ export default function HeroSection() {
   const [active,  setActive]  = useState(0)
   const [loading, setLoading] = useState(true)
 
-  // Ambil data: 10 artikel terbaru, bagi ke slide/sidebar/latest
   useEffect(() => {
     async function load() {
       const { data } = await supabase
@@ -52,7 +72,21 @@ export default function HeroSection() {
         .order('published_at', { ascending: false })
         .limit(10)
 
-      const all = (data && data.length > 0) ? data : SEED_ARTICLES.slice(0, 10)
+      let all
+      if (data && data.length > 0) {
+        all = data
+      } else {
+        // Gabung articles.ts (foto Unsplash asli) + SEED_ARTICLES, urutkan terbaru
+        const local = buildLocalArticles()
+        const combined = [...local, ...SEED_ARTICLES]
+          .sort((a, b) =>
+            new Date(b.published_at ?? b.publishedAt ?? 0).getTime() -
+            new Date(a.published_at ?? a.publishedAt ?? 0).getTime()
+          )
+          .slice(0, 10)
+        all = combined
+      }
+
       setSlides(all.slice(0, 3))
       setSidebar(all.slice(3, 7))
       setLatest(all.slice(0, 4))
@@ -61,9 +95,8 @@ export default function HeroSection() {
     load()
   }, [])
 
-  // Auto-slide tiap INTERVAL ms
   const next = useCallback(() => {
-    setActive(a => (slides.length > 0 ? (a + 1) % slides.length : 0))
+    setActive((a) => (slides.length > 0 ? (a + 1) % slides.length : 0))
   }, [slides.length])
 
   useEffect(() => {
@@ -72,36 +105,24 @@ export default function HeroSection() {
     return () => clearInterval(t)
   }, [slides.length, next])
 
-  // ── Skeleton ──────────────────────────────────────────────────────────────
-
+  // ── Skeleton ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] overflow-hidden rounded-2xl border border-[var(--border)]">
-          <div className="h-[300px] sm:h-[380px] md:h-[460px] animate-pulse bg-gray-200 dark:bg-gray-700" />
-          <div className="flex flex-col gap-4 p-4 bg-[var(--card)]">
+          <div className="h-[300px] sm:h-[380px] md:h-[460px] animate-pulse bg-[var(--surface)]" />
+          <div className="flex flex-col gap-4 p-4 bg-[var(--surface)]">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="flex gap-3">
-                <div className="h-20 w-20 shrink-0 rounded-lg animate-pulse bg-gray-200 dark:bg-gray-700" />
+                <div className="h-20 w-20 shrink-0 rounded-lg animate-pulse bg-[var(--border)]" />
                 <div className="flex-1 space-y-2 pt-1">
-                  <div className="h-2 w-1/3 rounded animate-pulse bg-gray-200 dark:bg-gray-700" />
-                  <div className="h-3 w-full rounded animate-pulse bg-gray-200 dark:bg-gray-700" />
-                  <div className="h-3 w-3/4 rounded animate-pulse bg-gray-200 dark:bg-gray-700" />
+                  <div className="h-2 w-1/3 rounded animate-pulse bg-[var(--border)]" />
+                  <div className="h-3 w-full rounded animate-pulse bg-[var(--border)]" />
+                  <div className="h-3 w-3/4 rounded animate-pulse bg-[var(--border)]" />
                 </div>
               </div>
             ))}
           </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="rounded-xl overflow-hidden border border-[var(--border)] animate-pulse">
-              <div className="aspect-video bg-gray-200 dark:bg-gray-700" />
-              <div className="p-3 space-y-2">
-                <div className="h-2 w-1/3 rounded bg-gray-200 dark:bg-gray-700" />
-                <div className="h-3 w-full rounded bg-gray-200 dark:bg-gray-700" />
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     )
@@ -110,33 +131,32 @@ export default function HeroSection() {
   return (
     <div className="space-y-10">
 
-      {/* ── 1. HERO SPLIT ─────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] overflow-hidden rounded-2xl
-        border border-[var(--border)]">
+      {/* ── 1. HERO SPLIT ───────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] overflow-hidden
+        rounded-2xl border border-[var(--border)]">
 
-        {/* KIRI: Carousel ─────────────────────────────────────────────────── */}
-        <div className="relative h-[300px] sm:h-[380px] md:h-[460px] overflow-hidden bg-gray-900">
+        {/* KIRI: Carousel foto besar */}
+        <div className="relative h-[300px] sm:h-[380px] md:h-[480px]
+          overflow-hidden bg-[var(--foreground)]">
 
           {slides.map((slide, i) => {
             const isActive = i === active
+            const imgSrc = slide.cover_url
             return (
               <div
                 key={slide.id}
                 aria-hidden={!isActive}
-                className={`absolute inset-0 transition-opacity duration-[800ms] ease-in-out
+                className={`absolute inset-0 transition-opacity duration-[900ms] ease-in-out
                   ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               >
-                {/* Gambar + Ken Burns (key berbeda → animasi restart tiap slide aktif) */}
-                {slide.cover_url && (
+                {imgSrc && (
                   <div
-                    key={`${slide.id}-${isActive ? 'on' : 'off'}`}
+                    key={`${slide.id}-${isActive}`}
                     className="absolute inset-0"
-                    style={isActive
-                      ? { animation: 'kenburns 6s ease-out forwards' }
-                      : undefined}
+                    style={isActive ? { animation: 'kenburns 6s ease-out forwards' } : undefined}
                   >
                     <Image
-                      src={slide.cover_url}
+                      src={imgSrc}
                       alt={slide.title}
                       fill
                       priority={i === 0}
@@ -146,16 +166,17 @@ export default function HeroSection() {
                   </div>
                 )}
 
-                {/* Gradient gelap dari bawah */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                {/* Gradient editorial — kuat di bawah */}
+                <div className="absolute inset-0 bg-gradient-to-t
+                  from-black/90 via-black/35 to-transparent" />
 
-                {/* Konten teks slide */}
+                {/* Konten teks */}
                 <Link
                   href={articleHref(slide)}
-                  className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-5 sm:p-6 pb-10 sm:pb-12"
+                  className="absolute inset-x-0 bottom-0 z-10 flex flex-col
+                    p-5 sm:p-7 pb-12"
                   tabIndex={isActive ? 0 : -1}
                 >
-                  {/* Badge kategori + verifikasi */}
                   <div className="mb-2 flex flex-wrap items-center gap-2 self-start">
                     <span
                       className="inline-block rounded px-2.5 py-0.5
@@ -167,19 +188,19 @@ export default function HeroSection() {
                     {slide.is_verified && <VerifiedBadge size="sm" />}
                   </div>
 
-                  {/* Judul */}
-                  <h2 className="font-serif text-xl sm:text-2xl font-bold leading-snug
-                    text-white line-clamp-3 hover:underline decoration-white/60">
+                  <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold
+                    leading-snug text-white line-clamp-3 hover:underline
+                    decoration-white/60 underline-offset-4">
                     {slide.title}
                   </h2>
 
-                  {/* Excerpt */}
                   {slide.excerpt && (
-                    <p className="mt-2 text-sm text-white/75 line-clamp-2">{slide.excerpt}</p>
+                    <p className="mt-2 text-sm text-white/70 line-clamp-2 max-w-xl">
+                      {slide.excerpt}
+                    </p>
                   )}
 
-                  {/* Tanggal */}
-                  <time className="mt-2 text-xs text-white/55" dateTime={slide.published_at}>
+                  <time className="mt-3 text-xs text-white/50" dateTime={slide.published_at}>
                     {fmt(slide.published_at)}
                   </time>
                 </Link>
@@ -187,66 +208,71 @@ export default function HeroSection() {
             )
           })}
 
-          {/* Dot indikator — pojok kanan bawah */}
+          {/* Dot indikator */}
           {slides.length > 1 && (
-            <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5">
+            <div className="absolute bottom-4 right-5 z-20 flex items-center gap-1.5">
               {slides.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActive(i)}
                   aria-label={`Slide ${i + 1}`}
-                  className={`h-2 rounded-full bg-white transition-all duration-300
-                    ${i === active ? 'w-6 opacity-100' : 'w-2 opacity-40'}`}
+                  className={`h-1.5 rounded-full bg-white transition-all duration-300
+                    ${i === active ? 'w-6 opacity-100' : 'w-1.5 opacity-35'}`}
                 />
               ))}
             </div>
           )}
         </div>
 
-        {/* KANAN: Sidebar 4 berita ─────────────────────────────────────────── */}
+        {/* KANAN: Sidebar 4 berita — latar krem hangat */}
         <div className="flex flex-col divide-y divide-[var(--border)]
-          border-t md:border-t-0 md:border-l border-[var(--border)] bg-[var(--card)]">
-          {sidebar.map((a) => (
-            <Link
-              key={a.id}
-              href={articleHref(a)}
-              className="group flex items-start gap-3 p-4
-                hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-            >
-              {/* Thumbnail 80×80 */}
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-                {a.cover_url ? (
-                  <Image
-                    src={a.cover_url}
-                    alt=""
-                    fill
-                    className="object-cover transition duration-300 group-hover:scale-105"
-                    sizes="80px"
-                  />
-                ) : (
-                  <div className="h-full w-full bg-gray-200 dark:bg-gray-700" />
-                )}
-              </div>
+          border-t md:border-t-0 md:border-l border-[var(--border)]
+          bg-[var(--surface)]">
 
-              <div className="flex-1 min-w-0">
-                <span
-                  className="text-[9px] font-bold uppercase tracking-wider"
-                  style={{ color: RED }}
-                >
-                  {CHANNEL_LABEL[a.channel] ?? a.channel}
-                </span>
-                <h3 className="mt-0.5 font-serif text-sm font-semibold leading-snug
-                  text-[var(--foreground)] group-hover:text-[#E11932]
-                  transition-colors line-clamp-3">
-                  {a.title}
-                </h3>
-                <time className="mt-1 block text-[11px] text-[var(--muted)]"
-                  dateTime={a.published_at}>
-                  {fmt(a.published_at)}
-                </time>
-              </div>
-            </Link>
-          ))}
+          {sidebar.map((a) => {
+            const thumb = a.thumb_url ?? a.cover_url
+            return (
+              <Link
+                key={a.id}
+                href={articleHref(a)}
+                className="group flex items-start gap-3 p-4
+                  hover:bg-[var(--border)] transition-colors duration-150"
+              >
+                <div className="relative h-[72px] w-[72px] shrink-0
+                  overflow-hidden rounded-lg bg-[var(--border)]">
+                  {thumb ? (
+                    <Image
+                      src={thumb}
+                      alt=""
+                      fill
+                      className="object-cover transition duration-300 group-hover:scale-105"
+                      sizes="72px"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-[var(--border)]" />
+                  )}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-wider"
+                    style={{ color: RED }}
+                  >
+                    {CHANNEL_LABEL[a.channel] ?? a.channel}
+                  </span>
+                  <h3 className="mt-0.5 font-serif text-[13px] font-semibold leading-snug
+                    text-[var(--foreground)] group-hover:text-[var(--accent-red)]
+                    transition-colors line-clamp-3">
+                    {a.title}
+                  </h3>
+                  <time className="mt-1 block text-[11px] text-[var(--muted)]"
+                    dateTime={a.published_at}>
+                    {fmt(a.published_at)}
+                  </time>
+                </div>
+              </Link>
+            )
+          })}
 
           {sidebar.length === 0 && (
             <p className="flex flex-1 items-center justify-center p-8
@@ -257,10 +283,9 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ── 2. BERITA TERBARU ─────────────────────────────────────────────── */}
+      {/* ── 2. BERITA TERBARU — 4 kartu foto ──────────────────────────────── */}
       {latest.length > 0 && (
         <section aria-labelledby="terbaru-hero-heading">
-          {/* Header dengan border-top merah 3px */}
           <div
             className="mb-5 flex items-center justify-between border-t-[3px] pt-3"
             style={{ borderColor: RED }}
@@ -274,52 +299,54 @@ export default function HeroSection() {
             <Link
               href="/berita-kesehatan"
               className="flex min-h-[44px] items-center text-xs font-semibold
-                transition-colors hover:underline"
-              style={{ color: RED }}
+                text-[var(--accent-red)] transition-colors hover:underline"
             >
               Lihat semua →
             </Link>
           </div>
 
-          {/* Grid 4 kolom (desktop), 2 kolom (tablet), 1 kolom (HP) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {latest.map((a) => (
-              <Link
-                key={a.id}
-                href={articleHref(a)}
-                className="group flex flex-col overflow-hidden rounded-xl
-                  border border-[var(--border)] bg-[var(--card)]"
-              >
-                {a.cover_url && (
-                  <div className="relative aspect-video overflow-hidden">
-                    <Image
-                      src={a.cover_url}
-                      alt={a.title}
-                      fill
-                      className="object-cover transition duration-300 group-hover:scale-105"
-                      sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw"
-                    />
+            {latest.map((a) => {
+              const thumb = a.thumb_url ?? a.cover_url
+              return (
+                <Link
+                  key={a.id}
+                  href={articleHref(a)}
+                  className="group flex flex-col overflow-hidden rounded-xl
+                    border border-[var(--border)] bg-[var(--surface)]
+                    hover:shadow-md transition-shadow duration-200"
+                >
+                  <div className="relative aspect-video overflow-hidden bg-[var(--border)]">
+                    {thumb && (
+                      <Image
+                        src={thumb}
+                        alt={a.title}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                        sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw"
+                      />
+                    )}
                   </div>
-                )}
-                <div className="flex flex-1 flex-col p-3">
-                  <span
-                    className="text-[9px] font-bold uppercase tracking-wider"
-                    style={{ color: RED }}
-                  >
-                    {CHANNEL_LABEL[a.channel] ?? a.channel}
-                  </span>
-                  <h3 className="mt-1 font-serif text-sm font-semibold leading-snug
-                    text-[var(--foreground)] group-hover:text-[#E11932]
-                    transition-colors line-clamp-3">
-                    {a.title}
-                  </h3>
-                  <time className="mt-auto pt-2 text-[11px] text-[var(--muted)]"
-                    dateTime={a.published_at}>
-                    {fmt(a.published_at)}
-                  </time>
-                </div>
-              </Link>
-            ))}
+                  <div className="flex flex-1 flex-col p-3">
+                    <span
+                      className="text-[9px] font-bold uppercase tracking-wider"
+                      style={{ color: RED }}
+                    >
+                      {CHANNEL_LABEL[a.channel] ?? a.channel}
+                    </span>
+                    <h3 className="mt-1 font-serif text-sm font-semibold leading-snug
+                      text-[var(--foreground)] group-hover:text-[var(--accent-red)]
+                      transition-colors line-clamp-3">
+                      {a.title}
+                    </h3>
+                    <time className="mt-auto pt-2 text-[11px] text-[var(--muted)]"
+                      dateTime={a.published_at}>
+                      {fmt(a.published_at)}
+                    </time>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </section>
       )}
