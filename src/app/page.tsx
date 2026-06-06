@@ -15,6 +15,7 @@ import {
 } from "@/data/articles";
 import { contributors } from "@/data/contributors";
 import ContributorCard from "@/components/contributor/ContributorCard";
+import { siteConfig } from "@/lib/site";
 
 export default function BerandaPage() {
   const [activeCategory, setActiveCategory] = useState<FilterCategory>("Semua");
@@ -41,6 +42,12 @@ export default function BerandaPage() {
       <Header />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-24 pt-4">
+
+        {/* Tagline portal — di bawah nama portal, atas beranda */}
+        <div className="mb-5 border-b border-[var(--border)] pb-4 text-center">
+          <p className="text-xs italic text-[var(--muted)]">{siteConfig.tagline}</p>
+        </div>
+
         {/* Headline Utama */}
         {featured && (
           <section aria-labelledby="headline-label" className="mb-5">

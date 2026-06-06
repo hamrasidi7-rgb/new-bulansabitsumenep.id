@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Lora } from "next/font/google";
+import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/layout/Footer";
+import { siteConfig } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -16,17 +16,47 @@ const lora = Lora({
   display: "swap",
 });
 
+// ── Metadata global ────────────────────────────────────────────────────────
+// Setiap halaman dapat menimpa title/description via generateMetadata.
+// Template "%s — Bulan Sabit Sumenep" otomatis ditambahkan pada title per halaman.
+
 export const metadata: Metadata = {
-  title: "Bulan Sabit Sumenep — Kesehatan & Kemanusiaan",
-  description:
-    "Portal berita kesehatan dan aksi kemanusiaan PMI Sumenep, Madura. Divalidasi dokter dan tenaga kesehatan.",
+  // TODO: ganti URL ini jika domain sendiri sudah aktif
+  metadataBase: new URL(siteConfig.url),
+
+  title: {
+    default: `${siteConfig.displayName} — ${siteConfig.seoTitle}`,
+    template: `%s — ${siteConfig.displayName}`,
+  },
+  description: siteConfig.description,
+  keywords: [...siteConfig.keywords],
+
   openGraph: {
-    title: "Bulan Sabit Sumenep",
-    description: "Kesehatan & Kemanusiaan untuk Masyarakat Sumenep",
+    siteName: siteConfig.displayName,
+    title: `${siteConfig.displayName} — ${siteConfig.seoTitle}`,
+    description: siteConfig.description,
     locale: "id_ID",
     type: "website",
+    images: [
+      {
+        // TODO: buat file public/og-default.jpg (ukuran ideal 1200×630 px)
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.displayName} — ${siteConfig.seoTitle}`,
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.displayName} — ${siteConfig.seoTitle}`,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
   },
 };
+
+// ── Root Layout ────────────────────────────────────────────────────────────
 
 export default function RootLayout({
   children,

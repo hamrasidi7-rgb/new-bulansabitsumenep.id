@@ -13,6 +13,7 @@ import AskArticle from "@/components/ai/AskArticle";
 import WhatsAppCard from "@/components/ui/WhatsAppCard";
 import ArticleCard from "@/components/article/ArticleCard";
 import { getArticleBySlug, getRecentArticles, articles } from "@/data/articles";
+import { siteConfig } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -26,9 +27,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) return {};
+
+  // title tanpa suffix — template layout ("%s — Bulan Sabit Sumenep") menambahkannya otomatis
   return {
-    title: `${article.title} — Bulan Sabit Sumenep`,
+    title: article.title,
     description: article.excerpt,
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      type: "article",
+      publishedTime: article.publishedAt,
+      authors: [article.author.name],
+      siteName: siteConfig.displayName,
+      locale: "id_ID",
+      // heroImage sudah URL absolut (Unsplash) — langsung dipakai sebagai OG image artikel
+      images: [
+        {
+          url: article.heroImage,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.excerpt,
+      images: [article.heroImage],
+    },
   };
 }
 

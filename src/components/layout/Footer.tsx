@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { siteConfig } from "@/lib/site";
 
 // ── Konstanta ──────────────────────────────────────────────────────────────
 
@@ -63,6 +64,11 @@ export default function Footer() {
             />
           </div>
         </div>
+
+        {/* ── 1b. Tagline ───────────────────────────────────────────────── */}
+        <p className="text-center text-sm italic text-white/55 -mt-4">
+          {siteConfig.tagline}
+        </p>
 
         {/* ── 2. Ikon media sosial ───────────────────────────────────────── */}
         <div className="flex items-center gap-3" role="list" aria-label="Media sosial">
