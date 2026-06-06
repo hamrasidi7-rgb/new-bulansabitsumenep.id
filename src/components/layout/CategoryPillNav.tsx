@@ -53,7 +53,7 @@ export default function CategoryPillNav({
                 'px-3 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors',
                 active
                   ? 'bg-[var(--accent-red)] text-white'
-                  : 'bg-[#e2e2e2] text-gray-600 hover:bg-[#d0d0d0] hover:text-gray-900',
+                  : 'border border-[var(--accent-red)] text-[var(--accent-red)] hover:bg-[var(--accent-red)] hover:text-white',
               ].join(' ')}
             >
               {cat.label}
