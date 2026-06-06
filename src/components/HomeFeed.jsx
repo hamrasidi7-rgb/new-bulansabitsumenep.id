@@ -17,14 +17,15 @@ function fmt(iso) {
   })
 }
 
-// ── Kartu featured: foto besar + overlay gelap + judul
+// ── Kartu featured: foto atas + panel teks putih di bawah (gaya palingHOT)
 function FeaturedCard({ article }) {
   return (
     <Link
       href={articleHref(article)}
-      className="group block overflow-hidden rounded-xl border border-[var(--border)]"
+      className="group block overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)]"
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-[var(--surface)]">
+      {/* Foto */}
+      <div className="relative aspect-[16/9] overflow-hidden bg-[var(--surface)]">
         {article.cover_url && (
           <Image
             src={article.cover_url}
@@ -35,25 +36,25 @@ function FeaturedCard({ article }) {
             sizes="(max-width:640px) 100vw, 70vw"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-4 z-10">
+      </div>
+      {/* Panel teks di bawah foto */}
+      <div className="p-4">
+        <div className="flex items-center gap-2 mb-1.5">
           {article.subchannel && (
-            <span
-              className="inline-block rounded px-2 py-0.5 mb-2
-                text-[10px] font-bold uppercase tracking-wider text-white"
-              style={{ background: RED }}
-            >
+            <span className="text-[10px] font-bold uppercase tracking-wider"
+              style={{ color: RED }}>
               {article.subchannel}
             </span>
           )}
-          <h3 className="font-serif text-lg font-bold leading-snug text-white
-            group-hover:underline decoration-white/60 underline-offset-2 line-clamp-3">
-            {article.title}
-          </h3>
-          <time className="mt-2 block text-xs text-white/50" dateTime={article.published_at}>
+          <time className="text-[10px] text-[var(--muted)]" dateTime={article.published_at}>
             {fmt(article.published_at)}
           </time>
         </div>
+        <h3 className="font-serif text-[1.1rem] font-bold leading-snug
+          text-[var(--foreground)] group-hover:text-[#c0392b]
+          transition-colors line-clamp-3">
+          {article.title}
+        </h3>
       </div>
     </Link>
   )
@@ -118,7 +119,7 @@ function GridCard({ article }) {
         )}
       </div>
       <div className="p-3 flex flex-col flex-1">
-        <time className="text-[10px] text-[var(--muted)]" dateTime={article.published_at}>
+        <time className="text-[10px] text-[var(--muted)] mb-0.5" dateTime={article.published_at}>
           {fmt(article.published_at)}
         </time>
         {article.subchannel && (
@@ -127,9 +128,9 @@ function GridCard({ article }) {
             {article.subchannel}
           </span>
         )}
-        <h3 className="mt-1 font-serif text-sm font-semibold leading-snug
+        <h3 className="mt-1 font-serif text-[13px] font-bold leading-snug
           text-[var(--foreground)] group-hover:text-[#c0392b]
-          transition-colors line-clamp-3">
+          transition-colors line-clamp-4">
           {article.title}
         </h3>
       </div>
