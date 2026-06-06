@@ -11,6 +11,7 @@ import ArticleImage from '@/components/article/ArticleImage'
 import ShareButtons from '@/components/article/ShareButtons'
 import AskArticle from '@/components/ai/AskArticle'
 import WhatsAppCard from '@/components/ui/WhatsAppCard'
+import BannerSlot from '@/components/ui/BannerSlot'
 
 // Pemetaan category articles.ts → channel slug
 const CATEGORY_TO_CHANNEL = {
@@ -47,6 +48,17 @@ function authorInitials(name = '') {
     .slice(0, 2)
 }
 
+// Potong HTML setelah paragraf ke-N (0-indexed count of </p>)
+function splitHtmlAfterParagraph(html, n) {
+  let pos = 0
+  for (let i = 0; i < n; i++) {
+    const idx = html.indexOf('</p>', pos)
+    if (idx === -1) return [html, '']
+    pos = idx + 4
+  }
+  return [html.slice(0, pos), html.slice(pos)]
+}
+
 // Badan artikel dari data articles.ts (array paragraf)
 function LocalBody({ body, pullQuote, bodyImages }) {
   if (!body?.length) return null
@@ -59,23 +71,24 @@ function LocalBody({ body, pullQuote, bodyImages }) {
           <p className="mb-5 font-serif text-[17px] leading-[1.85] text-[var(--foreground)]">
             {para}
           </p>
-          {/* Gambar inline — muncul setelah paragraf ke-N; [column-span:all] ada di ArticleImage */}
           {bodyImages
             ?.filter((img) => img.afterParagraph === i)
             .map((img, j) => (
-              <ArticleImage
-                key={j}
-                src={img.src}
-                alt={img.alt}
-                caption={img.caption}
-                credit={img.credit}
-              />
+              <ArticleImage key={j} src={img.src} alt={img.alt}
+                caption={img.caption} credit={img.credit} />
             ))}
-          {/* Pull quote di tengah artikel */}
+          {/* Banner setelah paragraf ke-2 */}
+          {i === 1 && (
+            <BannerSlot size="strip" className="my-6 [column-span:all]" />
+          )}
+          {/* Pull quote + banner di tengah artikel */}
           {pullQuote && i === pullAfter && (
-            <blockquote className="pull-quote my-8 [column-span:all]">
-              {pullQuote}
-            </blockquote>
+            <>
+              <blockquote className="pull-quote my-8 [column-span:all]">
+                {pullQuote}
+              </blockquote>
+              <BannerSlot size="rectangle" className="mb-8 [column-span:all]" />
+            </>
           )}
         </Fragment>
       ))}
@@ -83,17 +96,36 @@ function LocalBody({ body, pullQuote, bodyImages }) {
   )
 }
 
-// Badan artikel dari Supabase (HTML mentah)
+// Badan artikel dari Supabase/SEED (HTML mentah) — banner disuntik antar segmen
 function HtmlBody({ html }) {
+  const totalParas = (html.match(/<\/p>/g) ?? []).length
+  const [seg1, rest1] = splitHtmlAfterParagraph(html, 2)
+  const [seg2, seg3] = splitHtmlAfterParagraph(rest1, Math.max(1, Math.floor(totalParas / 2) - 2))
+
+  const proseClass =
+    'article-body prose prose-lg max-w-none ' +
+    'prose-headings:font-serif prose-headings:text-[var(--foreground)] ' +
+    'prose-p:font-serif prose-p:text-[17px] prose-p:leading-[1.85] ' +
+    'prose-p:text-[var(--foreground)] prose-a:text-[var(--accent-red)]'
+
   return (
-    <article
-      className="article-body prose prose-lg mt-8 max-w-none
-        prose-headings:font-serif prose-headings:text-[var(--foreground)]
-        prose-p:font-serif prose-p:text-[17px] prose-p:leading-[1.85]
-        prose-p:text-[var(--foreground)] prose-a:text-[var(--accent-red)]"
-      dangerouslySetInnerHTML={{ __html: html }}
-      aria-label="Isi artikel"
-    />
+    <>
+      {/* Paragraf 1-2 */}
+      <article className={`${proseClass} mt-8`}
+        dangerouslySetInnerHTML={{ __html: seg1 }} aria-label="Isi artikel bagian awal" />
+      {/* Banner setelah paragraf ke-2 */}
+      <BannerSlot size="strip" className="my-6" />
+      {/* Paragraf tengah */}
+      <article className={proseClass}
+        dangerouslySetInnerHTML={{ __html: seg2 }} aria-label="Isi artikel bagian tengah" />
+      {/* Banner di tengah artikel */}
+      <BannerSlot size="rectangle" className="my-6" />
+      {/* Paragraf akhir */}
+      {seg3 && (
+        <article className={proseClass}
+          dangerouslySetInnerHTML={{ __html: seg3 }} aria-label="Isi artikel bagian akhir" />
+      )}
+    </>
   )
 }
 
@@ -287,6 +319,9 @@ export default async function ArtikelDetailPage({ params }) {
 
       <div className="px-4 pt-5">
 
+        {/* ── Banner di atas judul ──────────────────────────────────────── */}
+        <BannerSlot size="leaderboard" className="mb-5" />
+
         {/* ── Label kategori — small caps, wide tracking ────────────────── */}
         <div className="mb-3">
           <Link
@@ -349,6 +384,9 @@ export default async function ArtikelDetailPage({ params }) {
         ) : (
           <HtmlBody html={art.contentHtml ?? ''} />
         )}
+
+        {/* ── Banner setelah artikel ────────────────────────────────────── */}
+        <BannerSlot size="leaderboard" className="mt-8" />
 
         {/* ── Tags ──────────────────────────────────────────────────────── */}
         {art.tags.length > 0 && (
