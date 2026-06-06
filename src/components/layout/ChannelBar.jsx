@@ -24,8 +24,8 @@ export default function ChannelBar() {
                 'shrink-0 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors',
                 'inline-flex items-center min-h-[40px] whitespace-nowrap',
                 isActive
-                  ? 'bg-[var(--accent-red)] text-white'
-                  : 'text-[var(--muted)] hover:bg-gray-100 dark:hover:bg-white/10',
+                  ? 'bg-[var(--accent-red)] text-white border border-[var(--accent-red)]'
+                  : 'border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--accent-red)] hover:text-[var(--accent-red)]',
               ].join(' ')}
             >
               {ch.label}
