@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Fragment } from 'react'
 import { getChannelBySlug } from '@/lib/channels'
 import { getArticleBySlug, getAuthorById, getRecentArticles } from '@/data/articles'
+import { SEED_ARTICLES } from '@/lib/seedData'
 import VerifiedBadge from '@/components/article/VerifiedBadge'
 import ArticleImage from '@/components/article/ArticleImage'
 import ShareButtons from '@/components/article/ShareButtons'
@@ -188,42 +189,75 @@ export default async function ArtikelDetailPage({ params }) {
   } else {
     // ── 3. Fallback ke articles.ts ─────────────────────────────────────────
     const local = getArticleBySlug(slug)
-    if (!local) notFound()
 
-    const author = getAuthorById(local.authorId)
-    const channelSlug = CATEGORY_TO_CHANNEL[local.category] ?? 'berita-kesehatan'
-    const ch = getChannelBySlug(channelSlug)
+    if (local) {
+      const author = getAuthorById(local.authorId)
+      const channelSlug = CATEGORY_TO_CHANNEL[local.category] ?? 'berita-kesehatan'
+      const ch = getChannelBySlug(channelSlug)
 
-    art = {
-      title: local.title,
-      slug: local.slug,
-      channelSlug,
-      channelLabel: ch?.label ?? local.category,
-      channelHref: ch?.href ?? `/${channelSlug}`,
-      subchannel: null,
-      category: local.category,
-      heroUrl: local.heroImage,
-      heroCaption: local.heroCaption ?? null,
-      heroCredit: local.heroCredit ?? null,
-      authorName: author?.name ?? 'Redaksi BSS',
-      authorRole: author?.role ?? null,
-      publishedAt: local.publishedAt,
-      readingMinutes: local.readingMinutes,
-      isVerified: local.isVerified,
-      tags: local.tags,
-      contentHtml: null,
-      body: local.body,
-      pullQuote: local.pullQuote ?? null,
-      bodyImages: local.bodyImages ?? null,
+      art = {
+        title: local.title,
+        slug: local.slug,
+        channelSlug,
+        channelLabel: ch?.label ?? local.category,
+        channelHref: ch?.href ?? `/${channelSlug}`,
+        subchannel: null,
+        category: local.category,
+        heroUrl: local.heroImage,
+        heroCaption: local.heroCaption ?? null,
+        heroCredit: local.heroCredit ?? null,
+        authorName: author?.name ?? 'Redaksi BSS',
+        authorRole: author?.role ?? null,
+        publishedAt: local.publishedAt,
+        readingMinutes: local.readingMinutes,
+        isVerified: local.isVerified,
+        tags: local.tags,
+        contentHtml: null,
+        body: local.body,
+        pullQuote: local.pullQuote ?? null,
+        bodyImages: local.bodyImages ?? null,
+      }
+      related = getRecentArticles(3, slug).map((r) => ({
+        id: r.slug,
+        title: r.title,
+        slug: r.slug,
+        cover_url: r.thumbnailImage,
+        published_at: r.publishedAt,
+      }))
+      bodyKind = 'local'
+    } else {
+      // ── 4. Fallback ke SEED_ARTICLES ──────────────────────────────────────
+      const seed = SEED_ARTICLES.find(
+        (a) => a.slug === slug && a.channel !== 'dokter-menulis'
+      )
+      if (!seed) notFound()
+
+      const ch = getChannelBySlug(seed.channel)
+      art = {
+        title: seed.title,
+        slug: seed.slug,
+        channelSlug: seed.channel,
+        channelLabel: ch?.label ?? seed.channel,
+        channelHref: ch?.href ?? `/${seed.channel}`,
+        subchannel: seed.subchannel ?? null,
+        category: null,
+        heroUrl: seed.cover_url ?? null,
+        heroCaption: null,
+        heroCredit: null,
+        authorName: seed.author_name ?? 'Redaksi BSS',
+        authorRole: null,
+        publishedAt: seed.published_at,
+        readingMinutes: estimateMinutes(seed.content ?? ''),
+        isVerified: false,
+        tags: seed.tags ?? [],
+        contentHtml: seed.content ?? '',
+        body: null,
+        pullQuote: null,
+        bodyImages: null,
+      }
+      related = []
+      bodyKind = 'html'
     }
-    related = getRecentArticles(3, slug).map((r) => ({
-      id: r.slug,
-      title: r.title,
-      slug: r.slug,
-      cover_url: r.thumbnailImage,
-      published_at: r.publishedAt,
-    }))
-    bodyKind = 'local'
   }
 
   const articleText =

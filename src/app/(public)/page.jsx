@@ -47,7 +47,7 @@ async function fetchLatestArticles(limit = 24) {
   if (data && data.length > 0) return data
   // Gabungkan articles.ts + SEED_ARTICLES, urutkan terbaru dulu
   const combined = [...normalizeLocalArticles(), ...SEED_ARTICLES]
-    .sort((a, b) => new Date(b.published_at) - new Date(a.published_at))
+    .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
     .slice(0, limit)
   return combined
 }
