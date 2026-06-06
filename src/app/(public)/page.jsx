@@ -21,7 +21,7 @@ const CATEGORY_TO_CHANNEL = {
   'Gizi':             'berita-kesehatan',
 }
 
-// Normalisasi articles.ts ke format SEED_ARTICLES agar bisa ditampilkan di HomeFeed
+// Normalisasi articles.ts ke format SEED_ARTICLES
 function normalizeLocalArticles() {
   return localArticles.map((a) => ({
     id:           a.slug,
@@ -30,9 +30,11 @@ function normalizeLocalArticles() {
     channel:      CATEGORY_TO_CHANNEL[a.category] ?? 'berita-kesehatan',
     subchannel:   null,
     excerpt:      a.excerpt,
-    cover_url:    a.thumbnailImage,
+    cover_url:    a.heroImage,       // gambar besar untuk slide hero
+    thumb_url:    a.thumbnailImage,  // thumbnail untuk grid kecil
     author_name:  getAuthorById(a.authorId)?.name ?? 'Redaksi BSS',
     published_at: a.publishedAt,
+    is_verified:  a.isVerified,
   }))
 }
 
@@ -54,11 +56,15 @@ async function fetchLatestArticles(limit = 24) {
 export default async function HomePage() {
   const articles = await fetchLatestArticles(20)
 
+  // Pisah untuk HeroSection — server fetch, tidak perlu client fetch ulang
+  const heroSlides = articles.slice(0, 3)
+  const heroGrid   = articles.slice(3, 7)
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 space-y-12">
 
-      {/* Hero carousel + sidebar + berita terbaru */}
-      <HeroSection />
+      {/* Hero carousel + grid + berita terbaru (data dari server) */}
+      <HeroSection slides={heroSlides} grid={heroGrid} />
 
       {/* Artikel per kanal: Berita Kesehatan, Aksi Kemanusiaan, Dokter Menulis */}
       <HomeFeed articles={articles} />
