@@ -31,6 +31,7 @@ export default function CategoryPillNav({
     if (activeCategory !== undefined) {
       return activeCategory === (cat.slug ?? cat.href)
     }
+    if (cat.href === '/') return pathname === '/'
     return pathname === cat.href || pathname.startsWith(cat.href + '/')
   }
 
