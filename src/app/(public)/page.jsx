@@ -7,6 +7,9 @@ import GallerySection from '@/components/GallerySection'
 import WhatsAppCard from '@/components/ui/WhatsAppCard'
 import HomeFeed from '@/components/HomeFeed'
 
+// Cache homepage 5 menit — Supabase tidak dipanggil setiap request
+export const revalidate = 300
+
 export const metadata = {
   title: 'Bulan Sabit Sumenep — Portal Kesehatan & Kemanusiaan',
   description:

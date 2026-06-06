@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { getChannelBySlug, subchannelHref } from '@/lib/channels'
 import { fmtDate as formatDate } from '@/lib/fmt'
 
+export const revalidate = 300
+
 export const metadata = {
   title: 'Berita Kesehatan',
   description:

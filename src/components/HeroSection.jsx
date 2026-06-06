@@ -61,7 +61,9 @@ export default function HeroSection({ slides = [], grid = [] }) {
                         src={slide.cover_url}
                         alt={slide.title}
                         fill
-                        priority={i === 0}
+                        preload={i === 0}
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={i === 0 ? 'high' : 'auto'}
                         className="object-cover"
                         sizes="(max-width:640px) 100vw, 640px"
                       />
@@ -131,7 +133,10 @@ export default function HeroSection({ slides = [], grid = [] }) {
                     <Image
                       src={slide.cover_url}
                       alt={slide.title}
-                      fill priority={i === 0}
+                      fill
+                      preload={i === 0}
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      fetchPriority={i === 0 ? 'high' : 'auto'}
                       className="object-cover"
                       sizes="(max-width:1024px) 100vw, 800px"
                     />

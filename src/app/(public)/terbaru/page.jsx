@@ -6,6 +6,8 @@ import Link from 'next/link'
 import SectionHeader from '@/components/ui/SectionHeader'
 import { fmtDate as fmt } from '@/lib/fmt'
 
+export const revalidate = 300
+
 export const metadata = {
   title: 'Berita Terbaru — Bulan Sabit Sumenep',
   description: 'Semua berita terbaru dari Bulan Sabit Sumenep: kesehatan, kemanusiaan, dan edukasi.',
