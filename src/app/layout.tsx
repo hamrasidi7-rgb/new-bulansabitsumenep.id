@@ -67,8 +67,12 @@ export default function RootLayout({
     <html
       lang="id"
       className={`${inter.variable} ${lora.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)] font-sans">
+      <body
+        className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)] font-sans"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
