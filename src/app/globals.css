@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafaf8;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --border: #e5e5e0;
+  --muted: #6b7280;
+  --accent-red: #dc2626;
+  --accent-blue: #2563eb;
+  --accent-green: #16a34a;
+  --serif: "Georgia", "Times New Roman", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111110;
+    --foreground: #f0ede8;
+    --card: #1c1c1a;
+    --border: #2d2d2a;
+    --muted: #9ca3af;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-pmi-red: var(--accent-red);
+  --color-ai-blue: var(--accent-blue);
+  --color-wa-green: var(--accent-green);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-lora);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Magazine drop cap */
+.article-body p:first-of-type::first-letter {
+  font-family: var(--serif);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 0.85;
+  float: left;
+  margin-right: 0.1em;
+  margin-top: 0.05em;
+  color: var(--accent-red);
+}
+
+/* Pull quote */
+.pull-quote {
+  border-left: 4px solid var(--accent-red);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Touch targets */
+button, a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Hide scrollbar for horizontal scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
