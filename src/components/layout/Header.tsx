@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -8,51 +10,66 @@ interface HeaderProps {
 export default function Header({ showSearch = true }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-2">
+      <div className="mx-auto flex max-w-2xl items-center justify-between px-3 py-1.5">
 
-        {/* Logo kiri: BSM */}
+        {/* Kiri: ikon BSM (crop simbol) + teks */}
         <Link
           href="/"
-          className="flex items-center gap-3 min-h-[44px]"
+          className="flex items-center gap-2 min-h-[44px]"
           aria-label="Beranda Bulan Sabit Sumenep"
         >
-          <div className="relative h-10 w-[130px] shrink-0">
+          {/* Container kecil — crop bagian kiri logo (simbol bulan sabit + hati) */}
+          <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg">
             <Image
               src="/logo-bulansabitsumenep.jpg"
-              alt="Bulan Sabit Merah Sumenep"
+              alt="Logo Bulan Sabit Sumenep"
               fill
-              className="object-contain object-left"
-              sizes="130px"
+              className="object-cover object-left"
+              sizes="36px"
               priority
             />
           </div>
+          <div className="leading-tight">
+            <span className="block text-[13px] font-bold lowercase tracking-tight text-[var(--foreground)]">
+              bulansabit
+            </span>
+            <span className="block text-[11px] font-semibold lowercase text-[var(--accent-red)] -mt-0.5">
+              sumenep
+            </span>
+          </div>
         </Link>
 
-        {/* Kanan: logo PMI + search */}
-        <div className="flex items-center gap-2">
-          {/* Logo PMI — badge afiliasi */}
-          <div className="relative h-8 w-[72px] shrink-0 opacity-80">
+        {/* Kanan: logo PMI + search + menu */}
+        <div className="flex items-center gap-0.5">
+          {/* Logo PMI — tampil penuh (sudah ada teks "Palang Merah Indonesia" di gambar) */}
+          <div className="relative h-8 w-[112px] shrink-0">
             <Image
               src="/logo-pmi.jpg"
               alt="Palang Merah Indonesia"
               fill
               className="object-contain object-right"
-              sizes="72px"
+              sizes="112px"
             />
           </div>
-
-          {/* Divider */}
-          <span className="h-6 w-px bg-[var(--border)]" aria-hidden="true" />
 
           {showSearch && (
             <Link
               href="/cari"
               aria-label="Cari artikel"
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--border)] transition"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
             >
               <SearchIcon />
             </Link>
           )}
+
+          {/* Hamburger menu — TODO: sambungkan ke sidebar/drawer */}
+          <button
+            aria-label="Buka menu navigasi"
+            onClick={() => console.log("[Menu] TODO: buka drawer/sidebar")}
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
+          >
+            <MenuIcon />
+          </button>
         </div>
       </div>
     </header>
@@ -73,6 +90,23 @@ function SearchIcon() {
     >
       <circle cx="8.5" cy="8.5" r="5.5" />
       <path d="M13 13l4 4" />
+    </svg>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M3 5h14M3 10h14M3 15h14" />
     </svg>
   );
 }
