@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Lightbox from './Lightbox'
+import { fmtDate } from '@/lib/fmt'
 
 /**
  * Detail album galeri: grid foto masonry + lightbox.
@@ -14,9 +15,7 @@ import Lightbox from './Lightbox'
 export default function GalleryDetail({ gallery, photos }) {
   const [lightboxIndex, setLightboxIndex] = useState(null)
 
-  const formatDate = (d) => d
-    ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-    : null
+  const formatDate = (d) => fmtDate(d) || null
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-6">

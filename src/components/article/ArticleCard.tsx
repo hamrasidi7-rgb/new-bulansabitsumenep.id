@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type Article, getAuthorById } from "@/data/articles";
+import { fmtDate } from "@/lib/fmt";
 import VerifiedBadge from "./VerifiedBadge";
 import ListenButton from "@/components/ai/ListenButton";
 
@@ -9,13 +10,6 @@ interface ArticleCardProps {
   variant?: "featured" | "list" | "grid";
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
 
 export default function ArticleCard({ article, variant = "list" }: ArticleCardProps) {
   if (variant === "featured") {
@@ -52,7 +46,7 @@ export default function ArticleCard({ article, variant = "list" }: ArticleCardPr
             <div className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
               <span className="font-medium text-[var(--foreground)]">{getAuthorById(article.authorId)?.name}</span>
               <span>·</span>
-              <span>{formatDate(article.publishedAt)}</span>
+              <span>{fmtDate(article.publishedAt)}</span>
             </div>
             {article.hasAudio && (
               <ListenButton

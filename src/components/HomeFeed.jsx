@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import SectionHeader from '@/components/ui/SectionHeader'
 import BannerSlot from '@/components/ui/BannerSlot'
+import { fmtDate as fmt } from '@/lib/fmt'
 
 const RED = '#c0392b'
 
@@ -11,11 +12,6 @@ function articleHref(a) {
     : `/artikel/${a.slug}`
 }
 
-function fmt(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  })
-}
 
 // ── Kartu featured: foto atas + panel teks putih di bawah (gaya palingHOT)
 function FeaturedCard({ article }) {

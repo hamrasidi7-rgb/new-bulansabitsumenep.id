@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
 import { SEED_GALLERIES } from '@/lib/seedData'
 import { GALLERY_CATEGORIES } from '@/lib/channels'
+import { fmtDate } from '@/lib/fmt'
 
 /**
  * Indeks semua album galeri dengan filter kategori.
@@ -57,9 +58,7 @@ export default function GalleryIndex() {
     load()
   }, [activeCategory])
 
-  const formatDate = (d) => d
-    ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-    : null
+  const formatDate = (d) => fmtDate(d) || null
 
   return (
     <div>

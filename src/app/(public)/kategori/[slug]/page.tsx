@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { NAV_CATEGORIES } from '@/data/categories'
 import { supabase } from '@/lib/supabaseClient'
 import { SEED_ARTICLES } from '@/lib/seedData'
+import { fmtDate as formatDate } from '@/lib/fmt'
 import { notFound } from 'next/navigation'
 
 const CHANNEL_FOR_CATEGORY: Record<string, string[]> = {
@@ -33,11 +34,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: cat.label }
 }
 
-function fmt(iso: string) {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  })
-}
 
 export default async function KategoriPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -99,7 +95,7 @@ export default async function KategoriPage({ params }: { params: Promise<{ slug:
                   <p className="mt-1 text-sm text-[var(--muted)] line-clamp-2">{a.excerpt}</p>
                 )}
                 <time className="mt-1 block text-xs text-[var(--muted)]" dateTime={a.published_at}>
-                  {fmt(a.published_at)}
+                  {formatDate(a.published_at)}
                 </time>
               </div>
               {a.cover_url && (

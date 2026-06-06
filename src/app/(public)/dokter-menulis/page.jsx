@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { getSeedArticles } from '@/lib/seedData'
+import { fmtDate as formatDate } from '@/lib/fmt'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -19,9 +20,6 @@ async function fetchArticles() {
   return getSeedArticles('dokter-menulis')
 }
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-}
 
 export default async function DokterMenulisPage() {
   const articles = await fetchArticles()

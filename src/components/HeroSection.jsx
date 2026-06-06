@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import VerifiedBadge from '@/components/article/VerifiedBadge'
 import SectionHeader from '@/components/ui/SectionHeader'
+import { fmtDate as fmt } from '@/lib/fmt'
 
 const CHANNEL_LABEL = {
   'berita-kesehatan': 'Berita Kesehatan',
@@ -18,11 +19,6 @@ const RED      = '#c0392b'
 const TITLE_BG = '#1c1814'
 const INTERVAL = 5500
 
-function fmt(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  })
-}
 
 function articleHref(a) {
   return a.channel === 'dokter-menulis'

@@ -4,6 +4,7 @@ import { articles as localArticles, getAuthorById } from '@/data/articles'
 import Image from 'next/image'
 import Link from 'next/link'
 import SectionHeader from '@/components/ui/SectionHeader'
+import { fmtDate as fmt } from '@/lib/fmt'
 
 export const metadata = {
   title: 'Berita Terbaru — Bulan Sabit Sumenep',
@@ -51,11 +52,6 @@ async function fetchAll(limit = 30) {
     .slice(0, limit)
 }
 
-function fmt(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  })
-}
 
 function articleHref(a) {
   return a.channel === 'dokter-menulis'

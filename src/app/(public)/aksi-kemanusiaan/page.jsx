@@ -3,6 +3,7 @@ import { getSeedArticles, getSeedSubchannelCounts } from '@/lib/seedData'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getChannelBySlug, subchannelHref } from '@/lib/channels'
+import { fmtDate as formatDate } from '@/lib/fmt'
 
 export const metadata = {
   title: 'Aksi Kemanusiaan',
@@ -37,11 +38,6 @@ async function fetchRecent() {
   return getSeedArticles('aksi-kemanusiaan').slice(0, 6)
 }
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  })
-}
 
 // Warna latar per sub-kanal agar kartu lebih informatif
 const SUBCHANNEL_ACCENT = {

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getSubchannelInfo } from '@/lib/channels'
+import { fmtDate as formatDate } from '@/lib/fmt'
 
 export async function generateMetadata({ params }) {
   const { subkanal } = await params
@@ -27,9 +28,6 @@ async function fetchArticles(subkanal) {
   return getSeedArticles('aksi-kemanusiaan', subkanal)
 }
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-}
 
 export default async function SubkanalAksiPage({ params }) {
   const { subkanal } = await params

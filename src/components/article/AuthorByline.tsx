@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { AuthorProfile } from "@/data/articles";
+import { fmtDate } from "@/lib/fmt";
 
 function getInitials(name: string): string {
   return name
@@ -14,13 +15,6 @@ function getInitials(name: string): string {
     .join("");
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
 
 interface Props {
   author: AuthorProfile;
@@ -63,7 +57,7 @@ export default function AuthorByline({ author, date, readTime }: Props) {
         <p className="mt-0.5 text-xs leading-tight text-[var(--muted)]">
           {author.role}
           <span className="mx-1.5 select-none opacity-40">•</span>
-          <time dateTime={date}>{formatDate(date)}</time>
+          <time dateTime={date}>{fmtDate(date)}</time>
           <span className="mx-1.5 select-none opacity-40">•</span>
           {readTime} mnt baca
         </p>

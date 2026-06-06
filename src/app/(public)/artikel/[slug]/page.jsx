@@ -6,6 +6,7 @@ import { Fragment } from 'react'
 import { getChannelBySlug } from '@/lib/channels'
 import { getArticleBySlug, getAuthorById, getRecentArticles } from '@/data/articles'
 import { SEED_ARTICLES } from '@/lib/seedData'
+import { fmtDate } from '@/lib/fmt'
 import VerifiedBadge from '@/components/article/VerifiedBadge'
 import ArticleImage from '@/components/article/ArticleImage'
 import ShareButtons from '@/components/article/ShareButtons'
@@ -62,11 +63,7 @@ function estimateMinutes(html = '') {
   return Math.max(1, Math.round(words / 200))
 }
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-  })
-}
+const formatDate = (iso) => fmtDate(iso, true)
 
 function authorInitials(name = '') {
   return name
