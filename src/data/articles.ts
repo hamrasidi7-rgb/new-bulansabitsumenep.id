@@ -178,6 +178,15 @@ export const articles: Article[] = [
     heroCaption: "Tim medis PMI Sumenep memeriksa kesehatan warga di Kepulauan Kangean.",
     heroCredit: "PMI Sumenep",
     thumbnailImage: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 1,
+        src: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80",
+        alt: "Petugas memeriksa tekanan darah warga lanjut usia di bakti kesehatan Kangean",
+        caption: "Warga lanjut usia mendapatkan pemeriksaan tekanan darah dan konsultasi penyakit kronis secara gratis — layanan yang selama ini hanya bisa diakses dengan naik kapal ke daratan.",
+        credit: "PMI Sumenep",
+      },
+    ],
   },
   {
     slug: "mengenal-oralit-rumahan",
@@ -201,7 +210,18 @@ export const articles: Article[] = [
     hasAudio: true,
     isVerified: true,
     heroImage: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1200&q=80",
+    heroCaption: "Ilustrasi penanganan awal diare dengan pemberian cairan oralit pada anak sebelum dibawa ke fasilitas kesehatan.",
+    heroCredit: "Freepik",
     thumbnailImage: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
+        alt: "Ibu memberikan oralit kepada anak kecil yang mengalami diare",
+        caption: "Pemberian oralit sedikit-sedikit setiap 5–10 menit lebih efektif mencegah dehidrasi dibanding langsung minum banyak sekaligus.",
+        credit: "Freepik",
+      },
+    ],
   },
   {
     slug: "manfaat-kelor-gizi-ibu-hamil",
@@ -223,7 +243,18 @@ export const articles: Article[] = [
     hasAudio: true,
     isVerified: true,
     heroImage: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80",
+    heroCaption: "Daun kelor yang tumbuh di pekarangan rumah menyimpan kandungan gizi tinggi, terutama zat besi dan kalsium untuk ibu hamil.",
+    heroCredit: "Unsplash",
     thumbnailImage: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80",
+        alt: "Sayur bening daun kelor yang mudah dimasak oleh ibu hamil di kepulauan",
+        caption: "Sayur bening kelor yang dimasak sederhana tetap mempertahankan kandungan vitamin dan mineralnya untuk ibu hamil dan menyusui.",
+        credit: "Program Anak Pulau Sehat",
+      },
+    ],
   },
   {
     slug: "donor-darah-pmi-sumenep",
@@ -245,7 +276,18 @@ export const articles: Article[] = [
     hasAudio: false,
     isVerified: false,
     heroImage: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1200&q=80",
+    heroCaption: "Pendonor darah sukarela di Unit Donor Darah PMI Sumenep. Satu kantong darah dapat dipilah menjadi tiga komponen penyelamat nyawa.",
+    heroCredit: "PMI Sumenep",
     thumbnailImage: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800&q=80",
+        alt: "Petugas UDD PMI Sumenep memproses kantong darah donor",
+        caption: "Kantong darah yang sudah diambil segera diproses di laboratorium UDD PMI Sumenep untuk dipisahkan menjadi sel darah merah, trombosit, dan plasma.",
+        credit: "PMI Sumenep",
+      },
+    ],
   },
   {
     slug: "hipertensi-garam-masakan-madura",
@@ -269,7 +311,18 @@ export const articles: Article[] = [
     hasAudio: true,
     isVerified: true,
     heroImage: "https://images.unsplash.com/photo-1547592180-85f173990554?w=1200&q=80",
+    heroCaption: "Masakan khas Madura yang kaya rasa dan bumbu — nikmat, namun perlu dikontrol kadar garamnya untuk menjaga tekanan darah.",
+    heroCredit: "Unsplash",
     thumbnailImage: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 1,
+        src: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&q=80",
+        alt: "Pemeriksaan tekanan darah sebagai langkah pencegahan hipertensi komplikasi",
+        caption: "Pemeriksaan tekanan darah rutin sangat dianjurkan, terutama bagi warga yang gemar mengonsumsi makanan tinggi garam dan santan.",
+        credit: "PMI Sumenep",
+      },
+    ],
   },
   {
     slug: "posyandu-remaja-sumenep",
@@ -291,7 +344,18 @@ export const articles: Article[] = [
     hasAudio: false,
     isVerified: true,
     heroImage: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80",
+    heroCaption: "Remaja Sumenep mengikuti kegiatan Posyandu Remaja — ruang aman untuk berkonsultasi kesehatan bersama teman sebaya.",
+    heroCredit: "Dinkes Sumenep",
     thumbnailImage: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&q=80",
+        alt: "Konselor sebaya Posyandu Remaja memberikan penyuluhan kesehatan reproduksi kepada pelajar",
+        caption: "Konselor sebaya yang telah dilatih Dinkes menjadi kunci keberhasilan Posyandu Remaja — remaja lebih nyaman bicara dengan teman seusianya.",
+        credit: "Dinkes Sumenep",
+      },
+    ],
   },
   {
     slug: "tbc-sumenep-kasus-meningkat",
@@ -318,6 +382,15 @@ export const articles: Article[] = [
     heroCaption: "Petugas puskesmas melakukan pemeriksaan dahak untuk deteksi dini tuberkulosis.",
     heroCredit: "Dinkes Sumenep",
     thumbnailImage: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+        alt: "Relawan PMI Sumenep melakukan kunjungan rumah untuk memantau kepatuhan minum obat TBC",
+        caption: "Relawan PMI Sumenep yang bertugas sebagai Pengawas Minum Obat (PMO) mengunjungi rumah pasien TBC untuk memastikan obat diminum rutin selama 6 bulan.",
+        credit: "PMI Sumenep",
+      },
+    ],
   },
   {
     slug: "bpjs-layanan-kepulauan-sumenep",
@@ -344,6 +417,15 @@ export const articles: Article[] = [
     heroCaption: "Ilustrasi layanan kesehatan di kawasan kepulauan terpencil.",
     heroCredit: "Unsplash",
     thumbnailImage: "https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80",
+        alt: "Dokter memeriksa pasien di klinik pratama terapung BPJS yang menjangkau kepulauan Sumenep",
+        caption: "Klinik terapung dilengkapi ruang pemeriksaan, apotek, dan alat diagnostik dasar yang memungkinkan penanganan penyakit kronis langsung di pulau.",
+        credit: "Dinas Kesehatan Sumenep",
+      },
+    ],
   },
   {
     slug: "diabetes-jantung-sumenep-penyakit-tidak-menular",
@@ -370,6 +452,15 @@ export const articles: Article[] = [
     heroCaption: "Pemeriksaan kadar gula darah di Posbindu PTM sebagai langkah deteksi dini diabetes.",
     heroCredit: "Dinkes Sumenep",
     thumbnailImage: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80",
+        alt: "Warga mengikuti skrining gula darah dan tekanan darah gratis di Posbindu PTM Sumenep",
+        caption: "Program Posbindu PTM kini hadir di 300 titik di Sumenep — warga usia 15 tahun ke atas bisa memeriksakan gula darah, tekanan darah, dan kolesterol setiap bulan secara gratis.",
+        credit: "Dinkes Sumenep",
+      },
+    ],
   },
 ];
 
