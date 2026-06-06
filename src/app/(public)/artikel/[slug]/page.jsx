@@ -292,31 +292,6 @@ export default async function ArtikelDetailPage({ params }) {
 
   return (
     <div className="mx-auto w-full max-w-2xl pb-24 pt-0">
-
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      {art.heroUrl && (
-        <div className="relative aspect-[16/9] w-full overflow-hidden sm:rounded-b-2xl">
-          <Image
-            src={art.heroUrl}
-            alt={art.title}
-            fill
-            className="object-cover"
-            sizes="(max-width:640px) 100vw, 640px"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        </div>
-      )}
-
-      {/* ── Keterangan foto hero (italic kecil, hanya jika ada) ───────────── */}
-      {(art.heroCaption || art.heroCredit) && (
-        <p className="px-4 pt-1.5 text-[11px] italic text-[var(--muted)]">
-          {art.heroCaption}
-          {art.heroCaption && art.heroCredit && ' '}
-          {art.heroCredit && `(Foto: ${art.heroCredit})`}
-        </p>
-      )}
-
       <div className="px-4 pt-5">
 
         {/* ── Banner di atas judul ──────────────────────────────────────── */}
@@ -332,7 +307,7 @@ export default async function ArtikelDetailPage({ params }) {
           </Link>
         </div>
 
-        {/* ── Judul — tampil SEKALI ─────────────────────────────────────── */}
+        {/* ── Judul ─────────────────────────────────────────────────────── */}
         <h1 className="font-serif text-2xl font-bold leading-tight text-[var(--foreground)] sm:text-3xl">
           {art.title}
         </h1>
@@ -344,13 +319,8 @@ export default async function ArtikelDetailPage({ params }) {
           </div>
         )}
 
-        {/* ── Byline: avatar + nama + jabatan + tanggal + waktu baca ────── */}
+        {/* ── Byline: avatar + nama + tanggal + waktu baca ─────────────── */}
         <div className="mt-4 flex items-center gap-3 border-b border-[var(--border)] pb-4">
-          {/*
-           * Avatar initials — ketika foto asli tersedia, ganti div ini dengan:
-           * <Image src={author.avatar} alt={art.authorName} width={40} height={40}
-           *   className="h-10 w-10 rounded-full object-cover shrink-0" />
-           */}
           <div
             aria-hidden="true"
             className="flex h-10 w-10 shrink-0 items-center justify-center
@@ -373,6 +343,29 @@ export default async function ArtikelDetailPage({ params }) {
             <span>{art.readingMinutes} mnt baca</span>
           </div>
         </div>
+
+        {/* ── Foto utama — di bawah judul & byline ─────────────────────── */}
+        {art.heroUrl && (
+          <div className="mt-5 overflow-hidden rounded-xl">
+            <div className="relative aspect-[16/9] w-full">
+              <Image
+                src={art.heroUrl}
+                alt={art.title}
+                fill
+                className="object-cover"
+                sizes="(max-width:640px) 100vw, 640px"
+                priority
+              />
+            </div>
+          </div>
+        )}
+        {(art.heroCaption || art.heroCredit) && (
+          <p className="mt-1.5 text-[11px] italic text-[var(--muted)]">
+            {art.heroCaption}
+            {art.heroCaption && art.heroCredit && ' '}
+            {art.heroCredit && `(Foto: ${art.heroCredit})`}
+          </p>
+        )}
 
         {/* ── Badan artikel ─────────────────────────────────────────────── */}
         {bodyKind === 'local' ? (
