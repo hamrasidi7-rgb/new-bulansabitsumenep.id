@@ -67,7 +67,7 @@ export default function HeroSection({ slides = [], grid = [] }) {
                         fill
                         priority={i === 0}
                         className="object-cover"
-                        sizes="100vw"
+                        sizes="(max-width:640px) 100vw, 640px"
                       />
                     )}
                     <div className="absolute top-3 left-3 flex items-center gap-2">
@@ -137,7 +137,7 @@ export default function HeroSection({ slides = [], grid = [] }) {
                       alt={slide.title}
                       fill priority={i === 0}
                       className="object-cover"
-                      sizes="62vw"
+                      sizes="(max-width:1024px) 100vw, 800px"
                     />
                   </div>
                 )}

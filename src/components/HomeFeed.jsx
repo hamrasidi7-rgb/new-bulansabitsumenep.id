@@ -33,7 +33,7 @@ function FeaturedCard({ article }) {
             fill
             priority
             className="object-cover transition duration-500 group-hover:scale-105"
-            sizes="(max-width:640px) 100vw, 70vw"
+            sizes="(max-width:640px) 100vw, (max-width:1024px) 70vw, 800px"
           />
         )}
       </div>
