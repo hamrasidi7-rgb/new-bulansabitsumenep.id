@@ -115,15 +115,12 @@ export default function HeroSection() {
           </div>
         </div>
         {/* Desktop skeleton */}
-        <div className="hidden md:block overflow-hidden rounded-2xl border border-[var(--border)]">
-          <div className="grid grid-cols-[1.6fr_1fr]">
-            <div className="h-[480px] animate-pulse bg-[var(--surface)]" />
-            <div className="grid grid-cols-2">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-[240px] animate-pulse bg-[var(--border)]
-                  border border-[var(--surface)]" />
-              ))}
-            </div>
+        <div className="hidden md:flex gap-3 h-[480px]">
+          <div className="flex-[1.6] animate-pulse rounded-2xl bg-[var(--surface)]" />
+          <div className="flex-1 grid grid-cols-2 gap-2">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="animate-pulse rounded-xl bg-[var(--border)]" />
+            ))}
           </div>
         </div>
       </div>
@@ -258,11 +255,10 @@ export default function HeroSection() {
       {/* ════════════════════════════════════════════════════════════════════
           DESKTOP: Carousel kiri + Grid 2×2 kanan
           ════════════════════════════════════════════════════════════════════ */}
-      <div className="hidden md:grid grid-cols-[1.6fr_1fr] overflow-hidden
-        rounded-2xl border border-[var(--border)]">
+      <div className="hidden md:flex gap-3 items-start">
 
         {/* Carousel foto besar */}
-        <div className="relative h-[480px] overflow-hidden bg-[var(--foreground)]">
+        <div className="relative flex-[1.6] h-[480px] overflow-hidden rounded-2xl bg-[var(--foreground)]">
           {slides.map((slide, i) => {
             const isActive = i === active
             return (
@@ -332,40 +328,32 @@ export default function HeroSection() {
           )}
         </div>
 
-        {/* Grid 2×2 foto */}
-        <div className="grid grid-cols-2 border-l border-[var(--border)]">
-          {grid.slice(0, 4).map((a, i) => {
+        {/* Grid 2×2 foto — kartu individual rounded seperti ngopibareng */}
+        <div className="grid grid-cols-2 gap-2 p-2 bg-[var(--background)]
+          border-l border-[var(--border)]">
+          {grid.slice(0, 4).map((a) => {
             const img = a.thumb_url ?? a.cover_url
             return (
               <Link
                 key={a.id}
                 href={articleHref(a)}
-                className={[
-                  'group relative overflow-hidden h-[240px]',
-                  i < 2 ? 'border-b border-[var(--border)]' : '',
-                  i % 2 === 0 ? 'border-r border-[var(--border)]' : '',
-                ].join(' ')}
+                className="group relative overflow-hidden rounded-xl bg-[var(--foreground)]"
               >
-                {img ? (
+                {img && (
                   <Image src={img} alt={a.title} fill
                     className="object-cover transition duration-500 group-hover:scale-105"
-                    sizes="25vw" />
-                ) : (
-                  <div className="absolute inset-0 bg-[var(--surface)]" />
+                    sizes="20vw" />
                 )}
+                {/* Gradient kuat agar konsisten di semua foto terang/gelap */}
                 <div className="absolute inset-0 bg-gradient-to-t
-                  from-black/85 via-black/25 to-transparent" />
+                  from-black/90 via-black/50 to-black/15" />
                 <div className="absolute inset-x-0 bottom-0 p-3 z-10">
-                  <span className="text-[9px] font-bold uppercase tracking-wider"
-                    style={{ color: '#ff9090' }}>
-                    {CHANNEL_LABEL[a.channel] ?? a.channel}
-                  </span>
-                  <h3 className="mt-0.5 font-serif text-[13px] font-semibold
+                  <h3 className="font-serif text-[13px] font-semibold
                     leading-snug text-white line-clamp-3
                     group-hover:underline decoration-white/60 underline-offset-2">
                     {a.title}
                   </h3>
-                  <time className="mt-1 block text-[10px] text-white/45"
+                  <time className="mt-1 block text-[10px] text-white/50"
                     dateTime={a.published_at}>
                     {fmt(a.published_at)}
                   </time>
