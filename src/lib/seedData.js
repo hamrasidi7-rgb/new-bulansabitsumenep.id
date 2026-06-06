@@ -146,6 +146,36 @@ export const SEED_ARTICLES = [
     is_published: true,
     published_at: '2026-03-20T08:00:00.000Z',
   },
+  {
+    id: 'seed-bk-09',
+    title: 'Stok Darah Golongan O di Sumenep Menipis Jelang Idul Adha',
+    slug: 'stok-darah-golongan-o-menipis-jelang-idul-adha',
+    channel: 'berita-kesehatan',
+    subchannel: 'layanan-kesehatan',
+    excerpt: 'PMI Kabupaten Sumenep mencatat penurunan stok darah golongan O hingga 40% dalam dua pekan terakhir. Masyarakat diimbau segera mendonorkan darah di UDD PMI Sumenep.',
+    content:
+      '<p>PMI Kabupaten Sumenep mencatat penurunan stok darah golongan O hingga 40% dalam dua pekan terakhir, bertepatan dengan meningkatnya kebutuhan darah menjelang Idul Adha. Unit Donor Darah (UDD) PMI Sumenep kini hanya memiliki cadangan untuk dua hari ke depan.</p><p>Kepala UDD PMI Sumenep mengimbau masyarakat yang memenuhi syarat untuk segera mendonorkan darah. "Golongan O adalah golongan universal yang paling banyak dibutuhkan untuk transfusi darurat. Kami membutuhkan setidaknya 80 kantong per hari," ujarnya.</p><p>Masyarakat yang ingin berdonor dapat langsung datang ke UDD PMI Sumenep di Jl. Trunojoyo, buka setiap Senin–Sabtu pukul 08.00–14.00 WIB, atau menghubungi WhatsApp PMI untuk layanan jemput pendonor kelompok minimal 5 orang.</p>',
+    cover_url: 'https://placehold.co/600x400/c0392b/ffffff?text=Berita+Kesehatan',
+    author_name: 'Redaksi Bulan Sabit',
+    tags: ['donor-darah', 'stok-darah', 'pmi', 'idul-adha'],
+    is_published: true,
+    published_at: '2026-06-04T08:00:00.000Z',
+  },
+  {
+    id: 'seed-bk-10',
+    title: 'Kenali Tekanan Darah Ideal Sebelum Mendonor, Ini Penjelasannya',
+    slug: 'tekanan-darah-ideal-sebelum-donor',
+    channel: 'berita-kesehatan',
+    subchannel: 'edukasi-kesehatan',
+    excerpt: 'Calon pendonor wajib memiliki tekanan darah dalam rentang aman. Pemeriksaan awal dilakukan untuk memastikan keselamatan pendonor dan kualitas darah.',
+    content:
+      '<p>Calon pendonor darah wajib memiliki tekanan darah dalam rentang aman sebelum diperbolehkan mendonorkan darahnya. Pemeriksaan tekanan darah merupakan bagian dari seleksi awal yang dilakukan petugas UDD PMI Sumenep untuk memastikan keselamatan pendonor dan kualitas darah yang disumbangkan.</p><p>Standar tekanan darah yang diterima adalah sistolik antara 100–160 mmHg dan diastolik antara 60–100 mmHg. Pendonor dengan tekanan darah di luar rentang ini perlu menunggu hingga kondisinya membaik dan periksa ulang.</p><p>"Bukan berarti mereka tidak boleh donor selamanya — hanya perlu penanganan dulu. Jaga pola makan rendah garam dan rutin berolahraga," jelas dr. Ahmad dari Tim Medis UDD PMI Sumenep.</p>',
+    cover_url: 'https://placehold.co/600x400/c0392b/ffffff?text=Berita+Kesehatan',
+    author_name: 'Tim Medis UDD PMI',
+    tags: ['tekanan-darah', 'donor-darah', 'edukasi', 'pmi'],
+    is_published: true,
+    published_at: '2026-06-02T09:00:00.000Z',
+  },
 
   // =========================================================
   // AKSI KEMANUSIAAN
@@ -278,6 +308,36 @@ export const SEED_ARTICLES = [
     is_published: true,
     published_at: '2026-03-22T10:00:00.000Z',
   },
+  {
+    id: 'seed-ak-09',
+    title: 'Relawan PMI Sumenep Salurkan Bantuan untuk Korban Banjir Pamekasan',
+    slug: 'relawan-pmi-bantuan-banjir-pamekasan',
+    channel: 'aksi-kemanusiaan',
+    subchannel: 'tanggap-bencana',
+    excerpt: 'Tim relawan bergerak cepat mendistribusikan logistik dan layanan kesehatan dasar. Aksi ini bagian dari kesiapsiagaan PMI menghadapi bencana di wilayah Madura.',
+    content:
+      '<p>Tim relawan PMI Sumenep bergerak cepat ke Pamekasan setelah banjir bandang menerjang tiga kecamatan. Sebanyak 30 relawan dikirim membawa 200 paket logistik darurat berisi sembako, air bersih, dan perlengkapan sanitasi untuk warga yang mengungsi.</p><p>Selain distribusi logistik, tim medis PMI turut memberikan layanan kesehatan dasar kepada para pengungsi, terutama anak-anak dan lansia yang rentan mengalami masalah kesehatan pascabanjir seperti diare dan infeksi saluran pernapasan.</p><p>Ketua PMI Sumenep, H. Moh. Saleh, menegaskan bahwa kesiapsiagaan bencana lintas kabupaten merupakan bagian integral dari misi kemanusiaan PMI. "Bencana tidak mengenal batas administrasi. Selama kami mampu, kami akan hadir," tegasnya.</p>',
+    cover_url: 'https://placehold.co/600x400/27ae60/ffffff?text=Aksi+Kemanusiaan',
+    author_name: 'Humas PMI Sumenep',
+    tags: ['banjir', 'pamekasan', 'relawan', 'tanggap-bencana'],
+    is_published: true,
+    published_at: '2026-06-03T07:00:00.000Z',
+  },
+  {
+    id: 'seed-ak-10',
+    title: 'Donor Darah Massal di Alun-Alun Sumenep Kumpulkan 350 Kantong',
+    slug: 'donor-darah-massal-alun-alun-sumenep-350-kantong',
+    channel: 'aksi-kemanusiaan',
+    subchannel: 'donor-darah',
+    excerpt: 'Kegiatan kolaborasi PMI dan komunitas relawan ini melampaui target awal. Antusiasme warga menunjukkan tingginya kesadaran berbagi kehidupan.',
+    content:
+      '<p>Kegiatan donor darah massal yang digelar di Alun-Alun Sumenep berhasil mengumpulkan 350 kantong darah dari berbagai golongan, melampaui target awal 250 kantong. Ratusan warga dari berbagai kalangan antusias hadir sejak pagi hari.</p><p>Kegiatan ini merupakan kolaborasi PMI Sumenep dengan komunitas relawan lokal, OSIS SMA, dan komunitas motor sebagai bagian dari gerakan sadar donor darah yang terus digalakkan.</p><p>"Antusiasme warga Sumenep sangat luar biasa. Ini membuktikan bahwa kepedulian sosial masyarakat kita semakin tinggi," ujar koordinator panitia. Darah yang terkumpul langsung diserahkan ke UDD PMI Sumenep dan didistribusikan ke rumah sakit-rumah sakit yang membutuhkan.</p>',
+    cover_url: 'https://placehold.co/600x400/27ae60/ffffff?text=Aksi+Kemanusiaan',
+    author_name: 'Redaksi Bulan Sabit',
+    tags: ['donor-darah', 'massal', 'alun-alun', 'sumenep'],
+    is_published: true,
+    published_at: '2026-05-30T08:00:00.000Z',
+  },
 
   // =========================================================
   // DOKTER MENULIS
@@ -345,6 +405,36 @@ export const SEED_ARTICLES = [
     tags: ['jantung', 'pertolongan-pertama', 'darurat'],
     is_published: true,
     published_at: '2026-03-28T08:00:00.000Z',
+  },
+  {
+    id: 'seed-dm-05',
+    title: 'Mengapa Donor Darah Aman dan Menyehatkan',
+    slug: 'donor-darah-aman-dan-menyehatkan',
+    channel: 'dokter-menulis',
+    subchannel: null,
+    excerpt: 'Donor darah rutin membantu regenerasi sel darah merah dan menjaga kadar zat besi. Seorang dokter UDD membagikan pandangan medisnya untuk masyarakat awam.',
+    content:
+      '<p>Sebagai dokter yang bertugas di Unit Donor Darah PMI Sumenep, saya sering mendengar kekhawatiran calon pendonor: "Apakah aman? Apakah saya akan kelelahan?" Izinkan saya menjawab dengan fakta medis.</p><p>Donor darah aman dilakukan oleh orang sehat berusia 17–65 tahun, berat badan minimal 45 kg, dan kadar hemoglobin normal. Proses pengambilan darah sebanyak 350–450 mL menggunakan peralatan steril sekali pakai yang menjamin tidak ada risiko penularan penyakit.</p><p>Justru ada manfaat kesehatan yang didapat: donor darah rutin membantu menjaga kadar zat besi agar tidak berlebihan, merangsang sumsum tulang memproduksi sel darah merah baru yang lebih segar, dan sejumlah penelitian menunjukkan manfaat jangka panjang untuk kesehatan kardiovaskular. Jadi, donor darah bukan hanya menolong orang lain — Anda juga menolong diri sendiri.</p>',
+    cover_url: 'https://placehold.co/600x400/2980b9/ffffff?text=Dokter+Menulis',
+    author_name: 'dr. Ahmad Fauzi, Sp.PD',
+    tags: ['donor-darah', 'kesehatan', 'edukasi-medis'],
+    is_published: true,
+    published_at: '2026-06-01T09:00:00.000Z',
+  },
+  {
+    id: 'seed-dm-06',
+    title: 'Membongkar Mitos Donor Darah Bikin Lemas',
+    slug: 'mitos-donor-darah-bikin-lemas',
+    channel: 'dokter-menulis',
+    subchannel: null,
+    excerpt: 'Banyak warga ragu mendonor karena takut lemas setelahnya. Tinjauan medis menjelaskan bahwa tubuh memulihkan volume darah dalam hitungan jam.',
+    content:
+      '<p>Mitos bahwa donor darah membuat tubuh lemas adalah salah satu hambatan terbesar yang mencegah banyak orang menjadi pendonor. Sebagai dokter, saya ingin meluruskan kesalahpahaman ini secara ilmiah.</p><p>Tubuh manusia memiliki mekanisme kompensasi yang luar biasa. Setelah donor darah, volume plasma akan dipulihkan dalam 24–48 jam. Sel darah merah baru terbentuk sepenuhnya dalam 4–6 minggu. Rasa lemas sesaat setelah donor biasanya disebabkan oleh kecemasan, bukan kehilangan darah itu sendiri.</p><p>Kunci agar tetap berenergi setelah donor: cukup tidur malam sebelumnya, makan dan minum yang cukup, hindari aktivitas berat dalam 24 jam pertama, dan konsumsi makanan kaya zat besi — daging merah, bayam, kacang-kacangan — dalam beberapa hari berikutnya. Dengan persiapan yang tepat, Anda bisa beraktivitas normal bahkan di hari yang sama.</p>',
+    cover_url: 'https://placehold.co/600x400/2980b9/ffffff?text=Dokter+Menulis',
+    author_name: 'dr. Siti Rahmawati',
+    tags: ['donor-darah', 'mitos', 'edukasi-medis'],
+    is_published: true,
+    published_at: '2026-05-28T10:00:00.000Z',
   },
 ]
 

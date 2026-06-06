@@ -2,6 +2,38 @@ import { supabase } from '@/lib/supabaseClient'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { SEED_ARTICLES } from '@/lib/seedData'
+import ShareButtons from '@/components/article/ShareButtons'
+import AiToolbar from '@/components/ai/AiToolbar'
+import AiSummary from '@/components/ai/AiSummary'
+import AskArticle from '@/components/ai/AskArticle'
+import WhatsAppCard from '@/components/ui/WhatsAppCard'
+
+function stripHtml(html = '') {
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+function estimateMinutes(html = '') {
+  const words = stripHtml(html).split(' ').filter(Boolean).length
+  return Math.max(1, Math.round(words / 200))
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('id-ID', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  })
+}
+
+function authorInitials(name = '') {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(-2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
@@ -12,22 +44,38 @@ export async function generateMetadata({ params }) {
     .eq('channel', 'dokter-menulis')
     .eq('is_published', true)
     .single()
-  if (!data) return {}
-  return {
-    title: data.title,
-    description: data.excerpt ?? undefined,
-    openGraph: {
+  if (data) {
+    return {
       title: data.title,
+      description: data.excerpt ?? undefined,
+      openGraph: {
+        title: data.title,
+        type: 'article',
+        authors: data.author_name ? [data.author_name] : undefined,
+        images: data.cover_url ? [{ url: data.cover_url }] : [],
+      },
+    }
+  }
+  const seed = SEED_ARTICLES.find(
+    (a) => a.channel === 'dokter-menulis' && a.slug === slug,
+  )
+  if (!seed) return {}
+  return {
+    title: seed.title,
+    description: seed.excerpt ?? undefined,
+    openGraph: {
+      title: seed.title,
       type: 'article',
-      authors: data.author_name ? [data.author_name] : undefined,
-      images: data.cover_url ? [{ url: data.cover_url }] : [],
+      authors: seed.author_name ? [seed.author_name] : undefined,
     },
   }
 }
 
 export default async function DokterMenulisDetailPage({ params }) {
   const { slug } = await params
-  const { data: article } = await supabase
+
+  // ── 1. Coba Supabase ─────────────────────────────────────────────────────
+  const { data: sbData } = await supabase
     .from('articles')
     .select('*')
     .eq('slug', slug)
@@ -35,64 +83,139 @@ export default async function DokterMenulisDetailPage({ params }) {
     .eq('is_published', true)
     .single()
 
-  if (!article) notFound()
+  // ── 2. Fallback ke seed ───────────────────────────────────────────────────
+  const raw =
+    sbData ??
+    SEED_ARTICLES.find((a) => a.channel === 'dokter-menulis' && a.slug === slug)
 
-  const formatDate = (iso) =>
-    new Date(iso).toLocaleDateString('id-ID', {
-      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-    })
+  if (!raw) notFound()
+
+  const readingMinutes = estimateMinutes(raw.content)
+  const articleText = stripHtml(raw.content)
 
   return (
-    <div className="mx-auto w-full max-w-2xl pb-20 pt-0">
-      {article.cover_url && (
+    <div className="mx-auto w-full max-w-2xl pb-24 pt-0">
+
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      {raw.cover_url && (
         <div className="relative aspect-[16/9] w-full overflow-hidden sm:rounded-b-2xl">
-          <Image src={article.cover_url} alt={article.title} fill
-            className="object-cover" sizes="(max-width:640px) 100vw, 640px" priority />
+          <Image
+            src={raw.cover_url}
+            alt={raw.title}
+            fill
+            className="object-cover"
+            sizes="(max-width:640px) 100vw, 640px"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
       )}
 
-      <div className="px-4 pt-4">
-        <nav aria-label="Breadcrumb" className="mb-3 flex items-center gap-1.5 text-xs text-[var(--muted)]">
-          <Link href="/dokter-menulis" className="hover:text-[var(--accent-red)]">Dokter Menulis</Link>
-          <span aria-hidden="true">›</span>
-          <span className="truncate text-[var(--foreground)]">{article.title}</span>
-        </nav>
+      <div className="px-4 pt-5">
 
-        <h1 className="font-serif text-2xl font-bold leading-tight text-[var(--foreground)] sm:text-3xl">
-          {article.title}
-        </h1>
-
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--muted)]">
-          {article.author_name && (
-            <span className="font-medium text-[var(--foreground)]">{article.author_name}</span>
-          )}
-          {article.author_name && <span>·</span>}
-          <time dateTime={article.published_at}>{formatDate(article.published_at)}</time>
+        {/* ── Label kanal ───────────────────────────────────────────────── */}
+        <div className="mb-3">
+          <Link
+            href="/dokter-menulis"
+            className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--accent-red)]"
+          >
+            Dokter Menulis
+          </Link>
         </div>
 
+        {/* ── Judul ─────────────────────────────────────────────────────── */}
+        <h1 className="font-serif text-2xl font-bold leading-tight text-[var(--foreground)] sm:text-3xl">
+          {raw.title}
+        </h1>
+
+        {/* ── Byline ────────────────────────────────────────────────────── */}
+        <div className="mt-4 flex items-center gap-3 border-b border-[var(--border)] pb-4">
+          <div
+            aria-hidden="true"
+            className="flex h-10 w-10 shrink-0 items-center justify-center
+              rounded-full bg-[var(--accent-red)] text-[12px] font-bold text-white"
+          >
+            {authorInitials(raw.author_name ?? 'Dokter')}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold leading-tight text-[var(--foreground)]">
+              {raw.author_name ?? 'Dokter BSS'}
+            </p>
+            <p className="text-[11px] leading-tight text-[var(--muted)]">Dokter Menulis</p>
+          </div>
+          <div className="shrink-0 text-right text-[11px] text-[var(--muted)]">
+            <time dateTime={raw.published_at} className="block">
+              {formatDate(raw.published_at)}
+            </time>
+            <span>{readingMinutes} mnt baca</span>
+          </div>
+        </div>
+
+        {/* ── ShareButtons (atas) ───────────────────────────────────────── */}
+        <div className="mt-4">
+          <ShareButtons title={raw.title} slug={raw.slug} />
+        </div>
+
+        {/* ── AI Toolbar ────────────────────────────────────────────────── */}
+        <div className="mt-4">
+          <AiToolbar
+            articleText={articleText}
+            durationMinutes={readingMinutes}
+            articleSlug={raw.slug}
+          />
+        </div>
+
+        {/* ── AI Summary ────────────────────────────────────────────────── */}
+        <div className="mt-4">
+          <AiSummary />
+        </div>
+
+        {/* ── Badan artikel ─────────────────────────────────────────────── */}
         <article
-          className="article-body prose prose-sm mt-6 max-w-none
+          className="article-body prose prose-lg mt-8 max-w-none
             prose-headings:font-serif prose-headings:text-[var(--foreground)]
+            prose-p:font-serif prose-p:text-[17px] prose-p:leading-[1.85]
             prose-p:text-[var(--foreground)] prose-a:text-[var(--accent-red)]"
-          dangerouslySetInnerHTML={{ __html: article.content }}
+          dangerouslySetInnerHTML={{ __html: raw.content }}
         />
 
-        {article.tags?.length > 0 && (
+        {/* ── Tags ──────────────────────────────────────────────────────── */}
+        {raw.tags?.length > 0 && (
           <div className="mt-6 flex flex-wrap gap-2">
-            {article.tags.map((tag) => (
-              <span key={tag}
-                className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)]">
+            {raw.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)]"
+              >
                 #{tag}
               </span>
             ))}
           </div>
         )}
 
+        {/* ── ShareButtons (bawah) ─────────────────────────────────────── */}
+        <div className="mt-6 border-t border-[var(--border)] pt-4">
+          <ShareButtons title={raw.title} slug={raw.slug} />
+        </div>
+
+        {/* ── WhatsApp card ─────────────────────────────────────────────── */}
+        <div className="mt-6">
+          <WhatsAppCard />
+        </div>
+
+        {/* ── Tanya AI ─────────────────────────────────────────────────── */}
+        <div className="mt-6">
+          <AskArticle articleTitle={raw.title} articleSlug={raw.slug} />
+        </div>
+
+        {/* ── Kembali ───────────────────────────────────────────────────── */}
         <div className="mt-6 text-center">
-          <Link href="/dokter-menulis"
+          <Link
+            href="/dokter-menulis"
             className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl
               border border-[var(--border)] px-5 py-2.5 text-sm font-medium
-              text-[var(--muted)] transition hover:text-[var(--foreground)]">
+              text-[var(--muted)] transition hover:text-[var(--foreground)]"
+          >
             ← Kembali ke Dokter Menulis
           </Link>
         </div>

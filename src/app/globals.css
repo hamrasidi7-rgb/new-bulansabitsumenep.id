@@ -1,24 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafaf8;
-  --foreground: #1a1a1a;
+  /* Krem hangat — nuansa majalah cetak premium */
+  --background: #faf7f2;
+  --foreground: #1c1814;
   --card: #ffffff;
-  --border: #e5e5e0;
-  --muted: #6b7280;
-  --accent-red: #dc2626;
-  --accent-blue: #2563eb;
-  --accent-green: #16a34a;
+  --border: #e6e0d6;
+  --muted: #7d7168;
+  --accent-red: #c0392b;
+  --accent-blue: #1d6fa4;
+  --accent-green: #1a7a46;
+  --surface: #ede7da;      /* latar chip / pill nonaktif */
   --serif: "Georgia", "Times New Roman", serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #111110;
-    --foreground: #f0ede8;
-    --card: #1c1c1a;
-    --border: #2d2d2a;
-    --muted: #9ca3af;
+    --background: #13120f;
+    --foreground: #f0ede6;
+    --card: #1e1c18;
+    --border: #302e29;
+    --muted: #9e9389;
+    --surface: #252219;
   }
 }
 

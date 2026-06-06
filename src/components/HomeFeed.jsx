@@ -5,9 +5,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CategoryFilter from '@/components/article/CategoryFilter'
 
-const FEED_CATEGORIES = ['Semua', 'Edukasi', 'Kemanusiaan', 'Gizi']
+const FEED_CATEGORIES = ['Semua', 'Berita Kesehatan', 'Aksi Kemanusiaan', 'Dokter Menulis']
 
-const RED = '#E11932'
+const RED = '#c0392b'
 
 const CHANNEL_LABEL = {
   'berita-kesehatan': 'Berita Kesehatan',
@@ -17,10 +17,9 @@ const CHANNEL_LABEL = {
 
 function matchCategory(article, cat) {
   if (cat === 'Semua') return true
-  if (cat === 'Edukasi')
-    return article.channel === 'berita-kesehatan' || article.channel === 'dokter-menulis'
-  if (cat === 'Kemanusiaan') return article.channel === 'aksi-kemanusiaan'
-  if (cat === 'Gizi') return article.subchannel?.toLowerCase().includes('gizi')
+  if (cat === 'Berita Kesehatan') return article.channel === 'berita-kesehatan'
+  if (cat === 'Aksi Kemanusiaan') return article.channel === 'aksi-kemanusiaan'
+  if (cat === 'Dokter Menulis') return article.channel === 'dokter-menulis'
   return true
 }
 
