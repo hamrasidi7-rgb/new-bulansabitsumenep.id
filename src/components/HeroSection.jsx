@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { SEED_ARTICLES } from '@/lib/seedData'
 import { articles as localArticles } from '@/data/articles'
 import VerifiedBadge from '@/components/article/VerifiedBadge'
+import SectionHeader from '@/components/ui/SectionHeader'
 
 const CHANNEL_LABEL = {
   'berita-kesehatan': 'Berita Kesehatan',
@@ -328,22 +329,9 @@ export default function HeroSection() {
       {/* ── BERITA TERBARU ─────────────────────────────────────────────────── */}
       {slides.length > 0 && (
         <section aria-labelledby="terbaru-hero-heading">
-          <div
-            className="mb-5 flex items-center justify-between border-t-[3px] pt-3"
-            style={{ borderColor: RED }}
-          >
-            <h2 id="terbaru-hero-heading"
-              className="font-serif text-lg font-bold text-[var(--foreground)]">
-              Berita Terbaru
-            </h2>
-            <Link href="/berita-kesehatan"
-              className="flex min-h-[44px] items-center text-xs font-semibold
-                text-[var(--accent-red)] transition-colors hover:underline">
-              Lihat semua →
-            </Link>
-          </div>
+          <SectionHeader prefix="Berita " highlight="TERBARU" href="/terbaru" className="mb-4" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {slides.concat(grid).slice(0, 4).map((a) => {
               const thumb = a.thumb_url ?? a.cover_url
               return (
@@ -355,7 +343,7 @@ export default function HeroSection() {
                     {thumb && (
                       <Image src={thumb} alt={a.title} fill
                         className="object-cover transition duration-300 group-hover:scale-105"
-                        sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" />
+                        sizes="(max-width:640px) 50vw, (max-width:1024px) 50vw, 25vw" />
                     )}
                   </div>
                   <div className="flex flex-1 flex-col p-3">
