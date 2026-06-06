@@ -52,8 +52,8 @@ export default function CategoryPillNav({
                 'min-h-[32px] whitespace-nowrap rounded',
                 'px-3 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors',
                 active
-                  ? 'bg-[var(--accent-red)] text-white'
-                  : 'border border-[var(--accent-red)] text-[var(--accent-red)] hover:bg-[var(--accent-red)] hover:text-white',
+                  ? 'bg-[#c0392b] text-white'
+                  : 'border border-[#c0392b] text-[#c0392b] hover:bg-[#c0392b] hover:text-white',
               ].join(' ')}
             >
               {cat.label}
