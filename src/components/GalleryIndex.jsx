@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { SEED_GALLERIES } from '@/lib/seedData'
 import { GALLERY_CATEGORIES } from '@/lib/channels'
 
 /**
@@ -29,12 +30,10 @@ export default function GalleryIndex() {
       if (activeCategory) q = q.eq('category', activeCategory)
 
       const { data } = await q
-      const list = data ?? []
-      setAlbums(list)
 
-      // Hitung foto per album
-      if (list.length > 0) {
-        const ids = list.map((a) => a.id)
+      if (data && data.length > 0) {
+        setAlbums(data)
+        const ids = data.map((a) => a.id)
         const { data: photoData } = await supabase
           .from('gallery_photos')
           .select('gallery_id')
@@ -45,6 +44,13 @@ export default function GalleryIndex() {
             return acc
           }, {}))
         }
+      } else {
+        // Fallback ke seed — filter per kategori jika dipilih
+        const seed = activeCategory
+          ? SEED_GALLERIES.filter((g) => g.category === activeCategory)
+          : SEED_GALLERIES
+        setAlbums(seed)
+        setCounts(seed.reduce((acc, g) => { acc[g.id] = g.photos?.length ?? 0; return acc }, {}))
       }
       setLoading(false)
     }

@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import { getSeedArticles } from '@/lib/seedData'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -14,7 +15,8 @@ async function fetchArticles() {
     .eq('channel', 'dokter-menulis')
     .eq('is_published', true)
     .order('published_at', { ascending: false })
-  return data ?? []
+  if (data && data.length > 0) return data
+  return getSeedArticles('dokter-menulis')
 }
 
 function formatDate(iso) {

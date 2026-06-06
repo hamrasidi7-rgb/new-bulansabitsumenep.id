@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import { getSeedArticles } from '@/lib/seedData'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
@@ -22,7 +23,8 @@ async function fetchArticles(subkanal) {
     .eq('subchannel', subkanal)
     .eq('is_published', true)
     .order('published_at', { ascending: false })
-  return data ?? []
+  if (data && data.length > 0) return data
+  return getSeedArticles('berita-kesehatan', subkanal)
 }
 
 function formatDate(iso) {
