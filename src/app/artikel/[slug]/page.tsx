@@ -120,7 +120,7 @@ export default async function ArtikelPage({ params }: Props) {
                 const isPullQuoteSlot = i === 2 && article.pullQuote;
                 return (
                   <div key={i}>
-                    <p className="mb-4 font-serif text-[16px] leading-[1.8] text-[var(--foreground)] break-inside-avoid">
+                    <p className={`mb-4 font-serif text-[16px] leading-[1.8] text-[var(--foreground)] break-inside-avoid${i === 0 ? " first-paragraph" : ""}`}>
                       {para}
                     </p>
                     {isPullQuoteSlot && (
