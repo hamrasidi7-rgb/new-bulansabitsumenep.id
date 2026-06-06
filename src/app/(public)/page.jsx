@@ -4,7 +4,6 @@ import { articles as localArticles, getAuthorById } from '@/data/articles'
 import HeroSection from '@/components/HeroSection'
 import VideoStory from '@/components/VideoStory'
 import GallerySection from '@/components/GallerySection'
-import AiHighlight from '@/components/ai/AiHighlight'
 import WhatsAppCard from '@/components/ui/WhatsAppCard'
 import HomeFeed from '@/components/HomeFeed'
 
@@ -61,10 +60,7 @@ export default async function HomePage() {
       {/* Hero carousel + sidebar + berita terbaru */}
       <HeroSection />
 
-      {/* Sorotan AI (statis, sambungkan ke API nanti) */}
-      <AiHighlight />
-
-      {/* Artikel terbaru dengan filter kategori */}
+      {/* Artikel per kanal: Berita Kesehatan, Aksi Kemanusiaan, Dokter Menulis */}
       <HomeFeed articles={articles} />
 
       {/* Video Story */}
