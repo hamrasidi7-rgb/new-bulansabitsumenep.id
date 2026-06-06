@@ -146,16 +146,15 @@ export default function HomeFeed({ articles }) {
   return (
     <div className="space-y-12">
 
-      {/* ── Berita Kesehatan: featured besar + list artikel ── */}
+      {/* ── Berita Kesehatan: featured besar + grid 2 kolom ── */}
       {kesehatan.length > 0 && (
         <section aria-label="Berita Kesehatan">
           <SectionHeader prefix="Berita " highlight="KESEHATAN" href="/berita-kesehatan" />
           <FeaturedCard article={kesehatan[0]} />
           {kesehatan.length > 1 && (
-            <div className="mt-3 rounded-xl border border-[var(--border)]
-              bg-[var(--card)] px-4 divide-y divide-[var(--border)]">
+            <div className="mt-3 grid grid-cols-2 gap-3">
               {kesehatan.slice(1, 5).map((a) => (
-                <ListCard key={a.id} article={a} />
+                <GridCard key={a.id} article={a} />
               ))}
             </div>
           )}

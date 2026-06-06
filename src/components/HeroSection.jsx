@@ -211,45 +211,6 @@ export default function HeroSection() {
           )}
         </div>
 
-        {/* Artikel berikutnya — list ringkas */}
-        <div className="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)]
-          overflow-hidden bg-[var(--card)]">
-          {grid.slice(0, 3).map((a) => {
-            const thumb = a.thumb_url ?? a.cover_url
-            return (
-              <Link
-                key={a.id}
-                href={articleHref(a)}
-                className="group flex items-start gap-3 p-4
-                  hover:bg-[var(--surface)] transition-colors"
-              >
-                <div className="relative h-16 w-16 shrink-0
-                  overflow-hidden rounded-lg bg-[var(--border)]">
-                  {thumb && (
-                    <Image src={thumb} alt="" fill
-                      className="object-cover transition duration-300 group-hover:scale-105"
-                      sizes="64px" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[9px] font-bold uppercase tracking-wider"
-                    style={{ color: RED }}>
-                    {CHANNEL_LABEL[a.channel] ?? a.channel}
-                  </span>
-                  <h3 className="mt-0.5 font-serif text-[13px] font-semibold leading-snug
-                    text-[var(--foreground)] group-hover:text-[var(--accent-red)]
-                    transition-colors line-clamp-2">
-                    {a.title}
-                  </h3>
-                  <time className="mt-1 block text-[11px] text-[var(--muted)]"
-                    dateTime={a.published_at}>
-                    {fmt(a.published_at)}
-                  </time>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
       </div>
 
       {/* ════════════════════════════════════════════════════════════════════
