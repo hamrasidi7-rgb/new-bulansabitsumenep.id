@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/site";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
 });
 
 const lora = Lora({

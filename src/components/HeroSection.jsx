@@ -17,7 +17,7 @@ const CHANNEL_LABEL = {
 
 const RED      = '#c0392b'
 const TITLE_BG = '#1c1814'
-const INTERVAL = 5500
+const INTERVAL = 8000
 
 
 function articleHref(a) {
