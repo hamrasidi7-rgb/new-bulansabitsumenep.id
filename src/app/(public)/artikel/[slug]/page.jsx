@@ -12,6 +12,7 @@ import ShareButtons from '@/components/article/ShareButtons'
 import AskArticle from '@/components/ai/AskArticle'
 import WhatsAppCard from '@/components/ui/WhatsAppCard'
 import BannerSlot from '@/components/ui/BannerSlot'
+import SectionHeader from '@/components/ui/SectionHeader'
 
 // Pemetaan category articles.ts → channel slug
 const CATEGORY_TO_CHANNEL = {
@@ -20,6 +21,36 @@ const CATEGORY_TO_CHANNEL = {
   'Kemanusiaan': 'aksi-kemanusiaan',
   'Edukasi': 'berita-kesehatan',
   'Gizi': 'berita-kesehatan',
+}
+
+const CHANNEL_LABEL = {
+  'berita-kesehatan': 'Berita Kesehatan',
+  'aksi-kemanusiaan': 'Aksi Kemanusiaan',
+  'dokter-menulis':   'Dokter Menulis',
+}
+
+async function fetchLatestAll(excludeSlug, limit = 5) {
+  const { data } = await supabase
+    .from('articles')
+    .select('id,title,slug,channel,cover_url,published_at')
+    .eq('is_published', true)
+    .neq('slug', excludeSlug)
+    .order('published_at', { ascending: false })
+    .limit(limit)
+  if (data && data.length > 0) return data
+  const local = (await import('@/data/articles')).articles
+  const combined = [
+    ...local.map((a) => ({
+      id: a.slug, title: a.title, slug: a.slug,
+      channel: CATEGORY_TO_CHANNEL[a.category] ?? 'berita-kesehatan',
+      cover_url: a.thumbnailImage, published_at: a.publishedAt,
+    })),
+    ...SEED_ARTICLES.map((a) => ({ ...a, id: a.id ?? a.slug })),
+  ]
+    .filter((a) => a.slug !== excludeSlug)
+    .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
+    .slice(0, limit)
+  return combined
 }
 
 function stripHtml(html = '') {
@@ -208,12 +239,12 @@ export default async function ArtikelDetailPage({ params }) {
     }
     const { data: relData } = await supabase
       .from('articles')
-      .select('id,title,slug,cover_url,published_at')
+      .select('id,title,slug,channel,cover_url,published_at')
       .eq('channel', sbData.channel)
       .eq('is_published', true)
       .neq('slug', slug)
       .order('published_at', { ascending: false })
-      .limit(3)
+      .limit(4)
     related = relData ?? []
     bodyKind = 'html'
   } else {
@@ -247,10 +278,11 @@ export default async function ArtikelDetailPage({ params }) {
         pullQuote: local.pullQuote ?? null,
         bodyImages: local.bodyImages ?? null,
       }
-      related = getRecentArticles(3, slug).map((r) => ({
+      related = getRecentArticles(4, slug).map((r) => ({
         id: r.slug,
         title: r.title,
         slug: r.slug,
+        channel: CATEGORY_TO_CHANNEL[r.category] ?? 'berita-kesehatan',
         cover_url: r.thumbnailImage,
         published_at: r.publishedAt,
       }))
@@ -289,6 +321,8 @@ export default async function ArtikelDetailPage({ params }) {
       bodyKind = 'html'
     }
   }
+
+  const latest = await fetchLatestAll(slug, 5)
 
   return (
     <div className="mx-auto w-full max-w-2xl pb-24 pt-0">
@@ -405,38 +439,80 @@ export default async function ArtikelDetailPage({ params }) {
           <WhatsAppCard />
         </div>
 
-        {/* ── Artikel terkait ───────────────────────────────────────────── */}
+        {/* ── Berita Terkait ────────────────────────────────────────────── */}
         {related.length > 0 && (
-          <section className="mt-8" aria-labelledby="related-heading">
-            <h2
-              id="related-heading"
-              className="mb-4 font-serif text-lg font-bold text-[var(--foreground)]"
-            >
-              Baca Juga
-            </h2>
-            <div>
+          <section className="mt-10" aria-labelledby="related-heading">
+            <SectionHeader prefix="Berita " highlight="TERKAIT" id="related-heading" />
+            <div className="divide-y divide-[var(--border)]">
               {related.map((r) => (
                 <Link
                   key={r.id ?? r.slug}
                   href={`/artikel/${r.slug}`}
-                  className="group flex items-start gap-3 border-b border-[var(--border)] py-3 last:border-0"
+                  className="group flex items-start gap-3 py-3"
                 >
-                  {r.cover_url && (
-                    <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg">
-                      <Image
-                        src={r.cover_url}
-                        alt=""
-                        fill
-                        className="object-cover"
-                        sizes="80px"
-                      />
+                  <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--surface)]">
+                    {r.cover_url && (
+                      <Image src={r.cover_url} alt="" fill
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                        sizes="80px" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent-red)]">
+                        {CHANNEL_LABEL[r.channel] ?? art.channelLabel}
+                      </span>
+                      <span className="text-[10px] text-[var(--muted)]">·</span>
+                      <time className="text-[10px] text-[var(--muted)]" dateTime={r.published_at}>
+                        {formatDate(r.published_at)}
+                      </time>
                     </div>
-                  )}
-                  <p className="font-serif text-sm font-semibold leading-snug
-                    text-[var(--foreground)] transition-colors
-                    group-hover:text-[var(--accent-red)] line-clamp-3">
-                    {r.title}
-                  </p>
+                    <p className="font-serif text-[13px] font-semibold leading-snug
+                      text-[var(--foreground)] group-hover:text-[var(--accent-red)]
+                      transition-colors line-clamp-3">
+                      {r.title}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── Berita Terbaru ────────────────────────────────────────────── */}
+        {latest.length > 0 && (
+          <section className="mt-10" aria-labelledby="latest-heading">
+            <SectionHeader prefix="Berita " highlight="TERBARU" href="/terbaru" id="latest-heading" />
+            <div className="divide-y divide-[var(--border)]">
+              {latest.map((r) => (
+                <Link
+                  key={r.id ?? r.slug}
+                  href={r.channel === 'dokter-menulis' ? `/dokter-menulis/${r.slug}` : `/artikel/${r.slug}`}
+                  className="group flex items-start gap-3 py-3"
+                >
+                  <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--surface)]">
+                    {r.cover_url && (
+                      <Image src={r.cover_url} alt="" fill
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                        sizes="80px" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent-red)]">
+                        {CHANNEL_LABEL[r.channel] ?? r.channel}
+                      </span>
+                      <span className="text-[10px] text-[var(--muted)]">·</span>
+                      <time className="text-[10px] text-[var(--muted)]" dateTime={r.published_at}>
+                        {formatDate(r.published_at)}
+                      </time>
+                    </div>
+                    <p className="font-serif text-[13px] font-semibold leading-snug
+                      text-[var(--foreground)] group-hover:text-[var(--accent-red)]
+                      transition-colors line-clamp-3">
+                      {r.title}
+                    </p>
+                  </div>
                 </Link>
               ))}
             </div>
