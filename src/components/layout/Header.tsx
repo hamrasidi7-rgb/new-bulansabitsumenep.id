@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 interface HeaderProps {
   showSearch?: boolean;
@@ -7,26 +8,42 @@ interface HeaderProps {
 export default function Header({ showSearch = true }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
-        {/* Logo + nama */}
+      <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-2">
+
+        {/* Logo kiri: BSM */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 min-h-[44px]"
+          className="flex items-center gap-3 min-h-[44px]"
           aria-label="Beranda Bulan Sabit Sumenep"
         >
-          <HeartbeatIcon />
-          <div className="leading-tight">
-            <div className="text-sm font-bold text-[var(--foreground)] font-serif">
-              Bulan Sabit Sumenep
-            </div>
-            <div className="text-[10px] font-medium uppercase tracking-widest text-[var(--muted)]">
-              Kesehatan &amp; Kemanusiaan
-            </div>
+          <div className="relative h-10 w-[130px] shrink-0">
+            <Image
+              src="/logo-bulansabitsumenep.jpg"
+              alt="Bulan Sabit Merah Sumenep"
+              fill
+              className="object-contain object-left"
+              sizes="130px"
+              priority
+            />
           </div>
         </Link>
 
-        {/* Navigasi kanan */}
-        <div className="flex items-center gap-1">
+        {/* Kanan: logo PMI + search */}
+        <div className="flex items-center gap-2">
+          {/* Logo PMI — badge afiliasi */}
+          <div className="relative h-8 w-[72px] shrink-0 opacity-80">
+            <Image
+              src="/logo-pmi.jpg"
+              alt="Palang Merah Indonesia"
+              fill
+              className="object-contain object-right"
+              sizes="72px"
+            />
+          </div>
+
+          {/* Divider */}
+          <span className="h-6 w-px bg-[var(--border)]" aria-hidden="true" />
+
           {showSearch && (
             <Link
               href="/cari"
@@ -39,27 +56,6 @@ export default function Header({ showSearch = true }: HeaderProps) {
         </div>
       </div>
     </header>
-  );
-}
-
-function HeartbeatIcon() {
-  return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      aria-hidden="true"
-    >
-      <rect width="32" height="32" rx="8" fill="#dc2626" />
-      <path
-        d="M4 16h5l2.5-6L14 22l2.5-8 2 5H28"
-        stroke="white"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
 

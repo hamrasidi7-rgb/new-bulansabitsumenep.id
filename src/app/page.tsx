@@ -7,11 +7,14 @@ import ArticleCard from "@/components/article/ArticleCard";
 import CategoryFilter from "@/components/article/CategoryFilter";
 import AiHighlight from "@/components/ai/AiHighlight";
 import WhatsAppCard from "@/components/ui/WhatsAppCard";
+import Link from "next/link";
 import {
   articles,
   getFeaturedArticle,
   type FilterCategory,
 } from "@/data/articles";
+import { contributors } from "@/data/contributors";
+import ContributorCard from "@/components/contributor/ContributorCard";
 
 export default function BerandaPage() {
   const [activeCategory, setActiveCategory] = useState<FilterCategory>("Semua");
@@ -81,6 +84,43 @@ export default function BerandaPage() {
               ))}
             </div>
           )}
+        </section>
+
+        {/* Preview Kontributor */}
+        <section aria-labelledby="kontributor-preview-heading" className="mt-8">
+          <div className="mb-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--accent-red)]">
+                Kontributor
+              </p>
+              <h2
+                id="kontributor-preview-heading"
+                className="font-serif text-lg font-bold text-[var(--foreground)]"
+              >
+                Dokter &amp; Tenaga Kesehatan Kami
+              </h2>
+            </div>
+            <Link
+              href="/kontributor"
+              className="text-xs font-semibold text-[var(--accent-red)] hover:underline min-h-[44px] flex items-center"
+            >
+              Lihat semua →
+            </Link>
+          </div>
+          <p className="mb-4 text-sm text-[var(--muted)]">
+            Konten kami ditulis dan direview oleh dokter dan tenaga kesehatan berpengalaman.
+          </p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {contributors.slice(0, 4).map((c) => (
+              <ContributorCard key={c.id} contributor={c} />
+            ))}
+          </div>
+          <Link
+            href="/kontributor"
+            className="mt-4 flex w-full min-h-[44px] items-center justify-center rounded-xl border-2 border-[var(--accent-red)] text-sm font-semibold text-[var(--accent-red)] transition hover:bg-red-50 dark:hover:bg-red-950/20"
+          >
+            Lihat Semua Kontributor
+          </Link>
         </section>
 
         {/* Kartu WhatsApp */}
