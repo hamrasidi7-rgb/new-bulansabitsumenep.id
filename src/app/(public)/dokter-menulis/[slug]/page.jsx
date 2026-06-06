@@ -4,8 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { SEED_ARTICLES } from '@/lib/seedData'
 import ShareButtons from '@/components/article/ShareButtons'
-import AiToolbar from '@/components/ai/AiToolbar'
-import AiSummary from '@/components/ai/AiSummary'
 import AskArticle from '@/components/ai/AskArticle'
 import WhatsAppCard from '@/components/ui/WhatsAppCard'
 
@@ -91,7 +89,6 @@ export default async function DokterMenulisDetailPage({ params }) {
   if (!raw) notFound()
 
   const readingMinutes = estimateMinutes(raw.content)
-  const articleText = stripHtml(raw.content)
 
   return (
     <div className="mx-auto w-full max-w-2xl pb-24 pt-0">
@@ -149,25 +146,6 @@ export default async function DokterMenulisDetailPage({ params }) {
             </time>
             <span>{readingMinutes} mnt baca</span>
           </div>
-        </div>
-
-        {/* ── ShareButtons (atas) ───────────────────────────────────────── */}
-        <div className="mt-4">
-          <ShareButtons title={raw.title} slug={raw.slug} />
-        </div>
-
-        {/* ── AI Toolbar ────────────────────────────────────────────────── */}
-        <div className="mt-4">
-          <AiToolbar
-            articleText={articleText}
-            durationMinutes={readingMinutes}
-            articleSlug={raw.slug}
-          />
-        </div>
-
-        {/* ── AI Summary ────────────────────────────────────────────────── */}
-        <div className="mt-4">
-          <AiSummary />
         </div>
 
         {/* ── Badan artikel ─────────────────────────────────────────────── */}

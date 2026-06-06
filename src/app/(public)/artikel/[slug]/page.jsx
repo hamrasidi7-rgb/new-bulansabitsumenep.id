@@ -9,8 +9,6 @@ import { SEED_ARTICLES } from '@/lib/seedData'
 import VerifiedBadge from '@/components/article/VerifiedBadge'
 import ArticleImage from '@/components/article/ArticleImage'
 import ShareButtons from '@/components/article/ShareButtons'
-import AiToolbar from '@/components/ai/AiToolbar'
-import AiSummary from '@/components/ai/AiSummary'
 import AskArticle from '@/components/ai/AskArticle'
 import WhatsAppCard from '@/components/ui/WhatsAppCard'
 
@@ -260,11 +258,6 @@ export default async function ArtikelDetailPage({ params }) {
     }
   }
 
-  const articleText =
-    bodyKind === 'local'
-      ? (art.body ?? []).join(' ')
-      : stripHtml(art.contentHtml ?? '')
-
   return (
     <div className="mx-auto w-full max-w-2xl pb-24 pt-0">
 
@@ -344,25 +337,6 @@ export default async function ArtikelDetailPage({ params }) {
             </time>
             <span>{art.readingMinutes} mnt baca</span>
           </div>
-        </div>
-
-        {/* ── ShareButtons (atas) ───────────────────────────────────────── */}
-        <div className="mt-4">
-          <ShareButtons title={art.title} slug={art.slug} />
-        </div>
-
-        {/* ── AI Toolbar ────────────────────────────────────────────────── */}
-        <div className="mt-4">
-          <AiToolbar
-            articleText={articleText}
-            durationMinutes={art.readingMinutes}
-            articleSlug={art.slug}
-          />
-        </div>
-
-        {/* ── AI Summary ────────────────────────────────────────────────── */}
-        <div className="mt-4">
-          <AiSummary />
         </div>
 
         {/* ── Badan artikel ─────────────────────────────────────────────── */}
