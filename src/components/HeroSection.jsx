@@ -39,7 +39,6 @@ function articleHref(a) {
     : `/artikel/${a.slug}`
 }
 
-// Normalisasi articles.ts ke format unified
 function buildLocalArticles() {
   return [...localArticles]
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
@@ -49,8 +48,8 @@ function buildLocalArticles() {
       slug:         a.slug,
       channel:      CATEGORY_TO_CHANNEL[a.category] ?? 'berita-kesehatan',
       excerpt:      a.excerpt,
-      cover_url:    a.heroImage,       // foto landscape lebar untuk slide utama
-      thumb_url:    a.thumbnailImage,  // foto kotak untuk sidebar/card
+      cover_url:    a.heroImage,
+      thumb_url:    a.thumbnailImage,
       published_at: a.publishedAt,
       is_verified:  a.isVerified,
     }))
@@ -58,8 +57,7 @@ function buildLocalArticles() {
 
 export default function HeroSection() {
   const [slides,  setSlides]  = useState([])
-  const [sidebar, setSidebar] = useState([])
-  const [latest,  setLatest]  = useState([])
+  const [grid,    setGrid]    = useState([])
   const [active,  setActive]  = useState(0)
   const [loading, setLoading] = useState(true)
 
@@ -76,7 +74,6 @@ export default function HeroSection() {
       if (data && data.length > 0) {
         all = data
       } else {
-        // Gabung articles.ts (foto Unsplash asli) + SEED_ARTICLES, urutkan terbaru
         const local = buildLocalArticles()
         const combined = [...local, ...SEED_ARTICLES]
           .sort((a, b) =>
@@ -88,8 +85,7 @@ export default function HeroSection() {
       }
 
       setSlides(all.slice(0, 3))
-      setSidebar(all.slice(3, 7))
-      setLatest(all.slice(0, 4))
+      setGrid(all.slice(3, 7))
       setLoading(false)
     }
     load()
@@ -108,19 +104,13 @@ export default function HeroSection() {
   // ── Skeleton ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] overflow-hidden rounded-2xl border border-[var(--border)]">
-          <div className="h-[300px] sm:h-[380px] md:h-[460px] animate-pulse bg-[var(--surface)]" />
-          <div className="flex flex-col gap-4 p-4 bg-[var(--surface)]">
+      <div className="overflow-hidden rounded-2xl border border-[var(--border)]">
+        <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr]">
+          <div className="h-[300px] sm:h-[380px] md:h-[480px] animate-pulse bg-[var(--surface)]" />
+          <div className="hidden md:grid grid-cols-2">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex gap-3">
-                <div className="h-20 w-20 shrink-0 rounded-lg animate-pulse bg-[var(--border)]" />
-                <div className="flex-1 space-y-2 pt-1">
-                  <div className="h-2 w-1/3 rounded animate-pulse bg-[var(--border)]" />
-                  <div className="h-3 w-full rounded animate-pulse bg-[var(--border)]" />
-                  <div className="h-3 w-3/4 rounded animate-pulse bg-[var(--border)]" />
-                </div>
-              </div>
+              <div key={i} className="h-[240px] animate-pulse bg-[var(--border)]
+                border border-[var(--surface)]" />
             ))}
           </div>
         </div>
@@ -131,9 +121,9 @@ export default function HeroSection() {
   return (
     <div className="space-y-10">
 
-      {/* ── 1. HERO SPLIT ───────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] overflow-hidden
-        rounded-2xl border border-[var(--border)]">
+      {/* ── HERO: Carousel kiri + Grid 2×2 kanan ──────────────────────────── */}
+      <div className="overflow-hidden rounded-2xl border border-[var(--border)]
+        grid grid-cols-1 md:grid-cols-[1.6fr_1fr]">
 
         {/* KIRI: Carousel foto besar */}
         <div className="relative h-[300px] sm:h-[380px] md:h-[480px]
@@ -141,40 +131,33 @@ export default function HeroSection() {
 
           {slides.map((slide, i) => {
             const isActive = i === active
-            const imgSrc = slide.cover_url
             return (
               <div
                 key={slide.id}
                 aria-hidden={!isActive}
-                className={`absolute inset-0 transition-opacity duration-[900ms] ease-in-out
+                className={`absolute inset-0 transition-opacity duration-[900ms]
                   ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               >
-                {imgSrc && (
+                {slide.cover_url && (
                   <div
                     key={`${slide.id}-${isActive}`}
                     className="absolute inset-0"
                     style={isActive ? { animation: 'kenburns 6s ease-out forwards' } : undefined}
                   >
                     <Image
-                      src={imgSrc}
+                      src={slide.cover_url}
                       alt={slide.title}
-                      fill
-                      priority={i === 0}
+                      fill priority={i === 0}
                       className="object-cover"
                       sizes="(max-width:768px) 100vw, 62vw"
                     />
                   </div>
                 )}
-
-                {/* Gradient editorial — kuat di bawah */}
                 <div className="absolute inset-0 bg-gradient-to-t
                   from-black/90 via-black/35 to-transparent" />
-
-                {/* Konten teks */}
                 <Link
                   href={articleHref(slide)}
-                  className="absolute inset-x-0 bottom-0 z-10 flex flex-col
-                    p-5 sm:p-7 pb-12"
+                  className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-5 sm:p-7 pb-12"
                   tabIndex={isActive ? 0 : -1}
                 >
                   <div className="mb-2 flex flex-wrap items-center gap-2 self-start">
@@ -187,19 +170,16 @@ export default function HeroSection() {
                     </span>
                     {slide.is_verified && <VerifiedBadge size="sm" />}
                   </div>
-
-                  <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold
+                  <h2 className="font-serif text-xl sm:text-2xl md:text-[1.6rem] font-bold
                     leading-snug text-white line-clamp-3 hover:underline
                     decoration-white/60 underline-offset-4">
                     {slide.title}
                   </h2>
-
                   {slide.excerpt && (
                     <p className="mt-2 text-sm text-white/70 line-clamp-2 max-w-xl">
                       {slide.excerpt}
                     </p>
                   )}
-
                   <time className="mt-3 text-xs text-white/50" dateTime={slide.published_at}>
                     {fmt(slide.published_at)}
                   </time>
@@ -224,45 +204,98 @@ export default function HeroSection() {
           )}
         </div>
 
-        {/* KANAN: Sidebar 4 berita — latar krem hangat */}
-        <div className="flex flex-col divide-y divide-[var(--border)]
-          border-t md:border-t-0 md:border-l border-[var(--border)]
-          bg-[var(--surface)]">
+        {/* KANAN: Grid 2×2 foto dengan overlay teks */}
+        <div className="hidden md:grid grid-cols-2 border-l border-[var(--border)]">
+          {grid.slice(0, 4).map((a, i) => {
+            const img = a.thumb_url ?? a.cover_url
+            const isTop = i < 2
+            const isLeft = i % 2 === 0
+            return (
+              <Link
+                key={a.id}
+                href={articleHref(a)}
+                className={[
+                  'group relative overflow-hidden h-[240px]',
+                  isTop  ? 'border-b border-[var(--border)]' : '',
+                  isLeft ? 'border-r border-[var(--border)]' : '',
+                ].join(' ')}
+              >
+                {/* Foto latar */}
+                {img ? (
+                  <Image
+                    src={img}
+                    alt={a.title}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                    sizes="25vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-[var(--surface)]" />
+                )}
 
-          {sidebar.map((a) => {
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t
+                  from-black/85 via-black/25 to-transparent" />
+
+                {/* Teks overlay di bawah */}
+                <div className="absolute inset-x-0 bottom-0 p-3 z-10">
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-wider"
+                    style={{ color: '#ff8080' }}
+                  >
+                    {CHANNEL_LABEL[a.channel] ?? a.channel}
+                  </span>
+                  <h3 className="mt-0.5 font-serif text-[13px] font-semibold
+                    leading-snug text-white line-clamp-3
+                    group-hover:underline decoration-white/60 underline-offset-2">
+                    {a.title}
+                  </h3>
+                  <time className="mt-1 block text-[10px] text-white/45"
+                    dateTime={a.published_at}>
+                    {fmt(a.published_at)}
+                  </time>
+                </div>
+              </Link>
+            )
+          })}
+
+          {/* Isi kosong jika artikel < 4 */}
+          {grid.length === 0 && (
+            <div className="col-span-2 flex items-center justify-center
+              text-sm text-[var(--muted)] p-8">
+              Belum ada artikel.
+            </div>
+          )}
+        </div>
+
+        {/* MOBILE: daftar ringkas (hanya muncul di bawah carousel, bukan grid) */}
+        <div className="md:hidden divide-y divide-[var(--border)] border-t border-[var(--border)]
+          bg-[var(--surface)]">
+          {grid.slice(0, 3).map((a) => {
             const thumb = a.thumb_url ?? a.cover_url
             return (
               <Link
                 key={a.id}
                 href={articleHref(a)}
                 className="group flex items-start gap-3 p-4
-                  hover:bg-[var(--border)] transition-colors duration-150"
+                  hover:bg-[var(--border)] transition-colors"
               >
-                <div className="relative h-[72px] w-[72px] shrink-0
+                <div className="relative h-16 w-16 shrink-0
                   overflow-hidden rounded-lg bg-[var(--border)]">
-                  {thumb ? (
-                    <Image
-                      src={thumb}
-                      alt=""
-                      fill
+                  {thumb && (
+                    <Image src={thumb} alt="" fill
                       className="object-cover transition duration-300 group-hover:scale-105"
-                      sizes="72px"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-[var(--border)]" />
+                      sizes="64px" />
                   )}
                 </div>
-
                 <div className="flex-1 min-w-0">
-                  <span
-                    className="text-[9px] font-bold uppercase tracking-wider"
-                    style={{ color: RED }}
-                  >
+                  <span className="text-[9px] font-bold uppercase tracking-wider"
+                    style={{ color: RED }}>
                     {CHANNEL_LABEL[a.channel] ?? a.channel}
                   </span>
-                  <h3 className="mt-0.5 font-serif text-[13px] font-semibold leading-snug
+                  <h3 className="mt-0.5 font-serif text-sm font-semibold leading-snug
                     text-[var(--foreground)] group-hover:text-[var(--accent-red)]
-                    transition-colors line-clamp-3">
+                    transition-colors line-clamp-2">
                     {a.title}
                   </h3>
                   <time className="mt-1 block text-[11px] text-[var(--muted)]"
@@ -273,18 +306,11 @@ export default function HeroSection() {
               </Link>
             )
           })}
-
-          {sidebar.length === 0 && (
-            <p className="flex flex-1 items-center justify-center p-8
-              text-sm text-[var(--muted)]">
-              Belum ada artikel.
-            </p>
-          )}
         </div>
       </div>
 
-      {/* ── 2. BERITA TERBARU — 4 kartu foto ──────────────────────────────── */}
-      {latest.length > 0 && (
+      {/* ── BERITA TERBARU — 4 kartu foto ─────────────────────────────────── */}
+      {slides.length > 0 && (
         <section aria-labelledby="terbaru-hero-heading">
           <div
             className="mb-5 flex items-center justify-between border-t-[3px] pt-3"
@@ -306,7 +332,7 @@ export default function HeroSection() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {latest.map((a) => {
+            {slides.concat(grid).slice(0, 4).map((a) => {
               const thumb = a.thumb_url ?? a.cover_url
               return (
                 <Link
@@ -319,19 +345,15 @@ export default function HeroSection() {
                   <div className="relative aspect-video overflow-hidden bg-[var(--border)]">
                     {thumb && (
                       <Image
-                        src={thumb}
-                        alt={a.title}
-                        fill
+                        src={thumb} alt={a.title} fill
                         className="object-cover transition duration-300 group-hover:scale-105"
                         sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw"
                       />
                     )}
                   </div>
                   <div className="flex flex-1 flex-col p-3">
-                    <span
-                      className="text-[9px] font-bold uppercase tracking-wider"
-                      style={{ color: RED }}
-                    >
+                    <span className="text-[9px] font-bold uppercase tracking-wider"
+                      style={{ color: RED }}>
                       {CHANNEL_LABEL[a.channel] ?? a.channel}
                     </span>
                     <h3 className="mt-1 font-serif text-sm font-semibold leading-snug
