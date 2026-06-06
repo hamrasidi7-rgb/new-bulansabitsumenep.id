@@ -3,12 +3,18 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getChannelBySlug, subchannelHref } from '@/lib/channels'
+import VerifiedBadge from '@/components/article/VerifiedBadge'
+import ShareButtons from '@/components/article/ShareButtons'
+import AiToolbar from '@/components/ai/AiToolbar'
+import AiSummary from '@/components/ai/AiSummary'
+import AskArticle from '@/components/ai/AskArticle'
+import WhatsAppCard from '@/components/ui/WhatsAppCard'
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const { data } = await supabase
     .from('articles')
-    .select('title,excerpt,cover_url,channel,subchannel,published_at,author_name')
+    .select('title,excerpt,cover_url,channel,subchannel,published_at,author_name,is_verified')
     .eq('slug', slug)
     .eq('is_published', true)
     .single()
@@ -55,6 +61,15 @@ function formatDate(iso) {
   })
 }
 
+function stripHtml(html = '') {
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+function estimateMinutes(html = '') {
+  const words = stripHtml(html).split(' ').filter(Boolean).length
+  return Math.max(1, Math.round(words / 200))
+}
+
 export default async function ArtikelDetailPage({ params }) {
   const { slug } = await params
   const article = await fetchArticle(slug)
@@ -62,6 +77,9 @@ export default async function ArtikelDetailPage({ params }) {
 
   const related = await fetchRelated(article.channel, article.subchannel, slug)
   const ch = getChannelBySlug(article.channel)
+
+  const articleText = stripHtml(article.content)
+  const durationMinutes = estimateMinutes(article.content)
 
   return (
     <div className="mx-auto w-full max-w-2xl pb-20 pt-0">
@@ -73,6 +91,15 @@ export default async function ArtikelDetailPage({ params }) {
             className="object-cover" sizes="(max-width:640px) 100vw, 640px" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
+      )}
+
+      {/* ── Cover caption ──────────────────────────────────────── */}
+      {(article.hero_caption || article.hero_credit) && (
+        <p className="px-4 pt-1.5 text-[11px] italic text-[var(--muted)]">
+          {article.hero_caption}
+          {article.hero_caption && article.hero_credit && ' '}
+          {article.hero_credit && `(Foto: ${article.hero_credit})`}
+        </p>
       )}
 
       <div className="px-4 pt-4">
@@ -99,13 +126,35 @@ export default async function ArtikelDetailPage({ params }) {
           {article.title}
         </h1>
 
-        {/* Meta */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--muted)]">
-          {article.author_name && (
-            <span className="font-medium text-[var(--foreground)]">{article.author_name}</span>
-          )}
-          {article.author_name && <span>·</span>}
-          <time dateTime={article.published_at}>{formatDate(article.published_at)}</time>
+        {/* Verifikasi + Meta */}
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          {article.is_verified && <VerifiedBadge size="sm" />}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--muted)]">
+            {article.author_name && (
+              <span className="font-medium text-[var(--foreground)]">{article.author_name}</span>
+            )}
+            {article.author_name && <span>·</span>}
+            <time dateTime={article.published_at}>{formatDate(article.published_at)}</time>
+          </div>
+        </div>
+
+        {/* Share (atas) */}
+        <div className="mt-4 pb-4 border-b border-[var(--border)]">
+          <ShareButtons title={article.title} slug={slug} />
+        </div>
+
+        {/* AI Toolbar */}
+        <div className="mt-4">
+          <AiToolbar
+            articleText={articleText}
+            durationMinutes={durationMinutes}
+            articleSlug={slug}
+          />
+        </div>
+
+        {/* AI Summary */}
+        <div className="mt-4">
+          <AiSummary />
         </div>
 
         {/* Konten artikel */}
@@ -128,6 +177,16 @@ export default async function ArtikelDetailPage({ params }) {
             ))}
           </div>
         )}
+
+        {/* Share (bawah) */}
+        <div className="mt-6 pt-4 border-t border-[var(--border)]">
+          <ShareButtons title={article.title} slug={slug} />
+        </div>
+
+        {/* WhatsApp */}
+        <div className="mt-6">
+          <WhatsAppCard />
+        </div>
 
         {/* Artikel terkait */}
         {related.length > 0 && (
@@ -154,6 +213,11 @@ export default async function ArtikelDetailPage({ params }) {
             </div>
           </section>
         )}
+
+        {/* Tanya AI */}
+        <div className="mt-6">
+          <AskArticle articleTitle={article.title} articleSlug={slug} />
+        </div>
 
         {/* Kembali */}
         <div className="mt-6 text-center">

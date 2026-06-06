@@ -1,20 +1,21 @@
 "use client";
 
-import { CATEGORIES, type FilterCategory } from "@/data/articles";
+import { CATEGORIES } from "@/data/articles";
 
 interface CategoryFilterProps {
-  active: FilterCategory;
-  onChange: (cat: FilterCategory) => void;
+  active: string;
+  onChange: (cat: string) => void;
+  categories?: readonly string[];
 }
 
-export default function CategoryFilter({ active, onChange }: CategoryFilterProps) {
+export default function CategoryFilter({ active, onChange, categories = CATEGORIES }: CategoryFilterProps) {
   return (
     <div
-      className="flex gap-2 overflow-x-auto no-scrollbar px-4 -mx-4"
+      className="flex gap-2 overflow-x-auto no-scrollbar"
       role="tablist"
       aria-label="Filter kategori artikel"
     >
-      {CATEGORIES.map((cat) => {
+      {categories.map((cat) => {
         const isActive = cat === active;
         return (
           <button

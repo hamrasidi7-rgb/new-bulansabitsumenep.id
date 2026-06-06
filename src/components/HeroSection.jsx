@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
 import { SEED_ARTICLES } from '@/lib/seedData'
+import VerifiedBadge from '@/components/article/VerifiedBadge'
 
 // ── Konstanta ─────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ export default function HeroSection() {
     async function load() {
       const { data } = await supabase
         .from('articles')
-        .select('id,title,slug,channel,excerpt,cover_url,published_at')
+        .select('id,title,slug,channel,excerpt,cover_url,published_at,is_verified')
         .eq('is_published', true)
         .order('published_at', { ascending: false })
         .limit(10)
@@ -154,14 +155,17 @@ export default function HeroSection() {
                   className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-5 sm:p-6 pb-10 sm:pb-12"
                   tabIndex={isActive ? 0 : -1}
                 >
-                  {/* Badge kategori */}
-                  <span
-                    className="mb-2 inline-block self-start rounded px-2.5 py-0.5
-                      text-[10px] font-bold uppercase tracking-wider text-white"
-                    style={{ background: RED }}
-                  >
-                    {CHANNEL_LABEL[slide.channel] ?? slide.channel}
-                  </span>
+                  {/* Badge kategori + verifikasi */}
+                  <div className="mb-2 flex flex-wrap items-center gap-2 self-start">
+                    <span
+                      className="inline-block rounded px-2.5 py-0.5
+                        text-[10px] font-bold uppercase tracking-wider text-white"
+                      style={{ background: RED }}
+                    >
+                      {CHANNEL_LABEL[slide.channel] ?? slide.channel}
+                    </span>
+                    {slide.is_verified && <VerifiedBadge size="sm" />}
+                  </div>
 
                   {/* Judul */}
                   <h2 className="font-serif text-xl sm:text-2xl font-bold leading-snug

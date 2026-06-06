@@ -5,11 +5,11 @@ import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import ArticleCard from "@/components/article/ArticleCard";
 import WhatsAppCard from "@/components/ui/WhatsAppCard";
+import CategoryFilter from "@/components/article/CategoryFilter";
 import { articles } from "@/data/articles";
 
-type EduFilter = "Semua" | "Edukasi" | "Gizi";
-
-const EDU_FILTERS: EduFilter[] = ["Semua", "Edukasi", "Gizi"];
+const EDU_CATEGORIES = ["Semua", "Edukasi", "Gizi"] as const;
+type EduFilter = (typeof EDU_CATEGORIES)[number];
 
 export default function EdukasiPage() {
   const [activeFilter, setActiveFilter] = useState<EduFilter>("Semua");
@@ -41,27 +41,13 @@ export default function EdukasiPage() {
           </p>
         </div>
 
-        {/* Filter */}
-        <div
-          className="mb-5 flex gap-2 overflow-x-auto no-scrollbar"
-          role="tablist"
-          aria-label="Filter kategori edukasi"
-        >
-          {EDU_FILTERS.map((f) => (
-            <button
-              key={f}
-              role="tab"
-              aria-selected={f === activeFilter}
-              onClick={() => setActiveFilter(f)}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition min-h-[44px] ${
-                f === activeFilter
-                  ? "bg-[var(--accent-red)] text-white"
-                  : "border border-[var(--border)] text-[var(--muted)] hover:border-[var(--accent-red)] hover:text-[var(--foreground)]"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+        {/* Filter — gunakan komponen bersama, tidak dobel */}
+        <div className="mb-5">
+          <CategoryFilter
+            categories={EDU_CATEGORIES}
+            active={activeFilter}
+            onChange={(cat) => setActiveFilter(cat as EduFilter)}
+          />
         </div>
 
         {/* Grid artikel */}

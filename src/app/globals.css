@@ -40,7 +40,8 @@ body {
   color: var(--foreground);
 }
 
-/* Magazine drop cap — hanya paragraf pertama artikel */
+/* Magazine drop cap — paragraf pertama di dalam .article-body */
+.article-body > p:first-child::first-letter,
 .first-paragraph::first-letter {
   font-family: var(--serif);
   font-size: 3.5rem;
