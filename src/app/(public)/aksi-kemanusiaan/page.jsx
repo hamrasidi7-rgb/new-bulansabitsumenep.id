@@ -67,9 +67,6 @@ export default async function AksiKemanusiaanPage() {
 
       {/* Judul kanal */}
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent-red)]">
-          Kanal
-        </p>
         <h1 className="font-serif text-2xl font-bold text-[var(--foreground)]">
           Aksi Kemanusiaan
         </h1>

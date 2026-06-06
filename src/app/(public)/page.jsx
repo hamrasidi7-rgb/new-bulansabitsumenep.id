@@ -111,13 +111,10 @@ function ArticleCard({ article, href, priority = false }) {
 
 // ── Judul seksi ───────────────────────────────────────────────────────────────
 
-function SectionHeader({ label, title, href }) {
+function SectionHeader({ title, href }) {
   return (
     <div className="mb-4 flex items-center justify-between">
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--accent-red)]">
-          {label}
-        </p>
         <h2 className="font-serif text-lg font-bold text-[var(--foreground)]">{title}</h2>
       </div>
       <Link
@@ -201,8 +198,7 @@ export default async function HomePage() {
       {/* ── Berita Kesehatan ─────────────────────────────────── */}
       <section aria-labelledby="berita-heading">
         <SectionHeader
-          label="Kanal"
-          title="Berita Kesehatan"
+title="Berita Kesehatan"
           href="/berita-kesehatan"
         />
         {beritaRest.length > 0 ? (
@@ -221,8 +217,7 @@ export default async function HomePage() {
       {/* ── Aksi Kemanusiaan ─────────────────────────────────── */}
       <section aria-labelledby="aksi-heading">
         <SectionHeader
-          label="Kanal"
-          title="Aksi Kemanusiaan"
+title="Aksi Kemanusiaan"
           href="/aksi-kemanusiaan"
         />
         {aksiArticles.length > 0 ? (
@@ -255,8 +250,7 @@ export default async function HomePage() {
       {/* ── Dokter Menulis ───────────────────────────────────── */}
       <section aria-labelledby="dokter-heading">
         <SectionHeader
-          label="Kanal"
-          title="Dokter Menulis"
+title="Dokter Menulis"
           href="/dokter-menulis"
         />
         {dokterArticles.length > 0 ? (

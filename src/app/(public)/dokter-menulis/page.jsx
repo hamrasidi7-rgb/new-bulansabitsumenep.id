@@ -27,9 +27,6 @@ export default async function DokterMenulisPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
       <div className="mb-6">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent-red)]">
-          Kanal
-        </p>
         <h1 className="font-serif text-2xl font-bold text-[var(--foreground)]">Dokter Menulis</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
           Opini, edukasi, dan pengalaman klinis langsung dari para dokter dan tenaga medis.
