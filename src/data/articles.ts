@@ -6,6 +6,14 @@ export interface Author {
   avatar?: string;
 }
 
+export interface BodyImage {
+  afterParagraph: number; // sisipkan setelah paragraf ke-N (0-indexed)
+  src: string;
+  alt: string;
+  caption?: string;
+  credit?: string;
+}
+
 export interface Article {
   slug: string;
   title: string;
@@ -20,8 +28,11 @@ export interface Article {
   hasAudio: boolean;
   isVerified: boolean;
   heroImage: string;
+  heroCaption?: string;  // keterangan foto hero
+  heroCredit?: string;   // sumber foto hero — ditampilkan sebagai "(Foto: X)"
   thumbnailImage: string;
   featured?: boolean;
+  bodyImages?: BodyImage[]; // gambar inline di badan artikel
 }
 
 export const articles: Article[] = [
@@ -47,8 +58,19 @@ export const articles: Article[] = [
     hasAudio: true,
     isVerified: true,
     heroImage: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=1200&q=80",
+    heroCaption: "Ilustrasi nyamuk Aedes aegypti, vektor utama penularan demam berdarah dengue (DBD).",
+    heroCredit: "Freepik",
     thumbnailImage: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=400&q=80",
     featured: true,
+    bodyImages: [
+      {
+        afterParagraph: 1,
+        src: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&q=80",
+        alt: "Petugas Dinas Kesehatan Sumenep melakukan fogging di permukiman warga Kalianget",
+        caption: "Petugas Dinkes Sumenep melakukan fogging di permukiman padat Kecamatan Kalianget untuk memutus rantai penularan DBD.",
+        credit: "Dinkes Sumenep",
+      },
+    ],
   },
   {
     slug: "stunting-gizi-balita-kepulauan",
@@ -72,7 +94,18 @@ export const articles: Article[] = [
     hasAudio: true,
     isVerified: true,
     heroImage: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80",
+    heroCaption: "Kader Posyandu menimbang balita di Kepulauan Kangean sebagai bagian dari pemantauan tumbuh kembang.",
+    heroCredit: "PMI Sumenep",
     thumbnailImage: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&q=80",
+    bodyImages: [
+      {
+        afterParagraph: 2,
+        src: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80",
+        alt: "Kader Posyandu membagikan makanan tambahan berbahan pangan lokal kepada balita di Kangean",
+        caption: "Kader Posyandu membagikan PMT berbahan pangan lokal — ikan tongkol dan daun kelor — kepada balita di Desa Arjasa, Kangean.",
+        credit: "Program Anak Pulau Sehat",
+      },
+    ],
   },
   {
     slug: "bakti-kesehatan-pmi-kepulauan-kangean",
@@ -94,6 +127,8 @@ export const articles: Article[] = [
     hasAudio: true,
     isVerified: false,
     heroImage: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1200&q=80",
+    heroCaption: "Tim medis PMI Sumenep memeriksa kesehatan warga di Kepulauan Kangean.",
+    heroCredit: "PMI Sumenep",
     thumbnailImage: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80",
   },
   {

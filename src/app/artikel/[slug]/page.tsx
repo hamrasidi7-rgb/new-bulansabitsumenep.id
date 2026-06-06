@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import VerifiedBadge from "@/components/article/VerifiedBadge";
+import ArticleImage from "@/components/article/ArticleImage";
+import ShareButtons from "@/components/article/ShareButtons";
 import AiToolbar from "@/components/ai/AiToolbar";
 import AiSummary from "@/components/ai/AiSummary";
 import AskArticle from "@/components/ai/AskArticle";
@@ -52,7 +54,8 @@ export default async function ArtikelPage({ params }: Props) {
       <Header />
 
       <main className="mx-auto w-full max-w-2xl flex-1 pb-32 pt-0">
-        {/* Hero Image */}
+
+        {/* ── Hero Image ─────────────────────────────────────────────────── */}
         <div className="relative aspect-[16/9] w-full overflow-hidden sm:rounded-b-2xl">
           <Image
             src={article.heroImage}
@@ -65,8 +68,17 @@ export default async function ArtikelPage({ params }: Props) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
 
-        <div className="px-4 pt-5">
-          {/* Metadata */}
+        {/* ── Caption foto hero ──────────────────────────────────────────── */}
+        {(article.heroCaption || article.heroCredit) && (
+          <p className="px-4 pt-2 text-xs leading-relaxed text-[var(--muted)] italic">
+            {article.heroCaption && <span>{article.heroCaption}</span>}
+            {article.heroCaption && article.heroCredit && " "}
+            {article.heroCredit && `(Foto: ${article.heroCredit})`}
+          </p>
+        )}
+
+        <div className="px-4 pt-4">
+          {/* ── Metadata ────────────────────────────────────────────────── */}
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--accent-red)]">
               {article.category}
@@ -74,12 +86,12 @@ export default async function ArtikelPage({ params }: Props) {
             {article.isVerified && <VerifiedBadge />}
           </div>
 
-          {/* Judul */}
+          {/* ── Judul ───────────────────────────────────────────────────── */}
           <h1 className="font-serif text-2xl font-bold leading-tight text-[var(--foreground)] sm:text-3xl">
             {article.title}
           </h1>
 
-          {/* Penulis + tanggal + waktu baca */}
+          {/* ── Penulis + tanggal + waktu baca ──────────────────────────── */}
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--muted)]">
             <span className="font-medium text-[var(--foreground)]">
               {article.author.name}
@@ -94,7 +106,12 @@ export default async function ArtikelPage({ params }: Props) {
             <span>{article.readingMinutes} mnt baca</span>
           </div>
 
-          {/* AI Toolbar */}
+          {/* ── Share buttons (a) — di bawah penulis/tanggal ────────────── */}
+          <div className="mt-3">
+            <ShareButtons title={article.title} slug={article.slug} />
+          </div>
+
+          {/* ── AI Toolbar ──────────────────────────────────────────────── */}
           <div className="mt-4">
             <AiToolbar
               articleText={fullText}
@@ -103,12 +120,12 @@ export default async function ArtikelPage({ params }: Props) {
             />
           </div>
 
-          {/* AI Summary */}
+          {/* ── AI Summary ──────────────────────────────────────────────── */}
           <div className="mt-4">
             <AiSummary />
           </div>
 
-          {/* Badan Artikel */}
+          {/* ── Badan Artikel ───────────────────────────────────────────── */}
           <article
             className="article-body mt-6"
             aria-label={`Isi artikel: ${article.title}`}
@@ -116,13 +133,23 @@ export default async function ArtikelPage({ params }: Props) {
             {/* Desktop: 2 kolom; Mobile: 1 kolom */}
             <div className="sm:columns-2 sm:gap-6">
               {article.body.map((para, i) => {
-                // Sisipkan pull quote setelah paragraf ke-2 jika ada
                 const isPullQuoteSlot = i === 2 && article.pullQuote;
+                // Gambar inline disisipkan setelah paragraf ke-i
+                const inlineImage = article.bodyImages?.find(
+                  (img) => img.afterParagraph === i
+                );
+
                 return (
                   <div key={i}>
-                    <p className={`mb-4 font-serif text-[16px] leading-[1.8] text-[var(--foreground)] break-inside-avoid${i === 0 ? " first-paragraph" : ""}`}>
+                    {/* Drop cap HANYA pada paragraf pertama (i === 0) */}
+                    <p
+                      className={`mb-4 font-serif text-[16px] leading-[1.8] text-[var(--foreground)] break-inside-avoid${
+                        i === 0 ? " first-paragraph" : ""
+                      }`}
+                    >
                       {para}
                     </p>
+
                     {isPullQuoteSlot && (
                       <blockquote
                         className="pull-quote break-inside-avoid"
@@ -131,18 +158,25 @@ export default async function ArtikelPage({ params }: Props) {
                         {article.pullQuote}
                       </blockquote>
                     )}
+
+                    {/* Foto inline — [column-span:all] agar merentang dua kolom di desktop */}
+                    {inlineImage && (
+                      <ArticleImage
+                        src={inlineImage.src}
+                        alt={inlineImage.alt}
+                        caption={inlineImage.caption}
+                        credit={inlineImage.credit}
+                      />
+                    )}
                   </div>
                 );
               })}
             </div>
           </article>
 
-          {/* Tag */}
+          {/* ── Tag ─────────────────────────────────────────────────────── */}
           {article.tags.length > 0 && (
-            <div
-              className="mt-6 flex flex-wrap gap-2"
-              aria-label="Tag artikel"
-            >
+            <div className="mt-6 flex flex-wrap gap-2" aria-label="Tag artikel">
               {article.tags.map((tag) => (
                 <span
                   key={tag}
@@ -154,7 +188,12 @@ export default async function ArtikelPage({ params }: Props) {
             </div>
           )}
 
-          {/* WhatsApp */}
+          {/* ── Share buttons (b) — di akhir artikel ────────────────────── */}
+          <div className="mt-5 border-t border-[var(--border)] pt-5">
+            <ShareButtons title={article.title} slug={article.slug} />
+          </div>
+
+          {/* ── WhatsApp ─────────────────────────────────────────────────── */}
           <div className="mt-6">
             <WhatsAppCard
               message="Ada pertanyaan tentang kondisi kesehatan Anda?"
@@ -162,7 +201,7 @@ export default async function ArtikelPage({ params }: Props) {
             />
           </div>
 
-          {/* Artikel terkait */}
+          {/* ── Artikel terkait ──────────────────────────────────────────── */}
           {related.length > 0 && (
             <section className="mt-8" aria-labelledby="related-heading">
               <h2
@@ -179,11 +218,11 @@ export default async function ArtikelPage({ params }: Props) {
             </section>
           )}
 
-          {/* Kembali ke beranda */}
+          {/* ── Kembali ke beranda ───────────────────────────────────────── */}
           <div className="mt-6 text-center">
             <Link
               href="/"
-              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)] transition"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--muted)] transition hover:text-[var(--foreground)]"
             >
               ← Kembali ke Beranda
             </Link>
@@ -191,7 +230,7 @@ export default async function ArtikelPage({ params }: Props) {
         </div>
       </main>
 
-      {/* Panel Tanya AI — sticky di bawah, di atas BottomNav */}
+      {/* ── Panel Tanya AI — sticky di atas BottomNav ─────────────────── */}
       <div className="fixed bottom-16 left-0 right-0 z-40 mx-auto max-w-2xl">
         <AskArticle
           articleTitle={article.title}
