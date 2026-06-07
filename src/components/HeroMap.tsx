@@ -160,29 +160,6 @@ export default function HeroMap() {
         {selected && <div className="absolute inset-0 z-[15]" onClick={()=>setSelected(null)}/>}
       </div>
 
-      {/* QUICK MENU di bawah peta */}
-      <nav aria-label="Menu Kanal" className="bg-white border-b border-gray-100 shadow-sm">
-        <div className="mx-auto flex max-w-2xl justify-around px-2 py-3">
-          {[
-            { label:'Berita\nKesehatan', href:'/berita-kesehatan',            emoji:'📰', color:'#dc2626' },
-            { label:'Aksi\nKemanusiaan', href:'/aksi-kemanusiaan',            emoji:'🤝', color:'#16a34a' },
-            { label:'Dokter\nMenulis',   href:'/dokter-menulis',              emoji:'👨‍⚕️', color:'#2563eb' },
-            { label:'Video\nStory',      href:'/video-story',                 emoji:'🎬', color:'#7c3aed' },
-            { label:'Stok\nDarah',       href:'/aksi-kemanusiaan/donor-darah',emoji:'🩸', color:'#be123c' },
-          ].map(({ label, href, emoji, color }) => (
-            <Link key={href} href={href}
-              className="flex flex-col items-center gap-1.5 px-1 transition active:scale-95">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl shadow-sm"
-                style={{ background: color + '12', border: `1.5px solid ${color}22` }}>
-                {emoji}
-              </span>
-              <span className="text-center text-[9.5px] font-semibold leading-tight text-gray-600 whitespace-pre-line">
-                {label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </nav>
     </div>
   )
 }
