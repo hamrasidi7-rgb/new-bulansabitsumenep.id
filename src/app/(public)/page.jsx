@@ -108,7 +108,7 @@ export default async function HomePage() {
       <HeroMapClient />
 
       {/* Konten portal di bawah hero */}
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 space-y-12">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-5 pb-8 space-y-12">
         <HomeFeed articles={articles} />
 
         <section>

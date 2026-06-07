@@ -96,7 +96,7 @@ export default function HeroMap() {
       </div>
 
       {/* MAP CONTAINER */}
-      <div className="relative w-full h-[350px] sm:h-[480px] overflow-hidden">
+      <div className="relative w-full h-[270px] sm:h-[400px] overflow-hidden">
         <div ref={mapRef} className="absolute inset-0 z-0" />
 
         {/* Search overlay atas peta */}
