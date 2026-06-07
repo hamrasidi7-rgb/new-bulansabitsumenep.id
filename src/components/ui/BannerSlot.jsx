@@ -1,21 +1,26 @@
+import { unstable_cache } from 'next/cache'
 import { supabase } from '@/lib/supabaseClient'
 import Image from 'next/image'
 import Link from 'next/link'
 
-async function fetchBanner(position) {
-  const now = new Date().toISOString()
-  const { data } = await supabase
-    .from('banners')
-    .select('*')
-    .eq('position', position)
-    .eq('is_active', true)
-    .or(`starts_at.is.null,starts_at.lte.${now}`)
-    .or(`ends_at.is.null,ends_at.gte.${now}`)
-    .order('sort_order', { ascending: true })
-    .limit(1)
-    .single()
-  return data ?? null
-}
+const fetchBanner = unstable_cache(
+  async (position) => {
+    const now = new Date().toISOString()
+    const { data } = await supabase
+      .from('banners')
+      .select('*')
+      .eq('position', position)
+      .eq('is_active', true)
+      .or(`starts_at.is.null,starts_at.lte.${now}`)
+      .or(`ends_at.is.null,ends_at.gte.${now}`)
+      .order('sort_order', { ascending: true })
+      .limit(1)
+      .single()
+    return data ?? null
+  },
+  ['banner-slot'],
+  { revalidate: 300 }
+)
 
 function Placeholder({ size, className }) {
   const base =
