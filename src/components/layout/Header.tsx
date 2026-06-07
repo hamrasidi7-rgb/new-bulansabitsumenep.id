@@ -43,14 +43,14 @@ export default function Header({ showSearch = true }: HeaderProps) {
         </Link>
 
         {/* Kanan: logo PMI + search + menu */}
-        <div className="flex items-center gap-0.5">
-          <div className="relative h-8 w-8 sm:w-[148px] shrink-0 overflow-hidden rounded-sm">
+        <div className="flex items-center gap-1">
+          <div className="relative h-7 w-[108px] sm:h-8 sm:w-[148px] shrink-0 overflow-hidden">
             <Image
               src="/logo-pmi-sumenep.jpg"
               alt="Palang Merah Indonesia Kabupaten Sumenep"
               fill
-              className="object-cover object-left sm:object-contain sm:object-right"
-              sizes="(max-width:640px) 32px, 148px"
+              className="object-contain object-right"
+              sizes="(max-width:640px) 108px, 148px"
             />
           </div>
 
@@ -58,7 +58,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
             <Link
               href="/cari"
               aria-label="Cari artikel"
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
+              className="hidden sm:flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
             >
               <SearchIcon />
             </Link>
