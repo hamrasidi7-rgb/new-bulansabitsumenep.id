@@ -1,78 +1,93 @@
 import Image from "next/image";
+import Link from "next/link";
+import { CHANNELS, subchannelHref } from "@/lib/channels";
 import { siteConfig } from "@/lib/site";
-
-// ── Konstanta ──────────────────────────────────────────────────────────────
-
-const SOCIAL_LINKS = [
-  { label: "Facebook Bulan Sabit Sumenep", href: "#", icon: <FacebookIcon /> },
-  { label: "Instagram Bulan Sabit Sumenep", href: "#", icon: <InstagramIcon /> },
-  { label: "X (Twitter) Bulan Sabit Sumenep", href: "#", icon: <XIcon /> },
-  { label: "YouTube Bulan Sabit Sumenep", href: "#", icon: <YouTubeIcon /> },
-  { label: "TikTok Bulan Sabit Sumenep", href: "#", icon: <TikTokIcon /> },
-];
+import { getSiteSettings } from "@/lib/sitePages";
 
 const NAV_LINKS = [
-  { label: "Tentang Kami", href: "#" },
-  { label: "Manajemen & Dewan Redaksi", href: "#" },
-  { label: "Pedoman Media Siber", href: "#" },
-  { label: "Periklanan & Kerjasama", href: "#" },
-  { label: "FAQ", href: "#" },
-  { label: "Kebijakan Layanan", href: "#" },
-  { label: "Privasi Pengguna", href: "#" },
+  { label: "Tentang Kami", href: "/tentang-kami" },
+  { label: "Manajemen & Dewan Redaksi", href: "/redaksi" },
+  { label: "Pedoman Media Siber", href: "/pedoman-media-siber" },
+  { label: "Periklanan & Kerjasama", href: "/periklanan" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Kebijakan Layanan", href: "/kebijakan-layanan" },
+  { label: "Privasi Pengguna", href: "/privasi" },
 ];
 
-// ── Komponen utama ─────────────────────────────────────────────────────────
-
-export default function Footer() {
+export default async function Footer() {
   const year = new Date().getFullYear();
+  const settings = await getSiteSettings().catch(() => ({} as Record<string, string>));
+
+  const socialLinks = [
+    { label: "Facebook Bulan Sabit Sumenep",    href: settings.facebook_url  || "#", icon: <FacebookIcon /> },
+    { label: "Instagram Bulan Sabit Sumenep",   href: settings.instagram_url || "#", icon: <InstagramIcon /> },
+    { label: "X (Twitter) Bulan Sabit Sumenep", href: settings.twitter_url   || "#", icon: <XIcon /> },
+    { label: "YouTube Bulan Sabit Sumenep",     href: settings.youtube_url   || "#", icon: <YouTubeIcon /> },
+    { label: "TikTok Bulan Sabit Sumenep",      href: settings.tiktok_url    || "#", icon: <TikTokIcon /> },
+  ];
 
   return (
     <footer
-      className="pb-[4.5rem] sm:pb-0"   // pb-[4.5rem] = ruang untuk BottomNav fixed di mobile
+      className="pb-[4.5rem] sm:pb-0"
       style={{ backgroundColor: "#1a2235" }}
       aria-label="Footer Bulan Sabit Sumenep"
     >
-      <div className="mx-auto max-w-2xl px-6 py-10 flex flex-col items-center gap-8">
+      <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
 
-        {/* ── 1. Baris logo ─────────────────────────────────────────────── */}
-        <div className="flex items-center gap-5" role="img" aria-label="Logo Bulan Sabit Sumenep dan Palang Merah Indonesia">
-
-          {/* Logo BSM
-              TODO: ganti /logo-bulansabitsumenep.jpg dengan file logo final Anda di folder /public */}
-          <div className="relative h-10 w-[136px] overflow-hidden rounded-md bg-white px-2 py-1">
-            <Image
-              src="/logo-bulansabitsumenep.jpg"
-              alt="Bulan Sabit Merah Sumenep"
-              fill
-              className="object-contain"
-              sizes="136px"
-            />
+        {/* ── Logo + tagline ─────────────────────────────────────────── */}
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+          <div className="flex items-center gap-4" role="img" aria-label="Logo Bulan Sabit Sumenep dan Palang Merah Indonesia">
+            <div className="relative h-10 w-[136px] overflow-hidden rounded-md bg-white px-2 py-1">
+              <Image
+                src="/logo-bulansabitsumenep.jpg"
+                alt="Bulan Sabit Merah Sumenep"
+                fill
+                className="object-contain"
+                sizes="136px"
+              />
+            </div>
+            <span className="h-10 w-px bg-white/20" aria-hidden="true" />
+            <div className="relative h-10 w-[160px] overflow-hidden rounded-md bg-white px-2 py-1">
+              <Image
+                src="/logo-pmi-sumenep.jpg"
+                alt="Palang Merah Indonesia Kabupaten Sumenep"
+                fill
+                className="object-contain"
+                sizes="160px"
+              />
+            </div>
           </div>
-
-          {/* Pemisah vertikal */}
-          <span className="h-10 w-px bg-white/20" aria-hidden="true" />
-
-          {/* Logo PMI
-              TODO: ganti /logo-pmi.jpg dengan file logo final Anda di folder /public */}
-          <div className="relative h-10 w-[116px] overflow-hidden rounded-md bg-white px-2 py-1">
-            <Image
-              src="/logo-pmi.jpg"
-              alt="Palang Merah Indonesia"
-              fill
-              className="object-contain"
-              sizes="116px"
-            />
-          </div>
+          <p className="text-center text-sm italic text-white/55 sm:text-right">
+            {siteConfig.tagline}
+          </p>
         </div>
 
-        {/* ── 1b. Tagline ───────────────────────────────────────────────── */}
-        <p className="text-center text-sm italic text-white/55 -mt-4">
-          {siteConfig.tagline}
-        </p>
+        {/* ── Grid kanal + sub-kanal ─────────────────────────────────── */}
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+          {CHANNELS.map((ch) => (
+            <div key={ch.slug}>
+              <Link
+                href={ch.href}
+                className="block text-xs font-bold uppercase tracking-[0.15em] text-white/80 hover:text-white mb-2"
+              >
+                {ch.label}
+              </Link>
+              {ch.subchannels.slice(0, 4).map((sub) => (
+                <Link
+                  key={sub.slug}
+                  href={subchannelHref(ch.slug, sub.slug)}
+                  className="block py-0.5 text-xs text-white/45 hover:text-white/80 transition-colors"
+                >
+                  {sub.label}
+                </Link>
+              ))}
+            </div>
+          ))}
+        </div>
 
-        {/* ── 2. Ikon media sosial ───────────────────────────────────────── */}
-        <div className="flex items-center gap-3" role="list" aria-label="Media sosial">
-          {SOCIAL_LINKS.map(({ label, href, icon }) => (
+        {/* ── Media sosial ───────────────────────────────────────────── */}
+        <div className="flex justify-center gap-3" role="list" aria-label="Media sosial">
+          {socialLinks.map(({ label, href, icon }) => (
             <a
               key={label}
               href={href}
@@ -85,7 +100,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* ── 3. Menu tautan ────────────────────────────────────────────── */}
+        {/* ── Tautan legal ───────────────────────────────────────────── */}
         <nav aria-label="Tautan footer">
           <ul className="flex flex-wrap justify-center gap-x-3 gap-y-2">
             {NAV_LINKS.map(({ label, href }, i) => (
@@ -104,10 +119,8 @@ export default function Footer() {
           </ul>
         </nav>
 
-        {/* ── 4. Garis pemisah ──────────────────────────────────────────── */}
-        <hr className="w-full border-white/10" />
-
-        {/* ── 5. Copyright ──────────────────────────────────────────────── */}
+        {/* ── Copyright ──────────────────────────────────────────────── */}
+        <hr className="border-white/10" />
         <p className="text-center text-xs text-white/40 leading-relaxed">
           Copyright &copy; {year} Bulan Sabit Sumenep &bull; PMI Kabupaten Sumenep.
           All rights reserved.
@@ -116,8 +129,6 @@ export default function Footer() {
     </footer>
   );
 }
-
-// ── Ikon media sosial (SVG inline) ─────────────────────────────────────────
 
 function FacebookIcon() {
   return (

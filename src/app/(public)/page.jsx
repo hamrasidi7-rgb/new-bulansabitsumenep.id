@@ -4,7 +4,6 @@ import { articles as localArticles, getAuthorById } from '@/data/articles'
 import HeroSection from '@/components/HeroSection'
 import VideoStory from '@/components/VideoStory'
 import GallerySection from '@/components/GallerySection'
-import WhatsAppCard from '@/components/ui/WhatsAppCard'
 import HomeFeed from '@/components/HomeFeed'
 
 // Cache homepage 5 menit — Supabase tidak dipanggil setiap request
@@ -118,12 +117,6 @@ export default async function HomePage() {
       <section>
         <GallerySection limit={4} initialAlbums={albums} initialCounts={counts} />
       </section>
-
-      {/* WhatsApp CTA */}
-      <div className="mx-auto max-w-2xl">
-        {/* TODO: ganti WA_NUMBER di src/components/ui/WhatsAppCard.tsx */}
-        <WhatsAppCard />
-      </div>
 
     </div>
   )

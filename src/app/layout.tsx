@@ -14,7 +14,7 @@ const inter = Inter({
 const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin"],
-  display: "swap",
+  display: "fallback",
 });
 
 // ── Metadata global ────────────────────────────────────────────────────────

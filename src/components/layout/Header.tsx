@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import MobileNav from "./MobileNav";
 
 interface HeaderProps {
   showSearch?: boolean;
 }
 
 export default function Header({ showSearch = true }: HeaderProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-2xl items-center justify-between px-3 py-1.5">
@@ -18,7 +22,6 @@ export default function Header({ showSearch = true }: HeaderProps) {
           className="flex items-center gap-2 min-h-[44px]"
           aria-label="Beranda Bulan Sabit Sumenep"
         >
-          {/* Container kecil — crop bagian kiri logo (simbol bulan sabit + hati) */}
           <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg">
             <Image
               src="/logo-bulansabitsumenep.jpg"
@@ -41,14 +44,13 @@ export default function Header({ showSearch = true }: HeaderProps) {
 
         {/* Kanan: logo PMI + search + menu */}
         <div className="flex items-center gap-0.5">
-          {/* Logo PMI — tampil penuh (sudah ada teks "Palang Merah Indonesia" di gambar) */}
-          <div className="relative h-8 w-[112px] shrink-0">
+          <div className="relative hidden sm:block h-8 w-[148px] shrink-0">
             <Image
-              src="/logo-pmi.jpg"
-              alt="Palang Merah Indonesia"
+              src="/logo-pmi-sumenep.jpg"
+              alt="Palang Merah Indonesia Kabupaten Sumenep"
               fill
               className="object-contain object-right"
-              sizes="112px"
+              sizes="148px"
             />
           </div>
 
@@ -62,16 +64,18 @@ export default function Header({ showSearch = true }: HeaderProps) {
             </Link>
           )}
 
-          {/* Hamburger menu — TODO: sambungkan ke sidebar/drawer */}
           <button
             aria-label="Buka menu navigasi"
-            onClick={() => console.log("[Menu] TODO: buka drawer/sidebar")}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen(true)}
             className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
           >
             <MenuIcon />
           </button>
         </div>
       </div>
+
+      <MobileNav isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
     </header>
   );
 }

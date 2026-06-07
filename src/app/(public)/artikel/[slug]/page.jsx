@@ -11,9 +11,9 @@ import VerifiedBadge from '@/components/article/VerifiedBadge'
 import ArticleImage from '@/components/article/ArticleImage'
 import ShareButtons from '@/components/article/ShareButtons'
 import AskArticle from '@/components/ai/AskArticle'
-import WhatsAppCard from '@/components/ui/WhatsAppCard'
 import BannerSlot from '@/components/ui/BannerSlot'
 import SectionHeader from '@/components/ui/SectionHeader'
+import ViewTracker from '@/components/ViewTracker'
 
 // Pemetaan category articles.ts → channel slug
 const CATEGORY_TO_CHANNEL = {
@@ -124,11 +124,15 @@ function LocalBody({ body, pullQuote, bodyImages }) {
   )
 }
 
-// Badan artikel dari Supabase/SEED (HTML mentah) — banner disuntik antar segmen
-function HtmlBody({ html }) {
+// Badan artikel dari Supabase/SEED (HTML mentah) — banner + foto inline disuntik antar segmen
+function HtmlBody({ html, bodyImages }) {
   const totalParas = (html.match(/<\/p>/g) ?? []).length
-  const [seg1, rest1] = splitHtmlAfterParagraph(html, 2)
-  const [seg2, seg3] = splitHtmlAfterParagraph(rest1, Math.max(1, Math.floor(totalParas / 2) - 2))
+  const inlineImg = bodyImages?.[0] ?? null
+  const splitAfter = inlineImg ? Math.max(1, inlineImg.afterParagraph ?? 1) : 2
+  const midPoint = Math.max(1, Math.floor(totalParas / 2) - 2)
+
+  const [seg1, rest1] = splitHtmlAfterParagraph(html, splitAfter)
+  const [seg2, seg3]  = splitHtmlAfterParagraph(rest1, midPoint)
 
   const proseClass =
     'article-body prose prose-lg max-w-none ' +
@@ -138,17 +142,24 @@ function HtmlBody({ html }) {
 
   return (
     <>
-      {/* Paragraf 1-2 */}
       <article className={`${proseClass} mt-8`}
         dangerouslySetInnerHTML={{ __html: seg1 }} aria-label="Isi artikel bagian awal" />
-      {/* Banner setelah paragraf ke-2 */}
+
+      {/* Foto kedua inline (dari Supabase body_images) */}
+      {inlineImg && (
+        <ArticleImage
+          src={inlineImg.src}
+          alt={inlineImg.alt ?? ''}
+          caption={inlineImg.caption}
+          credit={inlineImg.credit}
+        />
+      )}
+
       <BannerSlot size="strip" className="my-6" />
-      {/* Paragraf tengah */}
+
       <article className={proseClass}
         dangerouslySetInnerHTML={{ __html: seg2 }} aria-label="Isi artikel bagian tengah" />
-      {/* Banner di tengah artikel */}
       <BannerSlot size="rectangle" className="my-6" />
-      {/* Paragraf akhir */}
       {seg3 && (
         <article className={proseClass}
           dangerouslySetInnerHTML={{ __html: seg3 }} aria-label="Isi artikel bagian akhir" />
@@ -224,7 +235,8 @@ export default async function ArtikelDetailPage({ params }) {
       heroCaption: sbData.hero_caption ?? null,
       heroCredit: sbData.hero_credit ?? null,
       authorName: sbData.author_name ?? 'Redaksi BSS',
-      authorRole: null,
+      authorRole: sbData.author_role ?? null,
+      authorPhoto: sbData.author_photo ?? null,
       publishedAt: sbData.published_at,
       readingMinutes: estimateMinutes(sbData.content),
       isVerified: sbData.is_verified ?? false,
@@ -232,7 +244,7 @@ export default async function ArtikelDetailPage({ params }) {
       contentHtml: sbData.content,
       body: null,
       pullQuote: null,
-      bodyImages: null,
+      bodyImages: sbData.body_images?.length ? sbData.body_images : null,
     }
     const { data: relData } = await supabase
       .from('articles')
@@ -266,6 +278,7 @@ export default async function ArtikelDetailPage({ params }) {
         heroCredit: local.heroCredit ?? null,
         authorName: author?.name ?? 'Redaksi BSS',
         authorRole: author?.role ?? null,
+        authorPhoto: author?.avatar ?? null,
         publishedAt: local.publishedAt,
         readingMinutes: local.readingMinutes,
         isVerified: local.isVerified,
@@ -305,6 +318,7 @@ export default async function ArtikelDetailPage({ params }) {
         heroCredit: null,
         authorName: seed.author_name ?? 'Redaksi BSS',
         authorRole: null,
+        authorPhoto: null,
         publishedAt: seed.published_at,
         readingMinutes: estimateMinutes(seed.content ?? ''),
         isVerified: false,
@@ -324,6 +338,8 @@ export default async function ArtikelDetailPage({ params }) {
   return (
     <div className="mx-auto w-full max-w-2xl pb-24 pt-0">
       <div className="px-4 pt-5">
+
+        <ViewTracker slug={slug} />
 
         {/* ── Banner di atas judul ──────────────────────────────────────── */}
         <BannerSlot size="leaderboard" className="mb-5" />
@@ -352,13 +368,19 @@ export default async function ArtikelDetailPage({ params }) {
 
         {/* ── Byline: avatar + nama + tanggal + waktu baca ─────────────── */}
         <div className="mt-4 flex items-center gap-3 border-b border-[var(--border)] pb-4">
-          <div
-            aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center
-              rounded-full bg-[var(--accent-red)] text-[12px] font-bold text-white"
-          >
-            {authorInitials(art.authorName)}
-          </div>
+          {art.authorPhoto ? (
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
+              <Image src={art.authorPhoto} alt={art.authorName} fill className="object-cover" sizes="40px" />
+            </div>
+          ) : (
+            <div
+              aria-hidden="true"
+              className="flex h-10 w-10 shrink-0 items-center justify-center
+                rounded-full bg-[var(--accent-red)] text-[12px] font-bold text-white"
+            >
+              {authorInitials(art.authorName)}
+            </div>
+          )}
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold leading-tight text-[var(--foreground)]">
               {art.authorName}
@@ -406,7 +428,7 @@ export default async function ArtikelDetailPage({ params }) {
             bodyImages={art.bodyImages}
           />
         ) : (
-          <HtmlBody html={art.contentHtml ?? ''} />
+          <HtmlBody html={art.contentHtml ?? ''} bodyImages={art.bodyImages} />
         )}
 
         {/* ── Banner setelah artikel ────────────────────────────────────── */}
@@ -429,11 +451,6 @@ export default async function ArtikelDetailPage({ params }) {
         {/* ── ShareButtons (bawah) ─────────────────────────────────────── */}
         <div className="mt-6 border-t border-[var(--border)] pt-4">
           <ShareButtons title={art.title} slug={art.slug} />
-        </div>
-
-        {/* ── WhatsApp card ─────────────────────────────────────────────── */}
-        <div className="mt-6">
-          <WhatsAppCard />
         </div>
 
         {/* ── Berita Terkait ────────────────────────────────────────────── */}
