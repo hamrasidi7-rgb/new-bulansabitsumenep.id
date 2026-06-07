@@ -27,7 +27,7 @@ export default async function WhatsAppFab() {
       "
     >
       <Image
-        src="/chat-darah.jpeg"
+        src="/chat-darah.png"
         alt="Chat Stok Darah Sekarang — PMI Sumenep"
         width={280}
         height={93}
