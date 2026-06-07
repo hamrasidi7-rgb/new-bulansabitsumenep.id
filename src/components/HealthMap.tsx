@@ -131,15 +131,15 @@ export default function HealthMap() {
 
       {/* Judul overlay — tepat di bawah header */}
       <div className="absolute left-4 right-4 z-20 pointer-events-none" style={{ top: '64px' }}>
-        <h1 className="text-[19px] font-bold leading-tight text-white drop-shadow-lg">
-          Peta Layanan Kesehatan
+        <h1 className="text-[15px] font-bold uppercase leading-snug tracking-wide text-white drop-shadow-lg">
+          Peta Layanan Kesehatan<br />dan Kedaruratan Sumenep
         </h1>
       </div>
 
       {/* Filter kategori */}
       <div className="absolute left-0 right-0 z-20 flex justify-center px-3" style={{ top: '96px' }}>
         <div className="flex gap-1.5 overflow-x-auto rounded-2xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur-sm no-scrollbar">
-          {(Object.keys(CATEGORY_CONFIG) as Category[]).map((cat) => {
+          {(Object.keys(CATEGORY_CONFIG) as Category[]).filter(c => c !== 'semua').map((cat) => {
             const cfg = CATEGORY_CONFIG[cat]
             const isOn = active === cat
             return (
