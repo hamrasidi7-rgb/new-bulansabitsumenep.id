@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 interface Facility {
@@ -91,20 +90,31 @@ export default function HeroMap() {
       <div className="relative w-full h-[270px] sm:h-[400px] overflow-hidden">
         <div ref={mapRef} className="absolute inset-0 z-0" />
 
-        {/* Banner Tanya AI — overlay atas peta */}
+        {/* Banner Tanya AI Faskes */}
         <a
-          href="https://wa.me/6285234567890?text=Halo%20Tanya%20AI%20BulanSabitSumenep%2C%20saya%20ingin%20bertanya%20tentang%20faskes%2C%20stok%20darah%2C%20atau%20layanan%20kesehatan."
+          href="https://wa.me/6285234567890?text=Halo%20Tanya%20AI%20Faskes%20BulanSabitSumenep%2C%20saya%20ingin%20bertanya%20tentang%20layanan%20kesehatan."
           target="_blank" rel="noopener noreferrer"
-          className="absolute top-3 left-3 right-3 z-10 block rounded-xl overflow-hidden shadow-lg hover:opacity-95 transition active:scale-95"
+          className="absolute top-3 left-3 right-3 z-10 flex items-center gap-3 bg-white rounded-full px-3 py-2 shadow-lg border border-red-100 hover:shadow-xl transition-shadow active:scale-[0.98]"
         >
-          <Image
-            src="/TANYA AI BULAN SABIT.jpeg"
-            alt="Tanya AI BulanSabitSumenep — Cari Faskes, Stok Darah, Obat, Ambulans"
-            width={900}
-            height={200}
-            className="w-full h-auto"
-            priority
-          />
+          {/* Robot icon */}
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-[22px] leading-none">
+            🤖
+          </span>
+
+          {/* Teks */}
+          <div className="flex-1 min-w-0">
+            <p className="text-[13px] font-bold leading-tight text-gray-800">Tanya AI Faskes...</p>
+            <p className="text-[10px] text-gray-400 leading-snug truncate">
+              Contoh: Puskesmas terdekat, Stok darah O, Klinik gigi buka hari ini
+            </p>
+          </div>
+
+          {/* Tombol kirim */}
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-500 text-white shadow-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/>
+            </svg>
+          </span>
         </a>
 
         {/* Floating buttons kanan bawah */}
