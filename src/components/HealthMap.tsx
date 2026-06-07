@@ -129,9 +129,11 @@ export default function HealthMap() {
         }}
       />
 
-      {/* Filter kategori — tepat di bawah header */}
-      <div className="absolute left-0 right-0 z-20 flex justify-center px-3" style={{ top: '64px' }}>
-        <div className="flex gap-1.5 overflow-x-auto rounded-2xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur-sm no-scrollbar">
+      {/* Filter + Judul — satu container flex column, tidak tumpang tindih */}
+      <div className="absolute left-0 right-0 z-20 flex flex-col gap-2 px-3" style={{ top: '64px' }}>
+
+        {/* Filter buttons */}
+        <div className="flex self-center gap-1.5 overflow-x-auto rounded-2xl bg-white/95 px-3 py-2 shadow-lg backdrop-blur-sm no-scrollbar">
           {(Object.keys(CATEGORY_CONFIG) as Category[]).filter(c => c !== 'semua').map((cat) => {
             const cfg = CATEGORY_CONFIG[cat]
             const isOn = active === cat
@@ -152,14 +154,15 @@ export default function HealthMap() {
             )
           })}
         </div>
-      </div>
 
-      {/* Judul — di bawah filter buttons */}
-      <div className="absolute left-4 right-4 z-20 pointer-events-none" style={{ top: '116px' }}>
-        <h1 className="text-[14px] font-black uppercase leading-snug tracking-wide drop-shadow-sm"
-          style={{ color: '#dc2626' }}>
-          Peta Layanan Kesehatan<br />dan Kedaruratan Sumenep
-        </h1>
+        {/* Judul — otomatis di bawah filter, tidak tumpang tindih */}
+        <div className="pointer-events-none pl-1">
+          <h1 className="text-[14px] font-black uppercase leading-snug tracking-wide"
+            style={{ color: '#dc2626', textShadow: '0 1px 3px rgba(255,255,255,0.8)' }}>
+            Peta Layanan Kesehatan<br />dan Kedaruratan Sumenep
+          </h1>
+        </div>
+
       </div>
 
       {/* Info panel — muncul saat marker diklik */}
