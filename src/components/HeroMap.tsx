@@ -41,21 +41,25 @@ export default function HeroMap() {
 
   useEffect(() => {
     if (!mapRef.current || leafletRef.current) return
-    Promise.all([import('leaflet'), import('leaflet.markercluster')]).then(([L]) => {
-      delete (L.Icon.Default.prototype as any)._getIconUrl
-      const map = L.map(mapRef.current!, { center:[-7.0047,113.8481], zoom:12, zoomControl:false, scrollWheelZoom:false })
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap', maxZoom:19 }).addTo(map)
-      L.control.zoom({ position:'bottomright' }).addTo(map)
-      map.on('locationfound',(e:any)=>{
-        userMk.current?.remove()
-        userMk.current = L.circleMarker(e.latlng,{radius:8,color:'#2563eb',fillColor:'#3b82f6',fillOpacity:1,weight:3}).addTo(map)
-        map.flyTo(e.latlng,15); setLocating(false)
+    // Delay 1.2s: beri browser waktu paint artikel (priority image) dulu → LCP lebih cepat
+    const timer = setTimeout(() => {
+      if (!mapRef.current) return
+      Promise.all([import('leaflet'), import('leaflet.markercluster')]).then(([L]) => {
+        delete (L.Icon.Default.prototype as any)._getIconUrl
+        const map = L.map(mapRef.current!, { center:[-7.0047,113.8481], zoom:12, zoomControl:false, scrollWheelZoom:false, preferCanvas:true })
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap', maxZoom:19 }).addTo(map)
+        L.control.zoom({ position:'bottomright' }).addTo(map)
+        map.on('locationfound',(e:any)=>{
+          userMk.current?.remove()
+          userMk.current = L.circleMarker(e.latlng,{radius:8,color:'#2563eb',fillColor:'#3b82f6',fillOpacity:1,weight:3}).addTo(map)
+          map.flyTo(e.latlng,15); setLocating(false)
+        })
+        map.on('locationerror',()=>setLocating(false))
+        leafletRef.current = { map, L }
+        buildClusters(L, map)
       })
-      map.on('locationerror',()=>setLocating(false))
-      leafletRef.current = { map, L }
-      buildClusters(L, map)
-    })
-    return ()=>{ leafletRef.current?.map?.remove(); leafletRef.current=null }
+    }, 1200)
+    return ()=>{ clearTimeout(timer); leafletRef.current?.map?.remove(); leafletRef.current=null }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
