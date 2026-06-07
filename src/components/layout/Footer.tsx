@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CHANNELS, subchannelHref } from "@/lib/channels";
+import { CHANNELS } from "@/lib/channels";
 import { siteConfig } from "@/lib/site";
 import { getSiteSettings } from "@/lib/sitePages";
 
@@ -62,25 +62,15 @@ export default async function Footer() {
         </div>
 
         {/* ── Grid kanal + sub-kanal ─────────────────────────────────── */}
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="flex flex-wrap gap-x-6 gap-y-3">
           {CHANNELS.map((ch) => (
-            <div key={ch.slug}>
-              <Link
-                href={ch.href}
-                className="block text-xs font-bold uppercase tracking-[0.15em] text-[#1a2235] hover:text-red-600 mb-2"
-              >
-                {ch.label}
-              </Link>
-              {ch.subchannels.slice(0, 4).map((sub) => (
-                <Link
-                  key={sub.slug}
-                  href={subchannelHref(ch.slug, sub.slug)}
-                  className="block py-0.5 text-xs text-gray-500 hover:text-[#1a2235] transition-colors"
-                >
-                  {sub.label}
-                </Link>
-              ))}
-            </div>
+            <Link
+              key={ch.slug}
+              href={ch.href}
+              className="text-xs font-bold uppercase tracking-[0.15em] text-[#1a2235] hover:text-red-600 transition-colors"
+            >
+              {ch.label}
+            </Link>
           ))}
         </div>
 
