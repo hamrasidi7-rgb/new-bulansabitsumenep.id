@@ -47,7 +47,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
           <div className="flex items-center gap-0.5">
             <div className="relative h-9 w-[120px] sm:w-[168px] shrink-0 overflow-hidden">
               <Image
-                src="/logo-pmi-sumenep.jpg"
+                src="/logo-pmi-sumenep.png"
                 alt="Palang Merah Indonesia Kabupaten Sumenep"
                 fill
                 className="object-contain object-right"
