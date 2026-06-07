@@ -66,6 +66,7 @@ export default function HealthMap() {
   const leafletRef = useRef<any>(null)
   const [active, setActive] = useState<Category>('semua')
   const [selected, setSelected] = useState<Facility | null>(null)
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     if (!mapRef.current || leafletRef.current) return
@@ -95,7 +96,7 @@ export default function HealthMap() {
       // Simpan map + L ke ref agar bisa diakses di filter
       leafletRef.current = { map, L, markers: [] as any[] }
 
-      renderMarkers(L, map, 'semua', setSelected)
+      renderMarkers(L, map, 'semua', '', setSelected)
     })
 
     return () => {
@@ -109,9 +110,9 @@ export default function HealthMap() {
     if (!leafletRef.current) return
     const { map, L, markers } = leafletRef.current
     markers.forEach((m: any) => map.removeLayer(m))
-    leafletRef.current.markers = renderMarkers(L, map, active, setSelected)
+    leafletRef.current.markers = renderMarkers(L, map, active, query, setSelected)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active])
+  }, [active, query])
 
   return (
     <div className="relative w-full" style={{ height: '100dvh' }}>
@@ -155,12 +156,20 @@ export default function HealthMap() {
           })}
         </div>
 
-        {/* Judul — otomatis di bawah filter, tidak tumpang tindih */}
-        <div className="pointer-events-none pl-1">
-          <h1 className="text-[14px] font-black uppercase leading-snug tracking-wide"
-            style={{ color: '#dc2626', textShadow: '0 1px 3px rgba(255,255,255,0.8)' }}>
-            Peta Layanan Kesehatan<br />dan Kedaruratan Sumenep
-          </h1>
+        {/* Search bar */}
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/>
+            </svg>
+          </span>
+          <input
+            type="search"
+            value={query}
+            onChange={e => { setQuery(e.target.value); setSelected(null) }}
+            placeholder="Cari Faskes, RS, Puskesmas..."
+            className="w-full rounded-2xl bg-white/95 py-2.5 pl-9 pr-4 text-[13px] font-medium text-gray-700 placeholder-gray-400 shadow-lg outline-none backdrop-blur-sm focus:ring-2 focus:ring-red-400"
+          />
         </div>
 
       </div>
@@ -210,8 +219,12 @@ export default function HealthMap() {
   )
 }
 
-function renderMarkers(L: any, map: any, active: Category, setSelected: (f: Facility) => void) {
-  const filtered = active === 'semua' ? FACILITIES : FACILITIES.filter(f => f.category === active)
+function renderMarkers(L: any, map: any, active: Category, query: string, setSelected: (f: Facility) => void) {
+  const q = query.trim().toLowerCase()
+  const filtered = FACILITIES.filter(f =>
+    (active === 'semua' || f.category === active) &&
+    (!q || f.name.toLowerCase().includes(q) || f.address.toLowerCase().includes(q))
+  )
   return filtered.map((f) => {
     const marker = L.marker([f.lat, f.lng], { icon: makeIcon(MARKER_COLORS[f.category], L) })
       .addTo(map)
