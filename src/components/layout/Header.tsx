@@ -44,13 +44,13 @@ export default function Header({ showSearch = true }: HeaderProps) {
 
         {/* Kanan: logo PMI + search + menu */}
         <div className="flex items-center gap-0.5">
-          <div className="relative hidden sm:block h-8 w-[148px] shrink-0">
+          <div className="relative h-8 w-8 sm:w-[148px] shrink-0 overflow-hidden rounded-sm">
             <Image
               src="/logo-pmi-sumenep.jpg"
               alt="Palang Merah Indonesia Kabupaten Sumenep"
               fill
-              className="object-contain object-right"
-              sizes="148px"
+              className="object-cover object-left sm:object-contain sm:object-right"
+              sizes="(max-width:640px) 32px, 148px"
             />
           </div>
 
