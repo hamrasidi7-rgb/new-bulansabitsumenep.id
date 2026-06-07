@@ -4,7 +4,7 @@ import { articles as localArticles, getAuthorById } from '@/data/articles'
 import VideoStory from '@/components/VideoStory'
 import GallerySection from '@/components/GallerySection'
 import HomeFeed from '@/components/HomeFeed'
-import HealthMapClient from '@/components/HealthMapClient'
+import HeroMapClient from '@/components/HeroMapClient'
 
 // Cache homepage 5 menit — Supabase tidak dipanggil setiap request
 export const revalidate = 300
@@ -104,12 +104,10 @@ export default async function HomePage() {
   return (
     <div className="w-full">
 
-      {/* Peta extend ke belakang header (negatif margin = naik ke atas) */}
-      <div className="-mt-14">
-        <HealthMapClient />
-      </div>
+      {/* Hero Map + Quick Menu */}
+      <HeroMapClient />
 
-      {/* Berita & konten di bawah peta */}
+      {/* Konten portal di bawah hero */}
       <div className="mx-auto w-full max-w-6xl px-4 py-8 space-y-12">
         <HomeFeed articles={articles} />
 

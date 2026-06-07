@@ -132,7 +132,7 @@ export default function HealthMap() {
   }
 
   return (
-    <div className="relative w-full" style={{ height: '100dvh' }}>
+    <div className="relative w-full h-full">
       <div ref={mapRef} className="absolute inset-0 z-0" />
 
       {/* Gradient overlay di bawah header */}
