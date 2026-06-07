@@ -1,7 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { SEED_ARTICLES, SEED_VIDEOS, SEED_GALLERIES } from '@/lib/seedData'
 import { articles as localArticles, getAuthorById } from '@/data/articles'
-import HeroSection from '@/components/HeroSection'
 import VideoStory from '@/components/VideoStory'
 import GallerySection from '@/components/GallerySection'
 import HomeFeed from '@/components/HomeFeed'
@@ -101,13 +100,9 @@ export default async function HomePage() {
     fetchGalleries(4),
   ])
 
-  const heroSlides = articles.slice(0, 3)
-  const heroGrid   = articles.slice(3, 7)
-
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 space-y-12">
 
-      <HeroSection slides={heroSlides} grid={heroGrid} />
       <HomeFeed articles={articles} />
 
       <section>
