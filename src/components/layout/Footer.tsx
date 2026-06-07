@@ -1,6 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
-import { CHANNELS } from "@/lib/channels";
 import { siteConfig } from "@/lib/site";
 import { getSiteSettings } from "@/lib/sitePages";
 
@@ -59,19 +57,6 @@ export default async function Footer() {
           <p className="text-center text-sm italic text-gray-500 sm:text-right">
             {siteConfig.tagline}
           </p>
-        </div>
-
-        {/* ── Grid kanal + sub-kanal ─────────────────────────────────── */}
-        <div className="flex flex-wrap gap-x-6 gap-y-3">
-          {CHANNELS.map((ch) => (
-            <Link
-              key={ch.slug}
-              href={ch.href}
-              className="text-xs font-bold uppercase tracking-[0.15em] text-[#1a2235] hover:text-red-600 transition-colors"
-            >
-              {ch.label}
-            </Link>
-          ))}
         </div>
 
         {/* ── Media sosial ───────────────────────────────────────────── */}
