@@ -13,8 +13,8 @@ export default function PublicLayout({ children }) {
       <PreloadResources />
 
       {/* Banner — Suspense agar tidak blokir LCP */}
-      <Suspense fallback={<div className="w-full h-[50px] sm:h-[90px] bg-[var(--surface)] border-b border-[var(--border)]" />}>
-        <div className="w-full px-4 py-2 bg-[var(--card)] border-b border-[var(--border)]">
+      <Suspense fallback={<div className="w-full h-[50px] sm:h-[90px]" style={{ backgroundColor: "#1a2235" }} />}>
+        <div className="w-full px-4 py-2 border-b border-white/10" style={{ backgroundColor: "#1a2235" }}>
           <div className="mx-auto max-w-6xl">
             <BannerSlot size="leaderboard" />
           </div>

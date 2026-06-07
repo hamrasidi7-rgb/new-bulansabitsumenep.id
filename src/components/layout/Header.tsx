@@ -14,10 +14,11 @@ export default function Header({ showSearch = true }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 border-b border-white/10"
+        style={{ backgroundColor: "#1a2235" }}>
         <div className="mx-auto flex max-w-2xl items-center justify-between px-3 py-1.5">
 
-          {/* Kiri: ikon BSM (crop simbol) + teks */}
+          {/* Kiri: ikon BSM + teks */}
           <Link
             href="/"
             className="flex items-center gap-2 min-h-[44px]"
@@ -34,10 +35,10 @@ export default function Header({ showSearch = true }: HeaderProps) {
               />
             </div>
             <div className="leading-tight">
-              <span className="block text-[13px] font-bold lowercase tracking-tight text-[var(--foreground)]">
+              <span className="block text-[13px] font-bold lowercase tracking-tight text-white">
                 bulansabit
               </span>
-              <span className="block text-[11px] font-semibold lowercase text-[var(--accent-red)] -mt-0.5">
+              <span className="block text-[11px] font-semibold lowercase text-red-400 -mt-0.5">
                 sumenep
               </span>
             </div>
@@ -50,7 +51,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
                 src="/logo-pmi-sumenep.png"
                 alt="Palang Merah Indonesia Kabupaten Sumenep"
                 fill
-                className="object-contain object-right"
+                className="object-contain object-right brightness-0 invert"
                 sizes="(max-width:640px) 120px, 168px"
               />
             </div>
@@ -59,7 +60,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
               <Link
                 href="/cari"
                 aria-label="Cari artikel"
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white"
               >
                 <SearchIcon />
               </Link>
@@ -69,7 +70,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
               aria-label="Buka menu navigasi"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(true)}
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white"
             >
               <MenuIcon />
             </button>
@@ -77,7 +78,6 @@ export default function Header({ showSearch = true }: HeaderProps) {
         </div>
       </header>
 
-      {/* MobileNav di luar <header> agar tidak terblokir stacking context sticky */}
       <MobileNav isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
     </>
   );
@@ -85,16 +85,8 @@ export default function Header({ showSearch = true }: HeaderProps) {
 
 function SearchIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+      stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
       <circle cx="8.5" cy="8.5" r="5.5" />
       <path d="M13 13l4 4" />
     </svg>
@@ -103,16 +95,8 @@ function SearchIcon() {
 
 function MenuIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+      stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
       <path d="M3 5h14M3 10h14M3 15h14" />
     </svg>
   );
