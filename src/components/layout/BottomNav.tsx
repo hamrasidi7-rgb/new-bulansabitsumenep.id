@@ -7,22 +7,13 @@ interface NavItem {
   href: string;
   label: string;
   icon: ({ isActive }: { isActive: boolean }) => React.JSX.Element;
-  exact: boolean;
 }
 
 const navItems: NavItem[] = [
-  {
-    href: "/",
-    label: "Beranda",
-    icon: HomeIcon,
-    exact: true,
-  },
-  {
-    href: "/edukasi",
-    label: "Edukasi",
-    icon: BookIcon,
-    exact: false,
-  },
+  { href: "/berita-kesehatan", label: "Kesehatan",  icon: HealthIcon },
+  { href: "/aksi-kemanusiaan", label: "Aksi",       icon: AksiIcon },
+  { href: "/dokter-menulis",   label: "Dokter",     icon: DokterIcon },
+  { href: "/video-story",      label: "Video",      icon: VideoIcon },
 ];
 
 export default function BottomNav() {
@@ -34,16 +25,8 @@ export default function BottomNav() {
       aria-label="Navigasi utama"
     >
       <div className="mx-auto flex max-w-2xl">
-        {navItems.map(({ href, label, icon: Icon, exact }) => {
-          const isActive = exact
-            ? pathname === href
-            : href !== "/" && pathname.startsWith(href);
-
-          const commonClass = `flex flex-1 flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] text-[10px] font-medium transition-colors ${
-            isActive
-              ? "text-pmi-red dark:text-red-400"
-              : "text-[var(--muted)] hover:text-[var(--foreground)]"
-          }`;
+        {navItems.map(({ href, label, icon: Icon }) => {
+          const isActive = pathname.startsWith(href);
 
           return (
             <Link
@@ -51,7 +34,11 @@ export default function BottomNav() {
               href={href}
               aria-label={label}
               aria-current={isActive ? "page" : undefined}
-              className={commonClass}
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] text-[10px] font-medium transition-colors ${
+                isActive
+                  ? "text-pmi-red dark:text-red-400"
+                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
+              }`}
             >
               <Icon isActive={isActive} />
               <span>{label}</span>
@@ -63,22 +50,40 @@ export default function BottomNav() {
   );
 }
 
-function HomeIcon({ isActive }: { isActive: boolean }) {
+function HealthIcon({ isActive }: { isActive: boolean }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" aria-hidden="true">
-      <path d="M3 10L11 3l8 7" />
-      <path d="M5 8.5V19h4v-5h4v5h4V8.5" />
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M11 19C11 19 3 13.5 3 8a4 4 0 017-2.65A4 4 0 0119 8c0 5.5-8 11-8 11z"/>
+      <path d="M8 9h2l1-2 1 4 1-2h2"/>
     </svg>
   );
 }
 
-function BookIcon({ isActive }: { isActive: boolean }) {
+function AksiIcon({ isActive }: { isActive: boolean }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" aria-hidden="true">
-      <path d="M4 3h6a3 3 0 013 3v12a2 2 0 00-2-2H4V3z"/>
-      <path d="M18 3h-6a3 3 0 00-3 3v12a2 2 0 012-2h7V3z" opacity=".5"/>
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 13c0-1.5 1-2.5 2.5-2.5S9 12 9 12s1-3 2.5-3S14 10 14 10"/>
+      <path d="M2 16.5C3.5 19 6 20 9 20c3.5 0 6.5-1.5 8.5-4L19 14a1.5 1.5 0 00-2.5-1.5L14 15"/>
+      <path d="M2 11V7a2 2 0 114 0v5"/>
     </svg>
   );
 }
 
+function DokterIcon({ isActive }: { isActive: boolean }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="11" cy="7" r="4"/>
+      <path d="M4 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+      <path d="M16 13v4M14 15h4"/>
+    </svg>
+  );
+}
 
+function VideoIcon({ isActive }: { isActive: boolean }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2" y="5" width="13" height="12" rx="2"/>
+      <path d="M15 9l5-3v10l-5-3V9z"/>
+    </svg>
+  );
+}
