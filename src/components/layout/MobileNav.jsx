@@ -53,7 +53,7 @@ export default function MobileNav({ isOpen, onClose }) {
       <div
         aria-hidden="true"
         onClick={onClose}
-        className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300
+        className={`fixed inset-0 z-[190] bg-black/50 transition-opacity duration-300
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       />
 
@@ -63,7 +63,7 @@ export default function MobileNav({ isOpen, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label="Menu navigasi"
-        className={`fixed inset-y-0 left-0 z-50 flex w-80 max-w-[85vw] flex-col
+        className={`fixed inset-y-0 left-0 z-[200] flex w-80 max-w-[85vw] flex-col
           bg-white dark:bg-[#1a1a1a] shadow-2xl
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}

@@ -13,70 +13,73 @@ export default function Header({ showSearch = true }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-2xl items-center justify-between px-3 py-1.5">
+    <>
+      <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-2xl items-center justify-between px-3 py-1.5">
 
-        {/* Kiri: ikon BSM (crop simbol) + teks */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 min-h-[44px]"
-          aria-label="Beranda Bulan Sabit Sumenep"
-        >
-          <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg">
-            <Image
-              src="/logo-bulansabitsumenep.jpg"
-              alt="Logo Bulan Sabit Sumenep"
-              fill
-              className="object-cover object-left"
-              sizes="36px"
-              priority
-            />
-          </div>
-          <div className="leading-tight">
-            <span className="block text-[13px] font-bold lowercase tracking-tight text-[var(--foreground)]">
-              bulansabit
-            </span>
-            <span className="block text-[11px] font-semibold lowercase text-[var(--accent-red)] -mt-0.5">
-              sumenep
-            </span>
-          </div>
-        </Link>
-
-        {/* Kanan: logo PMI + search + menu */}
-        <div className="flex items-center gap-1">
-          <div className="relative h-7 w-[108px] sm:h-8 sm:w-[148px] shrink-0 overflow-hidden">
-            <Image
-              src="/logo-pmi-sumenep.jpg"
-              alt="Palang Merah Indonesia Kabupaten Sumenep"
-              fill
-              className="object-contain object-right"
-              sizes="(max-width:640px) 108px, 148px"
-            />
-          </div>
-
-          {showSearch && (
-            <Link
-              href="/cari"
-              aria-label="Cari artikel"
-              className="hidden sm:flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
-            >
-              <SearchIcon />
-            </Link>
-          )}
-
-          <button
-            aria-label="Buka menu navigasi"
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen(true)}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
+          {/* Kiri: ikon BSM (crop simbol) + teks */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 min-h-[44px]"
+            aria-label="Beranda Bulan Sabit Sumenep"
           >
-            <MenuIcon />
-          </button>
-        </div>
-      </div>
+            <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg">
+              <Image
+                src="/logo-bulansabitsumenep.jpg"
+                alt="Logo Bulan Sabit Sumenep"
+                fill
+                className="object-cover object-left"
+                sizes="36px"
+                priority
+              />
+            </div>
+            <div className="leading-tight">
+              <span className="block text-[13px] font-bold lowercase tracking-tight text-[var(--foreground)]">
+                bulansabit
+              </span>
+              <span className="block text-[11px] font-semibold lowercase text-[var(--accent-red)] -mt-0.5">
+                sumenep
+              </span>
+            </div>
+          </Link>
 
+          {/* Kanan: logo PMI + search + menu */}
+          <div className="flex items-center gap-0.5">
+            <div className="relative h-7 w-[90px] sm:h-8 sm:w-[148px] shrink-0 overflow-hidden">
+              <Image
+                src="/logo-pmi-sumenep.jpg"
+                alt="Palang Merah Indonesia Kabupaten Sumenep"
+                fill
+                className="object-contain object-right"
+                sizes="(max-width:640px) 90px, 148px"
+              />
+            </div>
+
+            {showSearch && (
+              <Link
+                href="/cari"
+                aria-label="Cari artikel"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
+              >
+                <SearchIcon />
+              </Link>
+            )}
+
+            <button
+              aria-label="Buka menu navigasi"
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(true)}
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--muted)] transition hover:bg-[var(--border)] hover:text-[var(--foreground)]"
+            >
+              <MenuIcon />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* MobileNav di luar <header> agar tidak terblokir stacking context sticky */}
       <MobileNav isOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
-    </header>
+    </>
   );
 }
 
