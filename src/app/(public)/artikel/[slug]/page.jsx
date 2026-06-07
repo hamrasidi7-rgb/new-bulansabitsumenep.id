@@ -10,7 +10,6 @@ import { fmtDate } from '@/lib/fmt'
 import VerifiedBadge from '@/components/article/VerifiedBadge'
 import ArticleImage from '@/components/article/ArticleImage'
 import ShareButtons from '@/components/article/ShareButtons'
-import AskArticle from '@/components/ai/AskArticle'
 import BannerSlot from '@/components/ui/BannerSlot'
 import SectionHeader from '@/components/ui/SectionHeader'
 import ViewTracker from '@/components/ViewTracker'
@@ -532,11 +531,6 @@ export default async function ArtikelDetailPage({ params }) {
             </div>
           </section>
         )}
-
-        {/* ── Tanya AI (sticky mobile) ──────────────────────────────────── */}
-        <div className="mt-6">
-          <AskArticle articleTitle={art.title} articleSlug={art.slug} />
-        </div>
 
         {/* ── Kembali ───────────────────────────────────────────────────── */}
         <div className="mt-6 text-center">

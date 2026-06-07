@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { SEED_ARTICLES } from '@/lib/seedData'
 import { fmtDate } from '@/lib/fmt'
 import ShareButtons from '@/components/article/ShareButtons'
-import AskArticle from '@/components/ai/AskArticle'
 
 function stripHtml(html = '') {
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
@@ -170,11 +169,6 @@ export default async function DokterMenulisDetailPage({ params }) {
         {/* ── ShareButtons (bawah) ─────────────────────────────────────── */}
         <div className="mt-6 border-t border-[var(--border)] pt-4">
           <ShareButtons title={raw.title} slug={raw.slug} />
-        </div>
-
-        {/* ── Tanya AI ─────────────────────────────────────────────────── */}
-        <div className="mt-6">
-          <AskArticle articleTitle={raw.title} articleSlug={raw.slug} />
         </div>
 
         {/* ── Kembali ───────────────────────────────────────────────────── */}

@@ -23,12 +23,6 @@ const navItems: NavItem[] = [
     icon: BookIcon,
     exact: false,
   },
-  {
-    href: "/tanya-ai",
-    label: "Tanya AI",
-    icon: AiIcon,
-    exact: false,
-  },
 ];
 
 export default function BottomNav() {
@@ -87,13 +81,4 @@ function BookIcon({ isActive }: { isActive: boolean }) {
   );
 }
 
-function AiIcon({ isActive }: { isActive: boolean }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" aria-hidden="true">
-      <rect x="3" y="3" width="16" height="13" rx="3"/>
-      <path d="M7 19h8M11 16v3"/>
-      <path d="M7.5 9l1.5 3 2-5 2 5 1.5-3" strokeLinejoin="round"/>
-    </svg>
-  );
-}
 
