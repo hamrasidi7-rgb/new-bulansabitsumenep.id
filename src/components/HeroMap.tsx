@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 interface Facility {
@@ -37,7 +38,6 @@ export default function HeroMap() {
   const clusterRef = useRef<any>(null)
   const userMk     = useRef<any>(null)
   const [selected, setSelected] = useState<Facility | null>(null)
-  const [query, setQuery]       = useState('')
   const [locating, setLocating] = useState(false)
 
   useEffect(() => {
@@ -54,24 +54,16 @@ export default function HeroMap() {
       })
       map.on('locationerror',()=>setLocating(false))
       leafletRef.current = { map, L }
-      buildClusters(L, map, '')
+      buildClusters(L, map)
     })
     return ()=>{ leafletRef.current?.map?.remove(); leafletRef.current=null }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  useEffect(()=>{
-    if (!leafletRef.current) return
-    const {L,map} = leafletRef.current
-    buildClusters(L, map, query)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[query])
-
-  function buildClusters(L:any, map:any, q:string) {
+  function buildClusters(L:any, map:any) {
     if (clusterRef.current) map.removeLayer(clusterRef.current)
     const grp = (L as any).markerClusterGroup({ spiderfyOnMaxZoom:true, showCoverageOnHover:false, maxClusterRadius:45 })
-    const sq = q.trim().toLowerCase()
-    FACILITIES.filter(f => !sq || f.name.toLowerCase().includes(sq) || f.address.toLowerCase().includes(sq)).forEach(f=>{
+    FACILITIES.forEach(f=>{
       const mk = L.marker([f.lat,f.lng],{ icon: L.divIcon({ className:'', html:pinHtml(COLORS[f.category]??'#6b7280'), iconSize:[24,24], iconAnchor:[12,24] }) })
       mk.on('click',()=>setSelected(f))
       grp.addLayer(mk)
@@ -99,17 +91,21 @@ export default function HeroMap() {
       <div className="relative w-full h-[270px] sm:h-[400px] overflow-hidden">
         <div ref={mapRef} className="absolute inset-0 z-0" />
 
-        {/* Search overlay atas peta */}
-        <div className="absolute top-3 left-3 right-3 z-10">
-          <div className="relative">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              <circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/>
-            </svg>
-            <input type="search" value={query} onChange={e=>setQuery(e.target.value)}
-              placeholder="Cari RS, Puskesmas, Klinik..."
-              className="w-full rounded-xl bg-white/95 py-2.5 pl-8 pr-3 text-[13px] font-medium text-gray-700 placeholder-gray-400 shadow-lg outline-none focus:ring-2 focus:ring-red-400 backdrop-blur-sm" />
-          </div>
-        </div>
+        {/* Banner Tanya AI — overlay atas peta */}
+        <a
+          href="https://wa.me/6285234567890?text=Halo%20Tanya%20AI%20BulanSabitSumenep%2C%20saya%20ingin%20bertanya%20tentang%20faskes%2C%20stok%20darah%2C%20atau%20layanan%20kesehatan."
+          target="_blank" rel="noopener noreferrer"
+          className="absolute top-3 left-3 right-3 z-10 block rounded-xl overflow-hidden shadow-lg hover:opacity-95 transition active:scale-95"
+        >
+          <Image
+            src="/TANYA AI BULAN SABIT.jpeg"
+            alt="Tanya AI BulanSabitSumenep — Cari Faskes, Stok Darah, Obat, Ambulans"
+            width={900}
+            height={200}
+            className="w-full h-auto"
+            priority
+          />
+        </a>
 
         {/* Floating buttons kanan bawah */}
         <div className="absolute bottom-14 right-2.5 z-10 flex flex-col gap-2">
