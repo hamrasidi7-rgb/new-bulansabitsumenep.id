@@ -28,8 +28,7 @@ export default async function Footer() {
 
   return (
     <footer
-      className="pb-[4.5rem] sm:pb-0"
-      style={{ backgroundColor: "#1a2235" }}
+      className="pb-[4.5rem] sm:pb-0 bg-[#e8ecf2]"
       aria-label="Footer Bulan Sabit Sumenep"
     >
       <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
@@ -46,7 +45,7 @@ export default async function Footer() {
                 sizes="136px"
               />
             </div>
-            <span className="h-10 w-px bg-white/20" aria-hidden="true" />
+            <span className="h-10 w-px bg-gray-300" aria-hidden="true" />
             <div className="relative h-10 w-[160px] overflow-hidden rounded-md bg-white px-2 py-1">
               <Image
                 src="/logo-pmi-sumenep.jpg"
@@ -57,7 +56,7 @@ export default async function Footer() {
               />
             </div>
           </div>
-          <p className="text-center text-sm italic text-white/55 sm:text-right">
+          <p className="text-center text-sm italic text-gray-500 sm:text-right">
             {siteConfig.tagline}
           </p>
         </div>
@@ -68,7 +67,7 @@ export default async function Footer() {
             <div key={ch.slug}>
               <Link
                 href={ch.href}
-                className="block text-xs font-bold uppercase tracking-[0.15em] text-white/80 hover:text-white mb-2"
+                className="block text-xs font-bold uppercase tracking-[0.15em] text-[#1a2235] hover:text-red-600 mb-2"
               >
                 {ch.label}
               </Link>
@@ -76,7 +75,7 @@ export default async function Footer() {
                 <Link
                   key={sub.slug}
                   href={subchannelHref(ch.slug, sub.slug)}
-                  className="block py-0.5 text-xs text-white/45 hover:text-white/80 transition-colors"
+                  className="block py-0.5 text-xs text-gray-500 hover:text-[#1a2235] transition-colors"
                 >
                   {sub.label}
                 </Link>
@@ -93,7 +92,7 @@ export default async function Footer() {
               href={href}
               aria-label={label}
               role="listitem"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 text-white/70 transition duration-150 hover:border-white hover:text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition duration-150 hover:border-[#1a2235] hover:text-[#1a2235] hover:bg-white/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a2235]"
             >
               {icon}
             </a>
@@ -107,12 +106,12 @@ export default async function Footer() {
               <li key={label} className="flex items-center gap-3">
                 <a
                   href={href}
-                  className="text-xs text-white/60 transition hover:text-white focus-visible:text-white"
+                  className="text-xs text-gray-500 transition hover:text-[#1a2235] focus-visible:text-[#1a2235]"
                 >
                   {label}
                 </a>
                 {i < NAV_LINKS.length - 1 && (
-                  <span className="text-white/25 select-none" aria-hidden="true">•</span>
+                  <span className="text-gray-300 select-none" aria-hidden="true">•</span>
                 )}
               </li>
             ))}
@@ -120,8 +119,8 @@ export default async function Footer() {
         </nav>
 
         {/* ── Copyright ──────────────────────────────────────────────── */}
-        <hr className="border-white/10" />
-        <p className="text-center text-xs text-white/40 leading-relaxed">
+        <hr className="border-gray-300" />
+        <p className="text-center text-xs text-gray-400 leading-relaxed">
           Copyright &copy; {year} Bulan Sabit Sumenep &bull; PMI Kabupaten Sumenep.
           All rights reserved.
         </p>
