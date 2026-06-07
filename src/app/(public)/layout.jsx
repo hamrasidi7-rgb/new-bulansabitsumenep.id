@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import Header from '@/components/layout/Header'
-import ChannelBar from '@/components/layout/ChannelBar'
+import QuickAccess from '@/components/layout/QuickAccess'
 import Footer from '@/components/layout/Footer'
 import BottomNav from '@/components/layout/BottomNav'
 import BannerSlot from '@/components/ui/BannerSlot'
@@ -22,7 +22,7 @@ export default function PublicLayout({ children }) {
       </Suspense>
 
       <Header />
-      <ChannelBar />
+      <QuickAccess />
 
       <main className="flex-1 pb-16">
         {children}
