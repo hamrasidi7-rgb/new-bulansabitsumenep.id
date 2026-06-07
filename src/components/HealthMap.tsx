@@ -119,25 +119,18 @@ export default function HealthMap() {
       {/* Peta */}
       <div ref={mapRef} className="absolute inset-0 z-0" />
 
-      {/* Gradient — mulai SETELAH header (top: 56px) ke bawah */}
+      {/* Gradient — cover area filter + judul */}
       <div
         className="absolute left-0 right-0 z-10 pointer-events-none"
         style={{
           top: '56px',
-          height: '120px',
-          background: 'linear-gradient(to bottom, rgba(26,34,53,0.65) 0%, rgba(26,34,53,0.35) 55%, transparent 100%)',
+          height: '175px',
+          background: 'linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 60%, transparent 100%)',
         }}
       />
 
-      {/* Judul overlay — tepat di bawah header */}
-      <div className="absolute left-4 right-4 z-20 pointer-events-none" style={{ top: '64px' }}>
-        <h1 className="text-[15px] font-bold uppercase leading-snug tracking-wide text-white drop-shadow-lg">
-          Peta Layanan Kesehatan<br />dan Kedaruratan Sumenep
-        </h1>
-      </div>
-
-      {/* Filter kategori */}
-      <div className="absolute left-0 right-0 z-20 flex justify-center px-3" style={{ top: '96px' }}>
+      {/* Filter kategori — tepat di bawah header */}
+      <div className="absolute left-0 right-0 z-20 flex justify-center px-3" style={{ top: '64px' }}>
         <div className="flex gap-1.5 overflow-x-auto rounded-2xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur-sm no-scrollbar">
           {(Object.keys(CATEGORY_CONFIG) as Category[]).filter(c => c !== 'semua').map((cat) => {
             const cfg = CATEGORY_CONFIG[cat]
@@ -159,6 +152,14 @@ export default function HealthMap() {
             )
           })}
         </div>
+      </div>
+
+      {/* Judul — di bawah filter buttons */}
+      <div className="absolute left-4 right-4 z-20 pointer-events-none" style={{ top: '116px' }}>
+        <h1 className="text-[14px] font-black uppercase leading-snug tracking-wide drop-shadow-sm"
+          style={{ color: '#dc2626' }}>
+          Peta Layanan Kesehatan<br />dan Kedaruratan Sumenep
+        </h1>
       </div>
 
       {/* Info panel — muncul saat marker diklik */}
