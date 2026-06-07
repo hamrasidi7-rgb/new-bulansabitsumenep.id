@@ -14,7 +14,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-transparent">
+      <header className="sticky top-0 z-50 bg-white/60 backdrop-blur-md">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-3 py-1.5">
 
           {/* Kiri: ikon BSM + teks */}
@@ -34,10 +34,10 @@ export default function Header({ showSearch = true }: HeaderProps) {
               />
             </div>
             <div className="leading-tight">
-              <span className="block text-[13px] font-bold lowercase tracking-tight text-white">
+              <span className="block text-[13px] font-bold lowercase tracking-tight text-[#1a2235]">
                 bulansabit
               </span>
-              <span className="block text-[11px] font-semibold lowercase text-red-400 -mt-0.5">
+              <span className="block text-[11px] font-semibold lowercase text-red-600 -mt-0.5">
                 sumenep
               </span>
             </div>
@@ -50,7 +50,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
                 src="/logo-pmi-sumenep.png"
                 alt="Palang Merah Indonesia Kabupaten Sumenep"
                 fill
-                className="object-contain object-right brightness-0 invert"
+                className="object-contain object-right"
                 sizes="(max-width:640px) 120px, 168px"
               />
             </div>
@@ -59,7 +59,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
               <Link
                 href="/cari"
                 aria-label="Cari artikel"
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#1a2235]/70 transition hover:bg-black/10 hover:text-[#1a2235]"
               >
                 <SearchIcon />
               </Link>
@@ -69,7 +69,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
               aria-label="Buka menu navigasi"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(true)}
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#1a2235]/70 transition hover:bg-black/10 hover:text-[#1a2235]"
             >
               <MenuIcon />
             </button>

@@ -119,24 +119,25 @@ export default function HealthMap() {
       {/* Peta */}
       <div ref={mapRef} className="absolute inset-0 z-0" />
 
-      {/* Gradient atas — menyatu dengan header */}
+      {/* Gradient — mulai SETELAH header (top: 56px) ke bawah */}
       <div
-        className="absolute top-0 left-0 right-0 z-10 pointer-events-none"
+        className="absolute left-0 right-0 z-10 pointer-events-none"
         style={{
-          height: '160px',
-          background: 'linear-gradient(to bottom, #1a2235 0%, rgba(26,34,53,0.7) 45%, transparent 100%)',
+          top: '56px',
+          height: '120px',
+          background: 'linear-gradient(to bottom, rgba(26,34,53,0.65) 0%, rgba(26,34,53,0.35) 55%, transparent 100%)',
         }}
       />
 
-      {/* Judul overlay */}
-      <div className="absolute top-16 left-4 right-4 z-20 pointer-events-none">
-        <h1 className="text-[20px] font-bold leading-tight text-white drop-shadow-lg">
+      {/* Judul overlay — tepat di bawah header */}
+      <div className="absolute left-4 right-4 z-20 pointer-events-none" style={{ top: '64px' }}>
+        <h1 className="text-[19px] font-bold leading-tight text-white drop-shadow-lg">
           Peta Layanan Kesehatan
         </h1>
       </div>
 
-      {/* Filter kategori — floating di bawah judul */}
-      <div className="absolute top-[88px] left-0 right-0 z-20 flex justify-center px-3">
+      {/* Filter kategori */}
+      <div className="absolute left-0 right-0 z-20 flex justify-center px-3" style={{ top: '96px' }}>
         <div className="flex gap-1.5 overflow-x-auto rounded-2xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur-sm no-scrollbar">
           {(Object.keys(CATEGORY_CONFIG) as Category[]).map((cat) => {
             const cfg = CATEGORY_CONFIG[cat]
