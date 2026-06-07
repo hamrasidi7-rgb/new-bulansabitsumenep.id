@@ -86,6 +86,15 @@ export default function HeroMap() {
 
   return (
     <div className="w-full">
+
+      {/* Judul mini atas peta */}
+      <div className="flex items-center gap-2 px-4 py-2.5 bg-white border-b border-gray-100">
+        <span className="text-base">📍</span>
+        <h2 className="text-[13px] font-bold text-[#1a2235] tracking-tight">
+          Peta Faskes Kabupaten Sumenep
+        </h2>
+      </div>
+
       {/* MAP CONTAINER */}
       <div className="relative w-full h-[350px] sm:h-[480px] overflow-hidden">
         <div ref={mapRef} className="absolute inset-0 z-0" />
@@ -117,11 +126,10 @@ export default function HeroMap() {
           </Link>
         </div>
 
-        {/* Tombol Lihat Fullscreen — kiri bawah */}
+        {/* Tombol Jelajahi Peta — kiri bawah */}
         <Link href="/peta"
           className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-xl bg-[#1a2235] px-3 py-2 text-[12px] font-bold text-white shadow-lg hover:bg-[#243050] transition active:scale-95">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
-          Lihat Peta Fullscreen
+          📍 Jelajahi Peta Kesehatan
         </Link>
 
         {/* Bottom sheet info faskes */}
@@ -158,6 +166,25 @@ export default function HeroMap() {
           )}
         </div>
         {selected && <div className="absolute inset-0 z-[15]" onClick={()=>setSelected(null)}/>}
+      </div>
+
+      {/* Counter ringkas di bawah peta */}
+      <div className="bg-white border-t border-gray-100">
+        <div className="mx-auto flex max-w-2xl divide-x divide-gray-100">
+          {[
+            { emoji:'🏥', count:'4',  label:'RS' },
+            { emoji:'🩺', count:'31', label:'Puskesmas' },
+            { emoji:'💊', count:'20', label:'Apotek' },
+            { emoji:'🩸', count:'',   label:'PMI Aktif' },
+          ].map(({ emoji, count, label }) => (
+            <div key={label} className="flex flex-1 flex-col items-center py-2.5 gap-0.5">
+              <span className="text-lg leading-none">{emoji}</span>
+              <span className="text-[13px] font-extrabold text-[#1a2235] leading-none">
+                {count && <>{count} </>}{label}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>
