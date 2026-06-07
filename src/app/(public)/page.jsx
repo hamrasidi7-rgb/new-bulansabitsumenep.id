@@ -104,8 +104,10 @@ export default async function HomePage() {
   return (
     <div className="w-full">
 
-      {/* Peta interaktif fullscreen */}
-      <HealthMapClient />
+      {/* Peta extend ke belakang header (negatif margin = naik ke atas) */}
+      <div className="-mt-14">
+        <HealthMapClient />
+      </div>
 
       {/* Berita & konten di bawah peta */}
       <div className="mx-auto w-full max-w-6xl px-4 py-8 space-y-12">

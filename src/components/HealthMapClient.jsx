@@ -6,8 +6,8 @@ const HealthMap = dynamic(() => import('./HealthMap'), {
   ssr: false,
   loading: () => (
     <div
-      className="w-full animate-pulse bg-[#e8f0e8]"
-      style={{ height: 'calc(100dvh - 120px)' }}
+      className="w-full animate-pulse"
+      style={{ height: '100dvh', background: 'linear-gradient(to bottom, #1a2235 0%, #2d3f5e 40%, #c8d8c8 100%)' }}
     />
   ),
 })
