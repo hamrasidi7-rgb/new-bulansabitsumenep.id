@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import { siteConfig } from "@/lib/site";
 // Footer hanya dirender di (public)/layout.jsx — bukan di sini,
 // agar tidak double saat rute (public) diakses.

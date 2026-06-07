@@ -1,9 +1,12 @@
 import { supabase } from '@/lib/supabaseClient'
 import { SEED_ARTICLES, SEED_VIDEOS, SEED_GALLERIES } from '@/lib/seedData'
 import { articles as localArticles, getAuthorById } from '@/data/articles'
+import dynamic from 'next/dynamic'
 import VideoStory from '@/components/VideoStory'
 import GallerySection from '@/components/GallerySection'
 import HomeFeed from '@/components/HomeFeed'
+
+const HealthMap = dynamic(() => import('@/components/HealthMap'), { ssr: false })
 
 // Cache homepage 5 menit — Supabase tidak dipanggil setiap request
 export const revalidate = 300
@@ -101,17 +104,23 @@ export default async function HomePage() {
   ])
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6 space-y-12">
+    <div className="w-full">
 
-      <HomeFeed articles={articles} />
+      {/* Peta interaktif fullscreen */}
+      <HealthMap />
 
-      <section>
-        <VideoStory limit={4} initialVideos={videos} />
-      </section>
+      {/* Berita & konten di bawah peta */}
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 space-y-12">
+        <HomeFeed articles={articles} />
 
-      <section>
-        <GallerySection limit={4} initialAlbums={albums} initialCounts={counts} />
-      </section>
+        <section>
+          <VideoStory limit={4} initialVideos={videos} />
+        </section>
+
+        <section>
+          <GallerySection limit={4} initialAlbums={albums} initialCounts={counts} />
+        </section>
+      </div>
 
     </div>
   )
