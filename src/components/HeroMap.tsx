@@ -90,31 +90,38 @@ export default function HeroMap() {
       <div className="relative w-full h-[270px] sm:h-[400px] overflow-hidden">
         <div ref={mapRef} className="absolute inset-0 z-0" />
 
-        {/* Banner Tanya AI Faskes */}
+        {/* Banner Tanya AI BulanSabitSumenep */}
         <a
-          href="https://wa.me/6285234567890?text=Halo%20Tanya%20AI%20Faskes%20BulanSabitSumenep%2C%20saya%20ingin%20bertanya%20tentang%20layanan%20kesehatan."
+          href="https://wa.me/6285234567890?text=Halo%20Tanya%20AI%20BulanSabitSumenep%2C%20saya%20ingin%20bertanya%20tentang%20faskes%2C%20stok%20darah%2C%20obat%2C%20atau%20ambulans."
           target="_blank" rel="noopener noreferrer"
-          className="absolute top-3 left-3 right-3 z-10 flex items-center gap-3 bg-white rounded-full px-3 py-2 shadow-lg border border-red-100 hover:shadow-xl transition-shadow active:scale-[0.98]"
+          className="absolute top-3 left-3 right-3 z-10 flex items-center bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow active:scale-[0.98]"
         >
-          {/* Robot icon */}
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-[22px] leading-none">
-            🤖
-          </span>
+          {/* Robot icon + sparkle */}
+          <div className="relative flex h-[60px] w-[60px] shrink-0 items-center justify-center bg-red-50">
+            <span className="text-[28px] leading-none">🤖</span>
+            <span className="absolute top-2 right-1.5 text-[10px] text-red-400 font-black">✦</span>
+          </div>
 
-          {/* Teks */}
-          <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-bold leading-tight text-gray-800">Tanya AI Faskes...</p>
-            <p className="text-[10px] text-gray-400 leading-snug truncate">
-              Contoh: Puskesmas terdekat, Stok darah O, Klinik gigi buka hari ini
+          {/* Divider vertikal */}
+          <div className="w-px self-stretch bg-gray-200 mx-0 shrink-0" />
+
+          {/* Teks tengah */}
+          <div className="flex-1 px-3 py-2 min-w-0">
+            <p className="font-black text-[12.5px] leading-tight tracking-tight">
+              <span className="text-[#1a2235]">TANYA AI </span>
+              <span className="text-red-600">BULANSABITSUMENEP</span>
+            </p>
+            <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mt-0.5 leading-none">
+              CARI FASKES&nbsp;•&nbsp;STOK DARAH&nbsp;•&nbsp;OBAT&nbsp;•&nbsp;AMBULANS
             </p>
           </div>
 
-          {/* Tombol kirim */}
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-500 text-white shadow-sm">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          {/* Tombol kirim merah */}
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-500 text-white shadow-sm mr-2.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/>
             </svg>
-          </span>
+          </div>
         </a>
 
         {/* Floating buttons kanan bawah */}
