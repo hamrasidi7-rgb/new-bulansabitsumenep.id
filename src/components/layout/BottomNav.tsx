@@ -3,15 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const WA_NUMBER = "6285234567890"; // ganti dengan nomor PMI Sumenep yang sebenarnya
-
 interface NavItem {
   href: string;
   label: string;
-  icon: ({ isActive, isGreen }: { isActive: boolean; isGreen?: boolean }) => React.JSX.Element;
+  icon: ({ isActive }: { isActive: boolean }) => React.JSX.Element;
   exact: boolean;
-  external?: boolean;
-  isGreen?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -33,14 +29,6 @@ const navItems: NavItem[] = [
     icon: AiIcon,
     exact: false,
   },
-  {
-    href: `https://wa.me/${WA_NUMBER}`,
-    label: "WhatsApp",
-    icon: WhatsappIcon,
-    exact: false,
-    external: true,
-    isGreen: true,
-  },
 ];
 
 export default function BottomNav() {
@@ -52,34 +40,16 @@ export default function BottomNav() {
       aria-label="Navigasi utama"
     >
       <div className="mx-auto flex max-w-2xl">
-        {navItems.map(({ href, label, icon: Icon, exact, external, isGreen }) => {
+        {navItems.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact
             ? pathname === href
             : href !== "/" && pathname.startsWith(href);
 
           const commonClass = `flex flex-1 flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] text-[10px] font-medium transition-colors ${
-            isGreen
-              ? "text-green-600 dark:text-green-400"
-              : isActive
+            isActive
               ? "text-pmi-red dark:text-red-400"
               : "text-[var(--muted)] hover:text-[var(--foreground)]"
           }`;
-
-          if (external) {
-            return (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${label} (buka di tab baru)`}
-                className={commonClass}
-              >
-                <Icon isActive={false} isGreen />
-                <span>{label}</span>
-              </a>
-            );
-          }
 
           return (
             <Link
@@ -99,7 +69,7 @@ export default function BottomNav() {
   );
 }
 
-function HomeIcon({ isActive }: { isActive: boolean; isGreen?: boolean }) {
+function HomeIcon({ isActive }: { isActive: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" aria-hidden="true">
       <path d="M3 10L11 3l8 7" />
@@ -108,7 +78,7 @@ function HomeIcon({ isActive }: { isActive: boolean; isGreen?: boolean }) {
   );
 }
 
-function BookIcon({ isActive }: { isActive: boolean; isGreen?: boolean }) {
+function BookIcon({ isActive }: { isActive: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" aria-hidden="true">
       <path d="M4 3h6a3 3 0 013 3v12a2 2 0 00-2-2H4V3z"/>
@@ -117,7 +87,7 @@ function BookIcon({ isActive }: { isActive: boolean; isGreen?: boolean }) {
   );
 }
 
-function AiIcon({ isActive }: { isActive: boolean; isGreen?: boolean }) {
+function AiIcon({ isActive }: { isActive: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth={isActive ? 2.2 : 1.7} strokeLinecap="round" aria-hidden="true">
       <rect x="3" y="3" width="16" height="13" rx="3"/>
@@ -127,11 +97,3 @@ function AiIcon({ isActive }: { isActive: boolean; isGreen?: boolean }) {
   );
 }
 
-function WhatsappIcon({ isGreen }: { isActive: boolean; isGreen?: boolean }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke={isGreen ? "#16a34a" : "currentColor"} strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
-      <path d="M11 2a9 9 0 019 9c0 4.97-4.03 9-9 9a8.96 8.96 0 01-4.65-1.3L2 20l1.33-4.27A8.97 8.97 0 012 11a9 9 0 019-9z"/>
-      <path d="M8 9.5c.3 2.8 3.7 5.5 6 6 .5-1 .8-1.7.7-2.1-.1-.3-.5-.5-1-.8-.5-.2-.9-.1-1.2.2-.5.5-1 .5-1.9-.1-.9-.6-1.6-1.4-1.7-2.3-.1-.9.2-1.3.7-1.7.3-.3.4-.7.2-1.2-.2-.5-.6-.9-.9-1C9.4 6 8 7 8 9.5z"/>
-    </svg>
-  );
-}
