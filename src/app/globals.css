@@ -2,10 +2,10 @@
 
 :root {
   /* Krem hangat — nuansa majalah cetak premium */
-  --background: #faf7f2;
+  --background: #f0f2f5;
   --foreground: #1c1814;
-  --card: #fefcf8;
-  --border: #e6e0d6;
+  --card: #ffffff;
+  --border: #e2e5ea;
   --muted: #7d7168;
   --accent-red: #c0392b;
   --accent-blue: #1d6fa4;

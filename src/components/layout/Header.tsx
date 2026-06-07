@@ -14,7 +14,7 @@ export default function Header({ showSearch = true }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/10"
+      <header className="sticky top-0 z-50"
         style={{ backgroundColor: "#1a2235" }}>
         <div className="mx-auto flex max-w-2xl items-center justify-between px-3 py-1.5">
 

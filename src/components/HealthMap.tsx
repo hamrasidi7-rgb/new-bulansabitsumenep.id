@@ -114,13 +114,30 @@ export default function HealthMap() {
   }, [active])
 
   return (
-    <div className="relative w-full" style={{ height: 'calc(100dvh - 120px)' }}>
+    <div className="relative w-full" style={{ height: 'calc(100dvh - 56px)' }}>
 
       {/* Peta */}
       <div ref={mapRef} className="absolute inset-0 z-0" />
 
-      {/* Filter kategori — floating atas */}
-      <div className="absolute top-3 left-0 right-0 z-10 flex justify-center px-3">
+      {/* Gradient atas — menyatu dengan header */}
+      <div
+        className="absolute top-0 left-0 right-0 z-10 pointer-events-none"
+        style={{
+          height: '110px',
+          background: 'linear-gradient(to bottom, #1a2235 0%, rgba(26,34,53,0.55) 60%, transparent 100%)',
+        }}
+      />
+
+      {/* Judul & subtitle overlay */}
+      <div className="absolute top-3 left-4 right-4 z-20 pointer-events-none">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/60">PMI Sumenep</p>
+        <h1 className="text-[18px] font-bold leading-tight text-white drop-shadow">
+          Peta Layanan Kesehatan
+        </h1>
+      </div>
+
+      {/* Filter kategori — floating di bawah judul */}
+      <div className="absolute top-[72px] left-0 right-0 z-20 flex justify-center px-3">
         <div className="flex gap-1.5 overflow-x-auto rounded-2xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur-sm no-scrollbar">
           {(Object.keys(CATEGORY_CONFIG) as Category[]).map((cat) => {
             const cfg = CATEGORY_CONFIG[cat]
