@@ -1,21 +1,19 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CHANNELS, subchannelHref } from '@/lib/channels'
+import { CHANNELS } from '@/lib/channels'
 
 /**
  * Drawer navigasi mobile.
  * Dibuka oleh Header via prop onClose / dikontrol state isOpen dari Header.
  */
 export default function MobileNav({ isOpen, onClose }) {
-  // Accordion: simpan slug kanal yang sedang terbuka
-  const [openAccordion, setOpenAccordion] = useState(null)
   const pathname = usePathname()
   const drawerRef = useRef(null)
 
-  // Tutup accordion saat pathname berubah (berpindah halaman)
+  // Tutup drawer saat pathname berubah (berpindah halaman)
   useEffect(() => {
     if (isOpen) onClose()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,14 +36,6 @@ export default function MobileNav({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) drawerRef.current?.querySelector('button, a')?.focus()
   }, [isOpen])
-
-  const toggleAccordion = (slug) =>
-    setOpenAccordion((prev) => (prev === slug ? null : slug))
-
-  // Kanal dengan sub-kanal (Berita Kesehatan & Aksi Kemanusiaan)
-  const parentChannels = CHANNELS.filter((c) => c.hasSubchannels)
-  // Kanal pendukung (tanpa sub-kanal)
-  const leafChannels = CHANNELS.filter((c) => !c.hasSubchannels)
 
   return (
     <>
@@ -88,99 +78,56 @@ export default function MobileNav({ isOpen, onClose }) {
         </div>
 
         {/* Isi drawer — scrollable */}
-        <div className="flex-1 overflow-y-auto py-2">
+        <div className="flex-1 overflow-y-auto">
 
-          {/* ── Grup kanal dengan sub-kanal (accordion) ─────────────── */}
-          {parentChannels.map((ch) => {
-            const expanded = openAccordion === ch.slug
-            return (
-              <div key={ch.slug} className="border-b border-[var(--border)]">
-                {/* Tombol accordion */}
-                <button
-                  onClick={() => toggleAccordion(ch.slug)}
-                  aria-expanded={expanded}
-                  aria-controls={`accordion-${ch.slug}`}
-                  className="flex w-full items-center justify-between px-4 py-3.5 text-left
-                    text-sm font-semibold text-[var(--foreground)]
-                    hover:bg-gray-50 dark:hover:bg-white/5"
-                >
-                  <span className={pathname.startsWith(`/${ch.slug}`) ? 'text-[var(--accent-red)]' : ''}>
-                    {ch.label}
-                  </span>
-                  {/* Chevron */}
-                  <svg
-                    width="16" height="16" viewBox="0 0 16 16" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                    className={`shrink-0 text-[var(--muted)] transition-transform duration-200
-                      ${expanded ? 'rotate-180' : ''}`}
-                  >
-                    <polyline points="4 6 8 10 12 6" />
-                  </svg>
-                </button>
-
-                {/* Sub-kanal list */}
-                <ul
-                  id={`accordion-${ch.slug}`}
-                  role="list"
-                  className={`overflow-hidden transition-all duration-200
-                    ${expanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-                >
-                  {/* Tautan ke indeks kanal (semua sub-kanal) */}
-                  <li>
-                    <Link
-                      href={ch.href}
-                      className="flex items-center gap-2 py-2.5 pl-8 pr-4 text-xs
-                        font-semibold uppercase tracking-wider text-[var(--accent-red)]
-                        hover:bg-red-50 dark:hover:bg-red-950/20"
-                    >
-                      Semua {ch.label}
-                    </Link>
-                  </li>
-                  {ch.subchannels.map((sub) => {
-                    const href = subchannelHref(ch.slug, sub.slug)
-                    const active = pathname === href
-                    return (
-                      <li key={sub.slug}>
-                        <Link
-                          href={href}
-                          className={`flex items-center gap-2 py-2.5 pl-8 pr-4 text-sm
-                            hover:bg-gray-50 dark:hover:bg-white/5
-                            ${active
-                              ? 'font-semibold text-[var(--accent-red)]'
-                              : 'text-[var(--muted)]'}`}
-                        >
-                          {active && (
-                            <span className="mr-1 h-1.5 w-1.5 rounded-full bg-[var(--accent-red)] shrink-0" />
-                          )}
-                          {sub.label}
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )
-          })}
-
-          {/* ── Kanal pendukung (leaf — tanpa sub-kanal) ─────────────── */}
+          {/* ── Kanal utama ─────────────────────────────────────────── */}
           <div className="py-2">
-            <p className="px-4 pb-1 pt-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)]">
-              Kanal Pendukung
-            </p>
-            {leafChannels.map((ch) => {
+            {CHANNELS.map((ch) => {
               const active = pathname.startsWith(ch.href)
               return (
                 <Link
                   key={ch.slug}
                   href={ch.href}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium
-                    hover:bg-gray-50 dark:hover:bg-white/5
+                  className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold border-b border-[var(--border)]
+                    hover:bg-gray-50 dark:hover:bg-white/5 transition-colors
                     ${active ? 'text-[var(--accent-red)]' : 'text-[var(--foreground)]'}`}
                 >
                   {active && (
                     <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-red)] shrink-0" />
                   )}
                   {ch.label}
+                </Link>
+              )
+            })}
+            <Link
+              href="/peta"
+              className={`flex items-center gap-3 px-4 py-3.5 text-sm font-semibold border-b border-[var(--border)]
+                hover:bg-gray-50 dark:hover:bg-white/5 transition-colors
+                ${pathname === '/peta' ? 'text-[var(--accent-red)]' : 'text-[var(--foreground)]'}`}
+            >
+              {pathname === '/peta' && <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-red)] shrink-0" />}
+              Peta Layanan Kesehatan
+            </Link>
+          </div>
+
+          {/* ── Informasi ────────────────────────────────────────────── */}
+          <div className="py-2">
+            <p className="px-4 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--muted)]">
+              Informasi
+            </p>
+            {[
+              { label: 'Tentang Kami',   href: '/tentang-kami' },
+              { label: 'Redaksi',        href: '/redaksi' },
+              { label: 'FAQ',            href: '/faq' },
+            ].map(({ label, href }) => {
+              const active = pathname === href
+              return (
+                <Link key={href} href={href}
+                  className={`flex items-center gap-3 px-4 py-3 text-sm
+                    hover:bg-gray-50 dark:hover:bg-white/5 transition-colors
+                    ${active ? 'font-semibold text-[var(--accent-red)]' : 'font-medium text-[var(--muted)]'}`}
+                >
+                  {label}
                 </Link>
               )
             })}
