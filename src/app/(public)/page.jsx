@@ -1,12 +1,10 @@
 import { supabase } from '@/lib/supabaseClient'
 import { SEED_ARTICLES, SEED_VIDEOS, SEED_GALLERIES } from '@/lib/seedData'
 import { articles as localArticles, getAuthorById } from '@/data/articles'
-import dynamic from 'next/dynamic'
 import VideoStory from '@/components/VideoStory'
 import GallerySection from '@/components/GallerySection'
 import HomeFeed from '@/components/HomeFeed'
-
-const HealthMap = dynamic(() => import('@/components/HealthMap'), { ssr: false })
+import HealthMapClient from '@/components/HealthMapClient'
 
 // Cache homepage 5 menit — Supabase tidak dipanggil setiap request
 export const revalidate = 300
@@ -107,7 +105,7 @@ export default async function HomePage() {
     <div className="w-full">
 
       {/* Peta interaktif fullscreen */}
-      <HealthMap />
+      <HealthMapClient />
 
       {/* Berita & konten di bawah peta */}
       <div className="mx-auto w-full max-w-6xl px-4 py-8 space-y-12">
