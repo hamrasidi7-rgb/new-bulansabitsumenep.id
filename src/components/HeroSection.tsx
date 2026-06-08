@@ -35,7 +35,7 @@ export default function HeroSection() {
               <span className="text-[#1a2235]">TANYA AI </span>
               <span className="text-red-600">BULANSABITSUMENEP</span>
             </p>
-            <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mt-0.5">
+            <p className="text-[9px] font-bold text-gray-600 uppercase tracking-wide mt-0.5">
               CARI FASKES&nbsp;•&nbsp;STOK DARAH&nbsp;•&nbsp;OBAT&nbsp;•&nbsp;AMBULANS
             </p>
           </div>
