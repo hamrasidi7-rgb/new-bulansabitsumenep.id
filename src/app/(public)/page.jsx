@@ -4,7 +4,7 @@ import { articles as localArticles, getAuthorById } from '@/data/articles'
 import VideoStory from '@/components/VideoStory'
 import GallerySection from '@/components/GallerySection'
 import HomeFeed from '@/components/HomeFeed'
-import HeroMapClient from '@/components/HeroMapClient'
+import HeroSection from '@/components/HeroSection'
 
 // Cache homepage 5 menit — Supabase tidak dipanggil setiap request
 export const revalidate = 300
@@ -104,8 +104,8 @@ export default async function HomePage() {
   return (
     <div className="w-full">
 
-      {/* Hero Map + Quick Menu */}
-      <HeroMapClient />
+      {/* Hero: Tanya AI + Kartu Peta Statis */}
+      <HeroSection />
 
       {/* Konten portal di bawah hero */}
       <div className="mx-auto w-full max-w-6xl px-4 pt-5 pb-8 space-y-12">
