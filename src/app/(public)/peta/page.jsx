@@ -8,9 +8,20 @@ export const metadata = {
 
 export default function PetaPage() {
   return (
-    /* h-[calc(100dvh-56px)]: isi layar penuh dikurangi tinggi header */
-    <div style={{ height: 'calc(100dvh - 56px)', overflow: 'hidden' }}>
-      <HealthMapClient />
-    </div>
+    <>
+      {/*
+        Fixed positioning: map menutupi seluruh layar di bawah header (56px).
+        Tidak terpengaruh pb-16 pada <main> maupun Footer di layout (public).
+      */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-40"
+        style={{ top: '56px' }}
+      >
+        <HealthMapClient />
+      </div>
+
+      {/* Spacer agar <main> tidak collapse (elemen fixed keluar dari flow) */}
+      <div style={{ height: 'calc(100dvh - 56px)' }} aria-hidden="true" />
+    </>
   )
 }
